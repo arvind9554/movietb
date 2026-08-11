@@ -307,7 +307,6 @@ a { color: var(--text-primary); text-decoration: none; }
   padding-bottom: 30px;
 }
 
-/* ===== Footer ===== */
 /* ===== FOOTER STYLING & MOBILE RESPONSIVENESS ===== */
 footer {
   text-align: center;
@@ -716,39 +715,39 @@ footer {
   text-decoration: underline;
 }
 
-/* ===== Video Player & Fullscreen Styling ===== */
-/* ===== Video Player Clean Fix ===== */
+/* ===== VIDEO PLAYER FIT FIX (EXACT 100% FILL) ===== */
 .player-container {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto 24px auto;
   background: #000;
-  border-radius: var(--radius);
+  border-radius: var(--radius, 8px);
   overflow: hidden;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  padding: 0;
+  padding: 0 !important;
 }
 
 .video-responsive {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* Fixed 16:9 Ratio */
-  height: 0;
+  position: relative !important;
+  width: 100% !important;
+  padding-bottom: 56.25% !important; /* 16:9 Aspect Ratio */
+  height: 0 !important;
   background: #000;
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
+/* Force iframe to stretch 100% x 100% of container */
 .video-responsive iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
   width: 100% !important;
   height: 100% !important;
   border: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
-  object-fit: cover;
+  transform: none !important;
 }
 
 /* Movie Details Card Styling */
