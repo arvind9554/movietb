@@ -1,5 +1,8 @@
 /* ==============================================
    RESPONSIVE.CSS
+   Naya navbar system: Home/Blog/About hamesha
+   visible rehte hain, hamburger hamesha Categories
+   sidebar kholta hai — dono desktop aur mobile pe.
    ============================================== */
 
 /* ===== Tablet & below (900px) ===== */
@@ -26,13 +29,14 @@
 
 /* ===== Mobile (640px) ===== */
 @media (max-width: 640px) {
+  /* Prevent Horizontal Bleed / Unequal Margin Fix */
   body {
     overflow-x: hidden;
   }
 
   .container {
-    padding-left: 0!important;
-    padding-right: 0 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
   }
@@ -45,19 +49,17 @@
     box-sizing: border-box !important;
   }
 
-  /* Video Player Container Precise Symmetry Fix */
   .player-container {
     width: 100% !important;
     border-radius: 6px;
     margin-bottom: 16px;
     box-sizing: border-box !important;
-    overflow: hidden !important;
   }
 
   .video-responsive {
     position: relative !important;
     width: 100% !important;
-    padding-bottom: 56.25% !important; /* 16:9 Aspect Ratio */
+    padding-bottom: 56.25% !important; /* Standard 16:9 Aspect Ratio */
     height: 0 !important;
     overflow: hidden !important;
   }
@@ -108,9 +110,8 @@
     font-size: 14px;
   }
 
-  /* Search Button Typo Fix (99px -> 9px) */
   .search-box button {
-    padding: 9px 16px !important;
+    padding: 9px 16px;
     font-size: 0.85rem;
   }
 
@@ -152,6 +153,7 @@
     font-size: 24px;
   }
 
+  /* Mobile Footer Spacing Adjustments */
   footer {
     padding: 24px 12px;
     margin-top: 24px;
