@@ -295,39 +295,6 @@
 }
 
 
-/* Landscape fullscreen: scale iframe; collapse dead YouTube chrome when controls hide */
-@media (orientation: landscape) {
-
-    .player-container.is-player-fullscreen iframe,
-    .player-container:fullscreen iframe,
-    .player-container:-webkit-full-screen iframe,
-    .player-container:-moz-full-screen iframe,
-    .player-container:-ms-fullscreen iframe {
-
-        width: 100% !important;
-        height: 100% !important;
-
-        transform: scale(1.15) !important;
-        transform-origin: top center !important;
-    }
-
-
-    /* YouTube keeps a dead black top band after title auto-hides — crop it and fill viewport */
-    .player-container.is-player-fullscreen.yt-chrome-collapsed iframe,
-    .player-container:fullscreen.yt-chrome-collapsed iframe,
-    .player-container:-webkit-full-screen.yt-chrome-collapsed iframe,
-    .player-container:-moz-full-screen.yt-chrome-collapsed iframe,
-    .player-container:-ms-fullscreen.yt-chrome-collapsed iframe {
-
-        clip-path: inset(11% 0 0 0) !important;
-
-        transform: scale(1.124) !important;
-
-        transform-origin: top center !important;
-    }
-}
-
-
 /* =========================================================
    FULLSCREEN HTML5 VIDEO — COVER MODE
    ========================================================= */
