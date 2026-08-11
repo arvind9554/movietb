@@ -108,3 +108,26 @@ async function loadCategoryMovies() {
 }
 
 document.addEventListener('DOMContentLoaded', loadCategoryMovies);
+
+// Mobile menu toggle
+const menuToggle = document.getElementById('menu-toggle');
+const navLinks = document.getElementById('nav-links');
+
+if (menuToggle && navLinks) {
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('active');
+    navLinks.classList.toggle('open');
+  });
+}
+
+// Mobile: Categories dropdown open on tap (not hover)
+const dropdown = document.querySelector('.dropdown');
+if (dropdown) {
+  const dropbtn = dropdown.querySelector('.dropbtn');
+  dropbtn.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+      e.preventDefault();
+      dropdown.classList.toggle('mobile-open');
+    }
+  });
+}
