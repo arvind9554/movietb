@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - MovieTB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies, trailers...">
+      <button id="search-btn">Search</button>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+      <div class="dropdown">
+        <button class="dropbtn">Categories <span class="arrow">▾</span></button>
+        <div class="dropdown-content">
+          <a href="category.html?cat=latest-trailers">Trailers</a>
+          <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
+          <a href="category.html?cat=classic-cinema">Hollywood</a>
+          <a href="category.html?cat=movie-reviews">Web Series</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero" style="padding: 40px 20px;">
+    <span class="hero-badge">MovieTB Blog</span>
+    <h1>Latest Articles &amp; Reviews</h1>
+    <p>Movies, trailers aur web series ki dunia se taaza updates.</p>
+  </section>
+
+  <main class="container">
+    <div class="blog-grid" id="blog-grid"></div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="dmca.html">DMCA Disclaimer</a> | 
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
+    <p>&copy; 2026 MovieTB. All content embedded legally from public domains / YouTube.</p>
+    <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { blogs } from './js/blogs-data.js';
+
+    const grid = document.getElementById('blog-grid');
+    grid.innerHTML = blogs.map(b => `
+      <a href="blog-post.html?id=${b.id}" class="blog-card">
+        <div class="blog-img-wrap">
+          <img src="${b.image}" alt="${b.title}" loading="lazy">
+          <span class="blog-badge">${b.category}</span>
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-date">${b.date}</span>
+          <h3>${b.title}</h3>
+          <p>${b.excerpt}</p>
+          <span class="read-more">Read More →</span>
+        </div>
+      </a>
+    `).join('');
+  </script>
+</body>
+</html>

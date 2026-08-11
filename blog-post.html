@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Blog - MovieTB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies, trailers...">
+      <button id="search-btn">Search</button>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+      <div class="dropdown">
+        <button class="dropbtn">Categories <span class="arrow">▾</span></button>
+        <div class="dropdown-content">
+          <a href="category.html?cat=latest-trailers">Trailers</a>
+          <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
+          <a href="category.html?cat=classic-cinema">Hollywood</a>
+          <a href="category.html?cat=movie-reviews">Web Series</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <article class="blog-article" id="blog-article">
+      <p class="loading">Loading article...</p>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="dmca.html">DMCA Disclaimer</a> | 
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
+    <p>&copy; 2026 MovieTB. All content embedded legally from public domains / YouTube.</p>
+    <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { blogs } from './js/blogs-data.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+    const blog = blogs.find(b => b.id === id);
+    const article = document.getElementById('blog-article');
+
+    if (blog) {
+      document.getElementById('page-title').textContent = blog.title + ' - MovieTB';
+      article.innerHTML = `
+        <span class="blog-badge-inline">${blog.category}</span>
+        <h1>${blog.title}</h1>
+        <div class="blog-meta">By ${blog.author} • ${blog.date}</div>
+        <img src="${blog.image}" alt="${blog.title}" class="blog-hero-img">
+        <div class="blog-content">
+          ${blog.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+        </div>
+        <a href="blog.html" class="back-link">← Back to Blog</a>
+      `;
+    } else {
+      article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
+    }
+  </script>
+</body>
+</html>
