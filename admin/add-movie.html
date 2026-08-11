@@ -1,109 +1,174 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add New Movie - Admin | MovieTB</title>
+  <title>Add Movie - MovieTB Admin</title>
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/admin.css">
 </head>
-<body class="admin-body">
+<body class="admin-body" data-admin-page="add-movie">
 
-  <header class="navbar admin-navbar">
-    <div class="logo"><a href="../index.html">Movie<span class="accent">TB</span> <span class="admin-tag">Admin</span></a></div>
-    <button id="logout-btn" class="btn-logout">Logout</button>
-  </header>
-
-  <main class="container admin-main">
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <h2>Add New Movie Post</h2>
-        <p class="admin-subtext">Fill in the details below. Poster is optional — if left blank, the YouTube thumbnail will be used automatically.</p>
+  <div class="admin-app">
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin navigation">
+      <div class="admin-sidebar-brand">
+        <a href="../index.html">Movie<span class="accent">TB</span></a>
+        <div class="admin-stat-sub" style="margin-top:4px;">Content Management</div>
       </div>
+      <nav class="admin-sidebar-nav">
+        <div class="admin-nav-section">
+          <div class="admin-nav-label">Main</div>
+          <a href="dashboard.html" class="admin-nav-link" data-nav="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </a>
+          <a href="add-movie.html" class="admin-nav-link active" data-nav="add">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Movie
+          </a>
+          <a href="dashboard.html" class="admin-nav-link" data-nav="all">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            All Movies
+          </a>
+        </div>
+        <div class="admin-nav-section">
+          <div class="admin-nav-label">Categories</div>
+          <a href="dashboard.html?filter=latest-trailers" class="admin-nav-link">Latest Trailers</a>
+          <a href="dashboard.html?filter=south-dubbed-movies" class="admin-nav-link">South Dubbed</a>
+          <a href="dashboard.html?filter=classic-cinema" class="admin-nav-link">Hollywood</a>
+          <a href="dashboard.html?filter=movie-reviews" class="admin-nav-link">Web Series</a>
+        </div>
+        <div class="admin-nav-section">
+          <div class="admin-nav-label">System</div>
+          <a href="dashboard.html#settings" class="admin-nav-link">Settings</a>
+        </div>
+      </nav>
+      <div class="admin-sidebar-footer">
+        <button type="button" id="logout-btn" class="admin-nav-link admin-btn-ghost" style="width:100%;border:none;background:none;text-align:left;" aria-label="Logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </aside>
 
-      <form id="add-movie-form" class="admin-form">
+    <div class="admin-overlay" id="admin-sidebar-overlay" aria-hidden="true"></div>
 
-<!-- Existing Add Movie Form ke niche is section ko paste karein -->
-<div class="admin-manage-section" style="margin-top: 40px;">
-  <h2>Manage Uploaded Movies</h2>
-  
-  <!-- JavaScript is ID me Edit/Delete items inject karega -->
-  <div id="admin-movies-list"></div>
-</div>
+    <div class="admin-content">
+      <header class="admin-topbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button type="button" class="admin-menu-toggle" id="admin-menu-toggle" aria-label="Open menu" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h1 id="form-page-title">Add New Movie</h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <a href="dashboard.html" class="admin-btn admin-btn-secondary">Back to Dashboard</a>
+        </div>
+      </header>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Movie Title</label>
-            <input type="text" id="title" required placeholder="Sarrainodu (4K Ultra HD) Full Hindi Dubbed">
+      <main class="admin-page">
+        <div class="admin-panel admin-form-layout">
+          <div class="admin-panel-header">
+            <div>
+              <h2 id="form-card-title">Publish Movie</h2>
+              <p class="admin-stat-sub" style="margin-top:4px;">Fill in all details. Poster is optional — YouTube thumbnail is used as fallback.</p>
+            </div>
+          </div>
+          <div class="admin-panel-body">
+            <form id="add-movie-form" class="admin-form">
+
+              <div class="admin-form-section">
+                <h3 class="admin-form-section-title">Content</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="title">Movie Title</label>
+                    <input type="text" id="title" required placeholder="Sarrainodu (4K Ultra HD) Full Hindi Dubbed">
+                  </div>
+                </div>
+                <div class="form-row two-col">
+                  <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                      <option value="latest-trailers">Latest Trailers</option>
+                      <option value="south-dubbed-movies">South Dubbed / Bollywood</option>
+                      <option value="classic-cinema">Hollywood</option>
+                      <option value="movie-reviews">Web Series</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="language">Language</label>
+                    <input type="text" id="language" placeholder="Hindi Dubbed / English" required>
+                  </div>
+                </div>
+                <div class="form-row two-col">
+                  <div class="form-group">
+                    <label for="year">Release Year</label>
+                    <input type="number" id="year" placeholder="2024" required min="1900" max="2100">
+                  </div>
+                  <div class="form-group">
+                    <label for="format">Format</label>
+                    <input type="text" id="format" placeholder="4K Ultra HD / 1080p HD" value="1080p HD">
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-form-section">
+                <h3 class="admin-form-section-title">Credits</h3>
+                <div class="form-row two-col">
+                  <div class="form-group">
+                    <label for="director">Director</label>
+                    <input type="text" id="director" placeholder="Boyapati Srinu">
+                  </div>
+                  <div class="form-group">
+                    <label for="starCast">Star Cast</label>
+                    <input type="text" id="starCast" placeholder="Allu Arjun, Rakul Preet Singh">
+                    <small class="field-hint">Comma-separated names</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-form-section">
+                <h3 class="admin-form-section-title">Media</h3>
+                <div class="form-row two-col">
+                  <div class="form-group">
+                    <label for="posterUrl">Poster Image URL</label>
+                    <input type="url" id="posterUrl" placeholder="https://example.com/poster.jpg">
+                    <small class="field-hint">Optional — if empty, automatically use the YouTube thumbnail.</small>
+                    <div class="admin-poster-preview" aria-hidden="false">
+                      <img id="poster-preview-img" src="https://via.placeholder.com/300x450?text=MovieTB" alt="Poster preview">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="embedUrl">Embed Video URL</label>
+                    <input type="url" id="embedUrl" required placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+                    <small class="field-hint">Paste a YouTube watch, youtu.be, or embed URL.</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-form-section">
+                <h3 class="admin-form-section-title">SEO / Description</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="summary">Summary</label>
+                    <textarea id="summary" rows="5" required placeholder="Write a 100–150 word SEO-friendly description…"></textarea>
+                    <small class="field-hint">Write a 100–150 word SEO-friendly description.</small>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                <button type="submit" class="admin-btn admin-btn-primary" id="submit-movie-btn">Publish Movie</button>
+                <a href="dashboard.html" class="admin-btn admin-btn-secondary">Cancel</a>
+              </div>
+            </form>
           </div>
         </div>
-
-        <div class="form-row two-col">
-          <div class="form-group">
-            <label>Category</label>
-            <select id="category" required>
-              <option value="latest-trailers">Latest Trailers</option>
-             <option value="south-dubbed-movies">Bollywood Movies</option>
-             <option value="classic-cinema">Hollywood Movies</option>
-              <option value="movie-reviews">Movie Reviews</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Language</label>
-            <input type="text" id="language" placeholder="Hindi Dubbed / English" required>
-          </div>
-        </div>
-
-        <div class="form-row two-col">
-          <div class="form-group">
-            <label>Release Year</label>
-            <input type="number" id="year" placeholder="2024" required>
-          </div>
-          <div class="form-group">
-            <label>Format</label>
-            <input type="text" id="format" placeholder="4K Ultra HD / 1080p HD" value="1080p HD">
-          </div>
-        </div>
-
-        <div class="form-row two-col">
-          <div class="form-group">
-            <label>Director</label>
-            <input type="text" id="director" placeholder="Boyapati Srinu">
-          </div>
-          <div class="form-group">
-            <label>Star Cast (Comma Separated)</label>
-            <input type="text" id="starCast" placeholder="Allu Arjun, Rakul Preet Singh">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Poster Image URL <span class="optional-tag">Optional</span></label>
-            <input type="url" id="posterUrl" placeholder="https://image-link.com/poster.jpg">
-            <small class="field-hint">Leave blank to auto-use the YouTube video's thumbnail.</small>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Embed Video URL (src only, NOT full iframe tag)</label>
-            <input type="url" id="embedUrl" required placeholder="https://www.youtube.com/embed/VIDEO_ID">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Summary (100-150 words SEO description)</label>
-            <textarea id="summary" rows="5" required placeholder="Write movie plot summary here..."></textarea>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-submit">Publish Post</button>
-      </form>
+      </main>
     </div>
-  </main>
+  </div>
 
-<div id="admin-movies-list" style="margin-top: 30px;"></div>
+  <div class="admin-toast-container" id="admin-toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <script type="module" src="../js/admin.js"></script>
 </body>
