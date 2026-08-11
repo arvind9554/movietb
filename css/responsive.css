@@ -3,9 +3,7 @@
    Site ka general responsive layout - navbar, hero,
    grid, footer, aur movie-info-card ka sizing.
    Video player / fullscreen / zoom ka poora logic
-   ab player.css mein hai (isliye yaha se hata diya
-   gaya hai - do jagah same rule likhne se conflict
-   hota tha).
+   ab player.css mein hai.
    ============================================== */
 
 /* ===== Tablet & below (900px) ===== */
@@ -32,28 +30,31 @@
 
 /* ===== Mobile (640px) ===== */
 @media (max-width: 640px) {
-  body, html {
+  html, body {
     overflow-x: hidden;
+    width: 100%;
   }
 
   .container {
-    width: 100%;
-    padding-left: 16px;
-    padding-right: 16px;
-    margin: 0 auto;
-    box-sizing: border-box;
+    width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
   }
 
+  /* Fixed double padding overlap issue */
   #movie-content-wrapper {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    box-sizing: border-box;
-    padding: 0 16px;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
   }
 
   .movie-info-card {
     padding: 16px;
+    box-sizing: border-box;
   }
 
   .movie-info-card h1 {
@@ -86,7 +87,7 @@
   }
 
   .search-box button {
-    padding: 9px 16px;
+    padding: 9px 16px !important;
     font-size: 0.85rem;
   }
 
@@ -139,7 +140,7 @@
   }
 }
 
-/* ===== Tablet (641px - 1024px): movie info card thoda zyada breathing room ===== */
+/* ===== Tablet (641px - 1024px) ===== */
 @media (min-width: 641px) and (max-width: 1024px) {
   .movie-info-card {
     padding: 24px;
