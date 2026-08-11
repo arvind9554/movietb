@@ -10,26 +10,41 @@
 <body>
 
   <header class="navbar">
-    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="navbar-left">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Categories Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    </div>
+
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Search movies, trailers...">
       <button id="search-btn">Search</button>
     </div>
+
     <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="blog.html">Blog</a>
       <a href="about.html">About</a>
-      <div class="dropdown">
-        <button class="dropbtn">Categories <span class="arrow">▾</span></button>
-        <div class="dropdown-content">
-          <a href="category.html?cat=latest-trailers">Trailers</a>
-          <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
-          <a href="category.html?cat=classic-cinema">Hollywood</a>
-          <a href="category.html?cat=movie-reviews">Web Series</a>
-        </div>
-      </div>
     </nav>
   </header>
+
+  <!-- Left Sidebar - Categories -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="categories-sidebar" id="categories-sidebar">
+    <div class="sidebar-header">
+      <span>Categories</span>
+      <button class="sidebar-close" id="sidebar-close" aria-label="Close">&times;</button>
+    </div>
+    <nav class="sidebar-links">
+      <a href="category.html?cat=latest-trailers">Trailers</a>
+      <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
+      <a href="category.html?cat=classic-cinema">Hollywood</a>
+      <a href="category.html?cat=movie-reviews">Web Series</a>
+    </nav>
+  </aside>
 
   <section class="hero" style="padding: 40px 20px;">
     <span class="hero-badge">MovieTB Blog</span>
