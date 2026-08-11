@@ -109,25 +109,35 @@ async function loadCategoryMovies() {
 
 document.addEventListener('DOMContentLoaded', loadCategoryMovies);
 
-// Mobile menu toggle
+// ===== Left Sidebar (Categories) Toggle =====
 const menuToggle = document.getElementById('menu-toggle');
-const navLinks = document.getElementById('nav-links');
+const sidebar = document.getElementById('categories-sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const sidebarClose = document.getElementById('sidebar-close');
 
-if (menuToggle && navLinks) {
-  menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('active');
-    navLinks.classList.toggle('open');
-  });
+function openSidebar() {
+  if (!sidebar || !sidebarOverlay || !menuToggle) return;
+  sidebar.classList.add('active');
+  sidebarOverlay.classList.add('active');
+  menuToggle.classList.add('active');
 }
 
-// Mobile: Categories dropdown open on tap (not hover)
-const dropdown = document.querySelector('.dropdown');
-if (dropdown) {
-  const dropbtn = dropdown.querySelector('.dropbtn');
-  dropbtn.addEventListener('click', (e) => {
-    if (window.innerWidth <= 768) {
-      e.preventDefault();
-      dropdown.classList.toggle('mobile-open');
+function closeSidebar() {
+  if (!sidebar || !sidebarOverlay || !menuToggle) return;
+  sidebar.classList.remove('active');
+  sidebarOverlay.classList.remove('active');
+  menuToggle.classList.remove('active');
+}
+
+if (menuToggle) {
+  menuToggle.addEventListener('click', () => {
+    if (sidebar.classList.contains('active')) {
+      closeSidebar();
+    } else {
+      openSidebar();
     }
   });
 }
+
+if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
