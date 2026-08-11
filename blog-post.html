@@ -3,38 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">Blog - MovieTB</title>
+  <title>Blog - MovieTB</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
   <header class="navbar">
-    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="navbar-left">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Categories Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    </div>
+
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Search movies, trailers...">
       <button id="search-btn">Search</button>
     </div>
+
     <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="blog.html">Blog</a>
       <a href="about.html">About</a>
-      <div class="dropdown">
-        <button class="dropbtn">Categories <span class="arrow">▾</span></button>
-        <div class="dropdown-content">
-          <a href="category.html?cat=latest-trailers">Trailers</a>
-          <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
-          <a href="category.html?cat=classic-cinema">Hollywood</a>
-          <a href="category.html?cat=movie-reviews">Web Series</a>
-        </div>
-      </div>
     </nav>
   </header>
 
+  <!-- Left Sidebar - Categories -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="categories-sidebar" id="categories-sidebar">
+    <div class="sidebar-header">
+      <span>Categories</span>
+      <button class="sidebar-close" id="sidebar-close" aria-label="Close">&times;</button>
+    </div>
+    <nav class="sidebar-links">
+      <a href="category.html?cat=latest-trailers">Trailers</a>
+      <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
+      <a href="category.html?cat=classic-cinema">Hollywood</a>
+      <a href="category.html?cat=movie-reviews">Web Series</a>
+    </nav>
+  </aside>
+
+  <section class="hero" style="padding: 40px 20px;">
+    <span class="hero-badge">MovieTB Blog</span>
+    <h1>Latest Articles &amp; Reviews</h1>
+    <p>Movies, trailers aur web series ki dunia se taaza updates.</p>
+  </section>
+
   <main class="container">
-    <article class="blog-article" id="blog-article">
-      <p class="loading">Loading article...</p>
-    </article>
+    <div class="blog-grid" id="blog-grid"></div>
   </main>
 
   <footer>
@@ -50,26 +69,21 @@
   <script type="module">
     import { blogs } from './js/blogs-data.js';
 
-    const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get('id'));
-    const blog = blogs.find(b => b.id === id);
-    const article = document.getElementById('blog-article');
-
-    if (blog) {
-      document.getElementById('page-title').textContent = blog.title + ' - MovieTB';
-      article.innerHTML = `
-        <span class="blog-badge-inline">${blog.category}</span>
-        <h1>${blog.title}</h1>
-        <div class="blog-meta">By ${blog.author} • ${blog.date}</div>
-        <img src="${blog.image}" alt="${blog.title}" class="blog-hero-img">
-        <div class="blog-content">
-          ${blog.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+    const grid = document.getElementById('blog-grid');
+    grid.innerHTML = blogs.map(b => `
+      <a href="blog-post.html?id=${b.id}" class="blog-card">
+        <div class="blog-img-wrap">
+          <img src="${b.image}" alt="${b.title}" loading="lazy">
+          <span class="blog-badge">${b.category}</span>
         </div>
-        <a href="blog.html" class="back-link">← Back to Blog</a>
-      `;
-    } else {
-      article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
-    }
+        <div class="blog-card-body">
+          <span class="blog-date">${b.date}</span>
+          <h3>${b.title}</h3>
+          <p>${b.excerpt}</p>
+          <span class="read-more">Read More →</span>
+        </div>
+      </a>
+    `).join('');
   </script>
 </body>
 </html>
