@@ -2,16 +2,7 @@
    PLAYER.CSS
    Universal Video Player
    Movies / Trailers / Web Series
-
-   Supports:
-   - Normal 16:9 Player
-   - Desktop Fullscreen
-   - Mobile Fullscreen
-   - Mobile Landscape
-   - HTML5 Video
-   - Iframe Video
-   - Edge-to-Edge Cover Mode
-   - Safe Area
+   Normal + Fullscreen + Mobile Landscape
    ========================================================= */
 
 
@@ -20,10 +11,15 @@
    ========================================================= */
 
 #movie-content-wrapper {
+
     width: 100%;
+
     max-width: 1000px;
+
     margin: 0 auto;
+
     padding: 0;
+
     box-sizing: border-box;
 }
 
@@ -33,12 +29,15 @@
    ========================================================= */
 
 .player-container {
+
     position: relative;
 
     width: 100% !important;
+
     max-width: 100%;
 
     margin: 0 0 24px 0;
+
     padding: 0;
 
     background: #000;
@@ -54,17 +53,16 @@
     box-sizing: border-box !important;
 
     isolation: isolate;
-
-    -webkit-tap-highlight-color: transparent;
 }
 
 
 /* =========================================================
-   NORMAL VIDEO VIEWPORT
+   NORMAL VIDEO
    16:9
    ========================================================= */
 
 .video-responsive {
+
     position: relative !important;
 
     width: 100% !important;
@@ -88,7 +86,6 @@
 @supports not (aspect-ratio: 16 / 9) {
 
     .video-responsive {
-        width: 100% !important;
 
         height: 0 !important;
 
@@ -98,10 +95,11 @@
 
 
 /* =========================================================
-   NORMAL IFRAME
+   IFRAME
    ========================================================= */
 
 .video-responsive iframe {
+
     position: absolute !important;
 
     top: 0 !important;
@@ -125,10 +123,11 @@
 
 
 /* =========================================================
-   NORMAL HTML5 VIDEO
+   HTML5 VIDEO
    ========================================================= */
 
 .video-responsive video {
+
     position: absolute !important;
 
     top: 0 !important;
@@ -142,26 +141,14 @@
 
     display: block;
 
-    border: 0;
-
-    margin: 0;
-    padding: 0;
-
     background: #000;
 
-    /*
-     * Normal player me complete video visible.
-     */
     object-fit: contain;
-
-    object-position: center center;
 }
 
 
 /* =========================================================
-   =========================================================
-   TRUE NATIVE BROWSER FULLSCREEN
-   =========================================================
+   TRUE BROWSER FULLSCREEN
    ========================================================= */
 
 .player-container:fullscreen,
@@ -171,15 +158,13 @@
 
     position: fixed !important;
 
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
 
     width: 100vw !important;
     height: 100vh !important;
-    height: 100dvh !important;
 
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    min-height: 100dvh !important;
+    height: 100dvh !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -187,7 +172,7 @@
     margin: 0 !important;
     padding: 0 !important;
 
-    border: 0 !important;
+    border: none !important;
 
     border-radius: 0 !important;
 
@@ -200,15 +185,52 @@
     display: block !important;
 
     z-index: 2147483647 !important;
-
-    box-sizing: border-box !important;
 }
 
 
 /* =========================================================
-   FULLSCREEN VIDEO VIEWPORT
+   PROFESSIONAL FULLSCREEN VIDEO
+   ---------------------------------------------------------
+   Full viewport + no left/right empty space
+   Uses cover-style scaling for 16:9 video
    ========================================================= */
 
+.player-container:fullscreen,
+.player-container:-webkit-full-screen,
+.player-container:-moz-full-screen,
+.player-container:-ms-fullscreen {
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100dvh !important;
+
+    min-width: 100vw !important;
+    min-height: 100dvh !important;
+
+    max-width: none !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: #000 !important;
+
+    overflow: hidden !important;
+
+    display: block !important;
+
+    box-shadow: none !important;
+
+    z-index: 2147483647 !important;
+}
+
+
+/* Fullscreen viewport */
 .player-container:fullscreen .video-responsive,
 .player-container:-webkit-full-screen .video-responsive,
 .player-container:-moz-full-screen .video-responsive,
@@ -219,12 +241,7 @@
     inset: 0 !important;
 
     width: 100vw !important;
-    height: 100vh !important;
     height: 100dvh !important;
-
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    min-height: 100dvh !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -234,43 +251,27 @@
     padding: 0 !important;
     margin: 0 !important;
 
-    border: 0 !important;
-
     overflow: hidden !important;
 
     background: #000 !important;
-
-    box-sizing: border-box !important;
 }
 
 
 /* =========================================================
-   FULLSCREEN IFRAME
+   FULLSCREEN IFRAME — COVER MODE
    ---------------------------------------------------------
-   IMPORTANT
+   IMPORTANT:
+   iframe ko 100% x 100% dene se video ke andar
+   side bars aa sakte hain.
 
-   Landscape mobile screens are often 18:9, 19.5:9,
-   20:9 or similar.
-
-   Source video is usually 16:9.
-
-   If we force the 16:9 video into 20:9 without crop,
-   left/right bars appear.
-
-   Therefore:
-   - iframe remains 16:9
-   - iframe is scaled larger than viewport when needed
-   - center is kept fixed
-   - excess top/bottom area is cropped
-
-   Result:
-   COMPLETE SCREEN COVER
+   Isliye iframe ko viewport se bada rakha ja raha hai
+   aur center me crop kiya ja raha hai.
    ========================================================= */
 
-.player-container:fullscreen .video-responsive iframe,
-.player-container:-webkit-full-screen .video-responsive iframe,
-.player-container:-moz-full-screen .video-responsive iframe,
-.player-container:-ms-fullscreen .video-responsive iframe {
+.player-container:fullscreen iframe,
+.player-container:-webkit-full-screen iframe,
+.player-container:-moz-full-screen iframe,
+.player-container:-ms-fullscreen iframe {
 
     position: absolute !important;
 
@@ -278,8 +279,15 @@
     left: 50% !important;
 
     /*
-     * Keep iframe at 16:9 while making it large enough
-     * to cover the entire viewport.
+     * Landscape screen ke liye 16:9 cover.
+     *
+     * width:
+     *   viewport width OR
+     *   viewport height × 16/9
+     *
+     * height:
+     *   viewport height OR
+     *   viewport width × 9/16
      */
 
     width: max(
@@ -303,70 +311,17 @@
 
     border: 0 !important;
 
-    display: block !important;
-
-    background: #000 !important;
-
     transform:
         translate(-50%, -50%) !important;
 
-    box-sizing: border-box !important;
-}
-
-
-/* =========================================================
-   FULLSCREEN HTML5 VIDEO
-   ========================================================= */
-
-.player-container:fullscreen .video-responsive video,
-.player-container:-webkit-full-screen .video-responsive video,
-.player-container:-moz-full-screen .video-responsive video,
-.player-container:-ms-fullscreen .video-responsive video {
-
-    position: absolute !important;
-
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    min-height: 100dvh !important;
-
-    max-width: none !important;
-    max-height: none !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
-
-    border: 0 !important;
-
     display: block !important;
 
     background: #000 !important;
-
-    /*
-     * FULL SCREEN COVER
-     *
-     * No left/right bars.
-     * No top/bottom bars.
-     *
-     * Small portion may be cropped.
-     */
-
-    object-fit: cover !important;
-
-    object-position: center center !important;
 }
 
 
 /* =========================================================
    JAVASCRIPT FALLBACK FULLSCREEN
-   ---------------------------------------------------------
-   Agar browser native fullscreen provide nahi karta,
-   to JS .mobile-video-landscape class laga sakta hai.
    ========================================================= */
 
 .player-container.mobile-video-landscape {
@@ -377,11 +332,8 @@
 
     width: 100vw !important;
     height: 100vh !important;
-    height: 100dvh !important;
 
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    min-height: 100dvh !important;
+    height: 100dvh !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -389,7 +341,7 @@
     margin: 0 !important;
     padding: 0 !important;
 
-    border: 0 !important;
+    border: none !important;
 
     border-radius: 0 !important;
 
@@ -400,16 +352,8 @@
     overflow: hidden !important;
 
     z-index: 2147483647 !important;
-
-    display: block !important;
-
-    box-sizing: border-box !important;
 }
 
-
-/* =========================================================
-   FALLBACK VIDEO VIEWPORT
-   ========================================================= */
 
 .player-container.mobile-video-landscape
 .video-responsive {
@@ -420,14 +364,11 @@
 
     width: 100vw !important;
     height: 100vh !important;
+
     height: 100dvh !important;
 
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    min-height: 100dvh !important;
-
-    max-width: none !important;
-    max-height: none !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
 
     aspect-ratio: auto !important;
 
@@ -435,70 +376,12 @@
 
     margin: 0 !important;
 
-    border: 0 !important;
-
-    overflow: hidden !important;
-
     background: #000 !important;
-
-    box-sizing: border-box !important;
 }
 
 
-/* =========================================================
-   FALLBACK IFRAME
-   ========================================================= */
-
-.player-container.mobile-video-landscape
-.video-responsive iframe {
-
-    position: absolute !important;
-
-    top: 50% !important;
-    left: 50% !important;
-
-    /*
-     * Same 16:9 cover calculation as native fullscreen.
-     */
-
-    width: max(
-        100vw,
-        calc(100dvh * 1.7777778)
-    ) !important;
-
-    height: max(
-        100dvh,
-        calc(100vw * 0.5625)
-    ) !important;
-
-    min-width: 0 !important;
-    min-height: 0 !important;
-
-    max-width: none !important;
-    max-height: none !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
-
-    border: 0 !important;
-
-    display: block !important;
-
-    background: #000 !important;
-
-    transform:
-        translate(-50%, -50%) !important;
-
-    box-sizing: border-box !important;
-}
-
-
-/* =========================================================
-   FALLBACK HTML5 VIDEO
-   ========================================================= */
-
-.player-container.mobile-video-landscape
-.video-responsive video {
+.player-container.mobile-video-landscape iframe,
+.player-container.mobile-video-landscape video {
 
     position: absolute !important;
 
@@ -506,207 +389,20 @@
 
     width: 100vw !important;
     height: 100vh !important;
+
     height: 100dvh !important;
 
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    min-height: 100dvh !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
 
-    max-width: none !important;
-    max-height: none !important;
+    border: 0 !important;
 
     margin: 0 !important;
     padding: 0 !important;
 
-    border: 0 !important;
-
-    display: block !important;
-
     background: #000 !important;
 
-    object-fit: cover !important;
-
-    object-position: center center !important;
-}
-
-
-/* =========================================================
-   FULLSCREEN BODY STATE
-   ---------------------------------------------------------
-   Optional class if JS adds:
-   body.player-fullscreen-active
-   ========================================================= */
-
-body.player-fullscreen-active {
-
-    overflow: hidden !important;
-
-    width: 100% !important;
-    height: 100% !important;
-}
-
-
-/* =========================================================
-   MOBILE LANDSCAPE PAGE CLEANUP
-   ---------------------------------------------------------
-   Only while player exists and device is landscape.
-   ========================================================= */
-
-@media (max-width: 900px) and
-       (orientation: landscape) and
-       (hover: none) and
-       (pointer: coarse) {
-
-    html,
-    body {
-
-        width: 100% !important;
-        height: 100% !important;
-
-        min-width: 100% !important;
-        min-height: 100% !important;
-
-        margin: 0 !important;
-        padding: 0 !important;
-
-        overflow-x: hidden !important;
-    }
-
-
-    /*
-     * Hide normal page UI in landscape.
-     *
-     * IMPORTANT:
-     * This does NOT automatically fullscreen the player.
-     * It only prevents page content from creating
-     * unwanted visible space.
-     */
-
-    body:has(.player-container) {
-
-        overflow: hidden !important;
-    }
-
-
-    body:has(.player-container)
-    .navbar,
-
-    body:has(.player-container)
-    footer,
-
-    body:has(.player-container)
-    .movie-info-card {
-
-        display: none !important;
-    }
-
-
-    /*
-     * Native fullscreen / fallback player
-     */
-
-    .player-container:fullscreen,
-    .player-container:-webkit-full-screen,
-    .player-container.mobile-video-landscape {
-
-        position: fixed !important;
-
-        inset: 0 !important;
-
-        width: 100vw !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-
-        min-width: 100vw !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-
-        max-width: none !important;
-        max-height: none !important;
-
-        margin: 0 !important;
-        padding: 0 !important;
-
-        border: 0 !important;
-
-        border-radius: 0 !important;
-
-        overflow: hidden !important;
-
-        background: #000 !important;
-    }
-
-
-    /*
-     * High-specificity landscape iframe rule.
-     *
-     * This protects player.css from another responsive
-     * stylesheet trying to force iframe back to 100%.
-     */
-
-    .player-container:fullscreen
-    .video-responsive iframe,
-
-    .player-container:-webkit-full-screen
-    .video-responsive iframe,
-
-    .player-container.mobile-video-landscape
-    .video-responsive iframe {
-
-        position: absolute !important;
-
-        top: 50% !important;
-        left: 50% !important;
-
-        width: max(
-            100vw,
-            calc(100dvh * 1.7777778)
-        ) !important;
-
-        height: max(
-            100dvh,
-            calc(100vw * 0.5625)
-        ) !important;
-
-        max-width: none !important;
-        max-height: none !important;
-
-        margin: 0 !important;
-
-        border: 0 !important;
-
-        transform:
-            translate(-50%, -50%) !important;
-
-        background: #000 !important;
-    }
-
-
-    /*
-     * HTML5 video
-     */
-
-    .player-container:fullscreen
-    .video-responsive video,
-
-    .player-container:-webkit-full-screen
-    .video-responsive video,
-
-    .player-container.mobile-video-landscape
-    .video-responsive video {
-
-        width: 100vw !important;
-
-        height: 100dvh !important;
-
-        max-width: none !important;
-
-        max-height: none !important;
-
-        object-fit: cover !important;
-
-        object-position: center center !important;
-    }
+    object-fit: contain !important;
 }
 
 
@@ -721,7 +417,7 @@ body.player-fullscreen-active {
     right: 12px;
     bottom: 12px;
 
-    z-index: 1000;
+    z-index: 100;
 
     width: 42px;
     height: 42px;
@@ -730,8 +426,6 @@ body.player-fullscreen-active {
 
     align-items: center;
     justify-content: center;
-
-    padding: 0;
 
     border: 0;
 
@@ -750,14 +444,6 @@ body.player-fullscreen-active {
     -webkit-tap-highlight-color: transparent;
 
     touch-action: manipulation;
-
-    user-select: none;
-
-    -webkit-user-select: none;
-
-    transition:
-        background 0.2s ease,
-        transform 0.15s ease;
 }
 
 
@@ -770,47 +456,6 @@ body.player-fullscreen-active {
 .fullscreen-btn:active {
 
     transform: scale(0.94);
-}
-
-
-.fullscreen-btn:focus-visible {
-
-    outline: 2px solid #fff;
-
-    outline-offset: 2px;
-}
-
-
-/* =========================================================
-   FULLSCREEN BUTTON DURING FULLSCREEN
-   ========================================================= */
-
-.player-container:fullscreen
-.fullscreen-btn,
-
-.player-container:-webkit-full-screen
-.fullscreen-btn,
-
-.player-container.mobile-video-landscape
-.fullscreen-btn {
-
-    position: fixed !important;
-
-    /*
-     * Safe-area aware.
-     */
-
-    right: max(
-        12px,
-        env(safe-area-inset-right)
-    ) !important;
-
-    bottom: max(
-        12px,
-        env(safe-area-inset-bottom)
-    ) !important;
-
-    z-index: 2147483647 !important;
 }
 
 
@@ -836,8 +481,6 @@ body.player-fullscreen-active {
 
         width: 100% !important;
 
-        max-width: 100% !important;
-
         margin-bottom: 16px;
 
         border-radius: 6px;
@@ -850,43 +493,7 @@ body.player-fullscreen-active {
 
         aspect-ratio: 16 / 9;
 
-        height: auto;
-
         padding: 0 !important;
-    }
-
-
-    /*
-     * Normal portrait iframe.
-     */
-
-    .video-responsive iframe {
-
-        width: 100% !important;
-
-        height: 100% !important;
-
-        max-width: 100% !important;
-
-        max-height: 100% !important;
-    }
-
-
-    /*
-     * Normal portrait HTML5 video.
-     */
-
-    .video-responsive video {
-
-        width: 100% !important;
-
-        height: 100% !important;
-
-        max-width: 100% !important;
-
-        max-height: 100% !important;
-
-        object-fit: contain;
     }
 
 
@@ -904,45 +511,47 @@ body.player-fullscreen-active {
 
 
 /* =========================================================
-   VERY SMALL MOBILE PLAYER
+   MOBILE LANDSCAPE
+   IMPORTANT:
+   Sirf landscape hone par player ko force fullscreen
+   nahi karega. JavaScript fullscreen state handle karega.
    ========================================================= */
 
-@media (max-width: 380px) {
+@media (max-width: 900px) and (orientation: landscape) {
 
-    .fullscreen-btn {
+    .player-container:fullscreen,
+    .player-container:-webkit-full-screen,
+    .player-container.mobile-video-landscape {
 
-        width: 38px;
-        height: 38px;
+        width: 100vw !important;
 
-        right: 8px;
-        bottom: 8px;
+        height: 100vh !important;
 
-        font-size: 16px;
+        height: 100dvh !important;
+
+        max-width: none !important;
+
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        border-radius: 0 !important;
     }
 }
 
 
 /* =========================================================
-   TOUCH BEHAVIOR
+   TOUCH
    ========================================================= */
 
 .player-container {
 
-    touch-action: manipulation;
-}
+    /*
+     * Pinch zoom ko force nahi kar rahe.
+     * Native video/iframe controls ko interfere nahi karega.
+     */
 
-
-/*
- * Do not force pinch-zoom on fullscreen player.
- * This prevents gesture conflicts with native
- * video/browser fullscreen controls.
- */
-
-.player-container:fullscreen,
-.player-container:-webkit-full-screen,
-.player-container.mobile-video-landscape {
-
-    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -969,10 +578,6 @@ body.player-fullscreen-active {
     box-sizing: border-box;
 }
 
-
-/* =========================================================
-   MOVIE INFO TITLE
-   ========================================================= */
 
 .movie-info-card h1 {
 
@@ -1012,10 +617,6 @@ body.player-fullscreen-active {
 }
 
 
-/* =========================================================
-   TAG
-   ========================================================= */
-
 .tag {
 
     background: var(--accent);
@@ -1031,10 +632,6 @@ body.player-fullscreen-active {
     font-size: 0.75rem;
 }
 
-
-/* =========================================================
-   META DOT
-   ========================================================= */
 
 .meta-dot {
 
@@ -1058,8 +655,7 @@ body.player-fullscreen-active {
 
     display: grid;
 
-    grid-template-columns:
-        120px minmax(0, 1fr);
+    grid-template-columns: 120px minmax(0, 1fr);
 
     gap: 12px;
 
@@ -1074,10 +670,6 @@ body.player-fullscreen-active {
     font-size: 0.92rem;
 }
 
-
-/* =========================================================
-   INFO LABEL
-   ========================================================= */
 
 .info-label {
 
@@ -1094,10 +686,6 @@ body.player-fullscreen-active {
     padding-top: 2px;
 }
 
-
-/* =========================================================
-   INFO VALUE
-   ========================================================= */
 
 .info-value {
 
@@ -1132,10 +720,6 @@ body.player-fullscreen-active {
     border-left: 3px solid var(--accent);
 }
 
-
-/* =========================================================
-   SUMMARY TITLE
-   ========================================================= */
 
 .summary-box::before {
 
@@ -1220,173 +804,32 @@ body.player-fullscreen-active {
         grid-template-columns:
             75px minmax(0, 1fr);
     }
+
+
+    .fullscreen-btn {
+
+        width: 38px;
+        height: 38px;
+
+        right: 8px;
+        bottom: 8px;
+
+        font-size: 16px;
+    }
 }
 
 
 /* =========================================================
-   LANDSCAPE FULLSCREEN — FINAL OVERRIDE
-   ---------------------------------------------------------
-   This block intentionally appears near the end so it
-   wins against normal responsive player dimensions.
+   SAFE AREA
    ========================================================= */
 
-@media (max-width: 900px) and
-       (orientation: landscape) {
+@supports (padding: env(safe-area-inset-top)) {
 
     .player-container:fullscreen,
-    .player-container:-webkit-full-screen,
     .player-container.mobile-video-landscape {
 
-        position: fixed !important;
+        padding-top: env(safe-area-inset-top) !important;
 
-        inset: 0 !important;
-
-        width: 100vw !important;
-
-        height: 100vh !important;
-
-        height: 100dvh !important;
-
-        max-width: none !important;
-
-        max-height: none !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        border: 0 !important;
-
-        border-radius: 0 !important;
-
-        overflow: hidden !important;
-
-        background: #000 !important;
-    }
-
-
-    .player-container:fullscreen
-    .video-responsive,
-
-    .player-container:-webkit-full-screen
-    .video-responsive,
-
-    .player-container.mobile-video-landscape
-    .video-responsive {
-
-        position: absolute !important;
-
-        inset: 0 !important;
-
-        width: 100vw !important;
-
-        height: 100dvh !important;
-
-        max-width: none !important;
-
-        max-height: none !important;
-
-        padding: 0 !important;
-
-        margin: 0 !important;
-
-        aspect-ratio: auto !important;
-
-        overflow: hidden !important;
-
-        background: #000 !important;
-    }
-
-
-    /*
-     * FINAL IFRAME COVER
-     */
-
-    .player-container:fullscreen
-    .video-responsive iframe,
-
-    .player-container:-webkit-full-screen
-    .video-responsive iframe,
-
-    .player-container.mobile-video-landscape
-    .video-responsive iframe {
-
-        position: absolute !important;
-
-        top: 50% !important;
-
-        left: 50% !important;
-
-        width: max(
-            100vw,
-            calc(100dvh * 1.7777778)
-        ) !important;
-
-        height: max(
-            100dvh,
-            calc(100vw * 0.5625)
-        ) !important;
-
-        max-width: none !important;
-
-        max-height: none !important;
-
-        min-width: 0 !important;
-
-        min-height: 0 !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        border: 0 !important;
-
-        transform:
-            translate(-50%, -50%) !important;
-
-        background: #000 !important;
-
-        display: block !important;
-    }
-
-
-    /*
-     * FINAL HTML5 VIDEO COVER
-     */
-
-    .player-container:fullscreen
-    .video-responsive video,
-
-    .player-container:-webkit-full-screen
-    .video-responsive video,
-
-    .player-container.mobile-video-landscape
-    .video-responsive video {
-
-        position: absolute !important;
-
-        inset: 0 !important;
-
-        width: 100vw !important;
-
-        height: 100dvh !important;
-
-        max-width: none !important;
-
-        max-height: none !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        border: 0 !important;
-
-        background: #000 !important;
-
-        object-fit: cover !important;
-
-        object-position: center center !important;
-
-        display: block !important;
+        padding-bottom: env(safe-area-inset-bottom) !important;
     }
 }
