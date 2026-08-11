@@ -33,6 +33,19 @@
     padding: 12px 16px;
   }
 
+  .movie-info-card {
+    padding: 16px;
+  }
+
+  .movie-info-card h1 {
+    font-size: 1.3rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 90px 1fr;
+    font-size: 0.85rem;
+  }
+
   .navbar-left {
     gap: 10px;
   }

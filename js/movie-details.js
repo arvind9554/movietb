@@ -45,14 +45,22 @@ async function loadMovieDetails() {
       embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
     }
 
+    // Clean query parameters for YouTube iframe embed
+    if (embedUrl.includes('youtube.com/embed/')) {
+      const separator = embedUrl.includes('?') ? '&' : '?';
+      embedUrl = `${embedUrl}${separator}rel=0&enablejsapi=1`;
+    }
+
     wrapper.innerHTML = `
       <div class="player-container">
         <div class="video-responsive">
           <iframe
             src="${embedUrl}"
             title="${movie.title}"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen="true"
+            webkitallowfullscreen="true"
+            mozallowfullscreen="true"
           ></iframe>
         </div>
       </div>
