@@ -308,7 +308,7 @@
         height: 100% !important;
 
         transform: scale(1.15) !important;
-        transform-origin: center center !important;
+        transform-origin: top center !important;
     }
 }
 
