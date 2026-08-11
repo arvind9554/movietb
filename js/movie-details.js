@@ -41,37 +41,42 @@ async function loadMovieDetails() {
     if (embedUrl.includes('watch?v=')) {
       embedUrl = embedUrl.replace('watch?v=', 'embed/');
     }
+    if (embedUrl.includes('youtu.be/')) {
+      embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
+    }
 
     wrapper.innerHTML = `
       <div class="player-container">
         <div class="video-responsive">
-          <iframe src="${embedUrl}" allowfullscreen title="${movie.title}"></iframe>
+          <iframe
+            src="${embedUrl}"
+            title="${movie.title}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowfullscreen
+          ></iframe>
         </div>
       </div>
 
       <div class="movie-info-card">
         <h1>${movie.title}</h1>
+
         <div class="movie-tags">
           <span class="tag">${movie.format || 'HD'}</span>
-          <span>${movie.year || 'N/A'}</span> • 
+          <span>${movie.year || 'N/A'}</span>
+          <span class="meta-dot"></span>
           <span>${movie.language || 'N/A'}</span>
+          <span class="meta-dot"></span>
+          <span>${categoryNames[movie.category] || movie.category || 'N/A'}</span>
         </div>
 
         <div class="info-grid">
-          <div class="info-label">Director:</div>
+          <div class="info-label">Director</div>
           <div class="info-value">${movie.director || 'N/A'}</div>
 
-          <div class="info-label">Star Cast:</div>
+          <div class="info-label">Star Cast</div>
           <div class="info-value">${movie.starCast || 'N/A'}</div>
-
-          <div class="info-label">Release Year:</div>
-          <div class="info-value">${movie.year || 'N/A'}</div>
-
-          <div class="info-label">Category:</div>
-          <div class="info-value">${categoryNames[movie.category] || movie.category || 'N/A'}</div>
         </div>
 
-        <h3 style="margin-top:20px; color:#fff;">Summary</h3>
         <div class="summary-box">
           ${movie.summary || 'No summary provided.'}
         </div>
