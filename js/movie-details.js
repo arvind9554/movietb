@@ -45,7 +45,7 @@ async function loadMovieDetails() {
 
     if (embedUrl.includes('youtube.com/embed/')) {
       const baseUrl = embedUrl.split('?')[0];
-      embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1`;
+      embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1&fs=0&iv_load_policy=3`;
     }
 
     wrapper.innerHTML = `
@@ -170,29 +170,6 @@ function initVideoPlayer() {
     orientationLocked = false;
   }
 
-  function applyCoverDimensions() {
-    if (!isPlayerFullscreen()) return;
-
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const viewportRatio = vw / vh;
-    const videoRatio = 16 / 9;
-
-    let coverW;
-    let coverH;
-
-    if (viewportRatio > videoRatio) {
-      coverW = vw;
-      coverH = vw * 9 / 16;
-    } else {
-      coverH = vh;
-      coverW = vh * 16 / 9;
-    }
-
-    playerContainer.style.setProperty('--cover-w', `${coverW}px`);
-    playerContainer.style.setProperty('--cover-h', `${coverH}px`);
-  }
-
   function updateButtonState() {
     const active = isPlayerFullscreen();
     fsBtn.classList.toggle('is-fullscreen', active);
@@ -215,7 +192,6 @@ function initVideoPlayer() {
     document.body.classList.add('player-fullscreen-active');
     document.documentElement.style.overflow = 'hidden';
 
-    applyCoverDimensions();
     updateButtonState();
 
     requestNativeFullscreen()
@@ -223,9 +199,8 @@ function initVideoPlayer() {
         usingNativeFullscreen = true;
         return lockLandscape();
       })
-      .then(() => applyCoverDimensions())
       .catch(() => {
-        lockLandscape().then(() => applyCoverDimensions());
+        lockLandscape();
       });
   }
 
@@ -260,18 +235,12 @@ function initVideoPlayer() {
         playerContainer.classList.add('is-player-fullscreen');
         document.body.classList.add('player-fullscreen-active');
         document.documentElement.style.overflow = 'hidden';
-        applyCoverDimensions();
       } else if (usingNativeFullscreen) {
         cleanupFullscreen();
         unlockOrientation();
       }
       updateButtonState();
     });
-  });
-
-  window.addEventListener('resize', applyCoverDimensions);
-  window.addEventListener('orientationchange', () => {
-    setTimeout(applyCoverDimensions, 150);
   });
 
   updateButtonState();

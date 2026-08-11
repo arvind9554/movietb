@@ -254,12 +254,12 @@
 
     overflow: hidden !important;
 
-    background: #000 !important;
+    background: transparent !important;
 }
 
 
 /* =========================================================
-   FULLSCREEN IFRAME — 16:9 COVER (JS sets --cover-w/h)
+   FULLSCREEN IFRAME — edge-fill (YouTube UI overlays on video)
    ========================================================= */
 
 .player-container.is-player-fullscreen iframe,
@@ -270,14 +270,14 @@
 
     position: absolute !important;
 
-    top: 50% !important;
-    left: 50% !important;
+    top: 0 !important;
+    left: 0 !important;
 
-    width: var(--cover-w, 100vw) !important;
-    height: var(--cover-h, 100vh) !important;
+    width: 100% !important;
+    height: 100% !important;
 
-    min-width: 0 !important;
-    min-height: 0 !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -287,11 +287,29 @@
 
     border: 0 !important;
 
-    transform: translate(-50%, -50%) !important;
+    transform: none !important;
 
     display: block !important;
 
     background: #000 !important;
+}
+
+
+/* Landscape fullscreen: scale iframe up so video extends behind YouTube chrome */
+@media (orientation: landscape) {
+
+    .player-container.is-player-fullscreen iframe,
+    .player-container:fullscreen iframe,
+    .player-container:-webkit-full-screen iframe,
+    .player-container:-moz-full-screen iframe,
+    .player-container:-ms-fullscreen iframe {
+
+        width: 100% !important;
+        height: 100% !important;
+
+        transform: scale(1.15) !important;
+        transform-origin: center center !important;
+    }
 }
 
 
@@ -375,7 +393,20 @@ body.player-fullscreen-active #movie-content-wrapper {
 
     pointer-events: none;
 
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+}
+
+
+/* Fullscreen: no gradient strip — iframe fills viewport, button floats over video */
+.player-container.is-player-fullscreen .player-controls,
+.player-container:fullscreen .player-controls,
+.player-container:-webkit-full-screen .player-controls {
+
+    z-index: 100;
+
+    height: 64px;
+
+    background: transparent;
 }
 
 
@@ -459,17 +490,6 @@ body.player-fullscreen-active #movie-content-wrapper {
 .fullscreen-btn.is-fullscreen .fs-icon-exit {
 
     display: block;
-}
-
-
-/* Fullscreen mode — keep controls above video */
-.player-container.is-player-fullscreen .player-controls,
-.player-container:fullscreen .player-controls,
-.player-container:-webkit-full-screen .player-controls {
-
-    z-index: 100;
-
-    height: 64px;
 }
 
 
