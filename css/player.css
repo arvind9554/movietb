@@ -148,18 +148,17 @@
 
 
 /* =========================================================
-   TRUE BROWSER FULLSCREEN + JS LANDSCAPE FALLBACK
+   TRUE FULLSCREEN — native API + JS class fallback
    ========================================================= */
 
-.player-container:fullscreen,
-.player-container:-webkit-full-screen,
-.player-container:-moz-full-screen,
-.player-container:-ms-fullscreen,
-.player-container.mobile-video-landscape {
+.player-container.is-player-fullscreen {
 
     position: fixed !important;
 
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
 
     width: 100vw !important;
     height: 100vh !important;
@@ -189,16 +188,58 @@
 }
 
 
-/* Fullscreen / landscape viewport wrapper */
+.player-container:fullscreen,
+.player-container:-webkit-full-screen,
+.player-container:-moz-full-screen,
+.player-container:-ms-fullscreen {
+
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 100% !important;
+    min-height: 100% !important;
+
+    max-width: none !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: #000 !important;
+
+    overflow: hidden !important;
+
+    display: block !important;
+
+    box-shadow: none !important;
+
+    z-index: 2147483647 !important;
+}
+
+
+/* Fullscreen video wrapper — fills container exactly */
+.player-container.is-player-fullscreen .video-responsive,
 .player-container:fullscreen .video-responsive,
 .player-container:-webkit-full-screen .video-responsive,
 .player-container:-moz-full-screen .video-responsive,
-.player-container:-ms-fullscreen .video-responsive,
-.player-container.mobile-video-landscape .video-responsive {
+.player-container:-ms-fullscreen .video-responsive {
 
     position: absolute !important;
 
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
 
     width: 100% !important;
     height: 100% !important;
@@ -218,30 +259,22 @@
 
 
 /* =========================================================
-   FULLSCREEN / LANDSCAPE IFRAME — COVER MODE
-   16:9 centered cover — no side bars on wide phones
+   FULLSCREEN IFRAME — 16:9 COVER (JS sets --cover-w/h)
    ========================================================= */
 
+.player-container.is-player-fullscreen iframe,
 .player-container:fullscreen iframe,
 .player-container:-webkit-full-screen iframe,
 .player-container:-moz-full-screen iframe,
-.player-container:-ms-fullscreen iframe,
-.player-container.mobile-video-landscape iframe {
+.player-container:-ms-fullscreen iframe {
 
     position: absolute !important;
 
     top: 50% !important;
     left: 50% !important;
 
-    width: max(
-        100vw,
-        calc(100dvh * 1.7777778)
-    ) !important;
-
-    height: max(
-        100dvh,
-        calc(100vw * 0.5625)
-    ) !important;
+    width: var(--cover-w, 100vw) !important;
+    height: var(--cover-h, 100vh) !important;
 
     min-width: 0 !important;
     min-height: 0 !important;
@@ -263,14 +296,14 @@
 
 
 /* =========================================================
-   FULLSCREEN / LANDSCAPE HTML5 VIDEO — COVER MODE
+   FULLSCREEN HTML5 VIDEO — COVER MODE
    ========================================================= */
 
+.player-container.is-player-fullscreen video,
 .player-container:fullscreen video,
 .player-container:-webkit-full-screen video,
 .player-container:-moz-full-screen video,
-.player-container:-ms-fullscreen video,
-.player-container.mobile-video-landscape video {
+.player-container:-ms-fullscreen video {
 
     position: absolute !important;
 
@@ -297,29 +330,52 @@
 
 
 /* =========================================================
-   HIDE PAGE CONTENT DURING MOBILE LANDSCAPE PLAYER
+   HIDE PAGE CONTENT DURING FULLSCREEN
    ========================================================= */
 
-body.player-landscape-active {
+body.player-fullscreen-active {
     overflow: hidden !important;
+    background: #000 !important;
 }
 
-body.player-landscape-active .navbar,
-body.player-landscape-active footer,
-body.player-landscape-active .movie-info-card {
+body.player-fullscreen-active .navbar,
+body.player-fullscreen-active footer,
+body.player-fullscreen-active .movie-info-card {
     display: none !important;
 }
 
-body.player-landscape-active .container {
+body.player-fullscreen-active .container {
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
-body.player-landscape-active #movie-content-wrapper {
+body.player-fullscreen-active #movie-content-wrapper {
     margin: 0 !important;
     padding: 0 !important;
     max-width: none !important;
+}
+
+
+/* =========================================================
+   PLAYER CONTROLS OVERLAY
+   ========================================================= */
+
+.player-controls {
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 50;
+
+    height: 56px;
+
+    pointer-events: none;
+
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
 }
 
 
@@ -331,13 +387,15 @@ body.player-landscape-active #movie-content-wrapper {
 
     position: absolute;
 
-    right: 12px;
-    bottom: 12px;
+    right: 8px;
+    bottom: 8px;
 
-    z-index: 100;
+    z-index: 60;
 
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
 
     display: flex;
 
@@ -348,31 +406,78 @@ body.player-landscape-active #movie-content-wrapper {
 
     border-radius: 50%;
 
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.72);
 
     color: #fff;
 
     cursor: pointer;
 
-    font-size: 18px;
-
     line-height: 1;
+
+    pointer-events: auto;
 
     -webkit-tap-highlight-color: transparent;
 
     touch-action: manipulation;
+
+    transition: background 0.15s ease, transform 0.1s ease;
 }
 
 
 .fullscreen-btn:hover {
 
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.88);
 }
 
 
 .fullscreen-btn:active {
 
-    transform: scale(0.94);
+    transform: scale(0.92);
+}
+
+
+.fullscreen-btn .fs-icon {
+
+    display: block;
+
+    flex-shrink: 0;
+}
+
+
+.fullscreen-btn .fs-icon-exit {
+
+    display: none;
+}
+
+
+.fullscreen-btn.is-fullscreen .fs-icon-enter {
+
+    display: none;
+}
+
+
+.fullscreen-btn.is-fullscreen .fs-icon-exit {
+
+    display: block;
+}
+
+
+/* Fullscreen mode — keep controls above video */
+.player-container.is-player-fullscreen .player-controls,
+.player-container:fullscreen .player-controls,
+.player-container:-webkit-full-screen .player-controls {
+
+    z-index: 100;
+
+    height: 64px;
+}
+
+
+.player-container.is-player-fullscreen .fullscreen-btn,
+.player-container:fullscreen .fullscreen-btn,
+.player-container:-webkit-full-screen .fullscreen-btn {
+
+    z-index: 110;
 }
 
 
@@ -414,15 +519,21 @@ body.player-landscape-active #movie-content-wrapper {
     }
 
 
+    .player-controls {
+
+        height: 52px;
+    }
+
+
     .fullscreen-btn {
 
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
 
-        right: 10px;
-        bottom: 10px;
-
-        font-size: 17px;
+        right: 6px;
+        bottom: 6px;
     }
 }
 
@@ -691,18 +802,6 @@ body.player-landscape-active #movie-content-wrapper {
         grid-template-columns:
             75px minmax(0, 1fr);
     }
-
-
-    .fullscreen-btn {
-
-        width: 38px;
-        height: 38px;
-
-        right: 8px;
-        bottom: 8px;
-
-        font-size: 16px;
-    }
 }
 
 
@@ -712,11 +811,11 @@ body.player-landscape-active #movie-content-wrapper {
 
 @supports (padding: env(safe-area-inset-bottom)) {
 
+    .player-container.is-player-fullscreen .fullscreen-btn,
     .player-container:fullscreen .fullscreen-btn,
-    .player-container:-webkit-full-screen .fullscreen-btn,
-    .player-container.mobile-video-landscape .fullscreen-btn {
+    .player-container:-webkit-full-screen .fullscreen-btn {
 
-        right: calc(12px + env(safe-area-inset-right, 0px));
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        right: calc(8px + env(safe-area-inset-right, 0px));
+        bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     }
 }

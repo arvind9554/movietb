@@ -32,11 +32,9 @@ async function loadMovieDetails() {
 
     const movie = docSnap.data();
 
-    // Set page title dynamically
     const pageTitle = document.getElementById('movie-page-title');
     if (pageTitle) pageTitle.innerText = `${movie.title} - MovieTB`;
 
-    // Ensure YouTube embed link is properly formatted
     let embedUrl = movie.embedUrl || movie.trailerUrl || '';
     if (embedUrl.includes('watch?v=')) {
       embedUrl = embedUrl.replace('watch?v=', 'embed/');
@@ -45,7 +43,6 @@ async function loadMovieDetails() {
       embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
     }
 
-    // Clean base URL and append stretch/fit parameters
     if (embedUrl.includes('youtube.com/embed/')) {
       const baseUrl = embedUrl.split('?')[0];
       embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1`;
@@ -57,13 +54,22 @@ async function loadMovieDetails() {
           <iframe
             src="${embedUrl}"
             title="${movie.title}"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowfullscreen="true"
             webkitallowfullscreen="true"
             mozallowfullscreen="true"
           ></iframe>
         </div>
-        <button type="button" class="fullscreen-btn" aria-label="Toggle fullscreen">⛶</button>
+        <div class="player-controls" aria-hidden="false">
+          <button type="button" class="fullscreen-btn" aria-label="Enter fullscreen" title="Fullscreen">
+            <svg class="fs-icon fs-icon-enter" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+            </svg>
+            <svg class="fs-icon fs-icon-exit" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="currentColor" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="movie-info-card">
@@ -106,15 +112,8 @@ function initVideoPlayer() {
 
   if (!playerContainer || !fsBtn) return;
 
-  let playerActive = false;
-
-  function isMobile() {
-    return window.matchMedia('(max-width: 900px)').matches;
-  }
-
-  function isLandscape() {
-    return window.matchMedia('(orientation: landscape)').matches;
-  }
+  let orientationLocked = false;
+  let usingNativeFullscreen = false;
 
   function getFullscreenElement() {
     return (
@@ -126,12 +125,16 @@ function initVideoPlayer() {
     );
   }
 
-  function isPlayerFullscreen() {
+  function isNativeFullscreen() {
     const el = getFullscreenElement();
     return el === playerContainer;
   }
 
-  function requestPlayerFullscreen() {
+  function isPlayerFullscreen() {
+    return playerContainer.classList.contains('is-player-fullscreen') || isNativeFullscreen();
+  }
+
+  function requestNativeFullscreen() {
     const el = playerContainer;
     if (el.requestFullscreen) return el.requestFullscreen();
     if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
@@ -140,7 +143,7 @@ function initVideoPlayer() {
     return Promise.reject(new Error('Fullscreen not supported'));
   }
 
-  function exitPlayerFullscreen() {
+  function exitNativeFullscreen() {
     if (document.exitFullscreen) return document.exitFullscreen();
     if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
     if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
@@ -148,32 +151,100 @@ function initVideoPlayer() {
     return Promise.resolve();
   }
 
-  function updateLandscapeMode() {
-    const mobile = isMobile();
-    const landscape = isLandscape();
-    const fullscreen = isPlayerFullscreen();
-    const shouldExpand = mobile && landscape && (playerActive || fullscreen);
+  function lockLandscape() {
+    if (!screen.orientation || typeof screen.orientation.lock !== 'function') {
+      return Promise.resolve();
+    }
+    return screen.orientation.lock('landscape').then(() => {
+      orientationLocked = true;
+    }).catch(() => {});
+  }
 
-    playerContainer.classList.toggle('mobile-video-landscape', shouldExpand);
-    document.body.classList.toggle('player-landscape-active', shouldExpand);
+  function unlockOrientation() {
+    if (!orientationLocked) return;
+    if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+      try {
+        screen.orientation.unlock();
+      } catch (_) {}
+    }
+    orientationLocked = false;
+  }
 
-    if (shouldExpand || fullscreen) {
-      document.documentElement.style.overflow = 'hidden';
+  function applyCoverDimensions() {
+    if (!isPlayerFullscreen()) return;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const viewportRatio = vw / vh;
+    const videoRatio = 16 / 9;
+
+    let coverW;
+    let coverH;
+
+    if (viewportRatio > videoRatio) {
+      coverW = vw;
+      coverH = vw * 9 / 16;
     } else {
-      document.documentElement.style.overflow = '';
+      coverH = vh;
+      coverW = vh * 16 / 9;
+    }
+
+    playerContainer.style.setProperty('--cover-w', `${coverW}px`);
+    playerContainer.style.setProperty('--cover-h', `${coverH}px`);
+  }
+
+  function updateButtonState() {
+    const active = isPlayerFullscreen();
+    fsBtn.classList.toggle('is-fullscreen', active);
+    fsBtn.setAttribute('aria-label', active ? 'Exit fullscreen' : 'Enter fullscreen');
+    fsBtn.setAttribute('title', active ? 'Exit fullscreen' : 'Fullscreen');
+  }
+
+  function cleanupFullscreen() {
+    usingNativeFullscreen = false;
+    playerContainer.classList.remove('is-player-fullscreen');
+    document.body.classList.remove('player-fullscreen-active');
+    document.documentElement.style.overflow = '';
+    playerContainer.style.removeProperty('--cover-w');
+    playerContainer.style.removeProperty('--cover-h');
+    updateButtonState();
+  }
+
+  function enterFullscreen() {
+    playerContainer.classList.add('is-player-fullscreen');
+    document.body.classList.add('player-fullscreen-active');
+    document.documentElement.style.overflow = 'hidden';
+
+    applyCoverDimensions();
+    updateButtonState();
+
+    requestNativeFullscreen()
+      .then(() => {
+        usingNativeFullscreen = true;
+        return lockLandscape();
+      })
+      .then(() => applyCoverDimensions())
+      .catch(() => {
+        lockLandscape().then(() => applyCoverDimensions());
+      });
+  }
+
+  function exitFullscreen() {
+    unlockOrientation();
+
+    if (isNativeFullscreen()) {
+      exitNativeFullscreen().catch(() => {}).finally(cleanupFullscreen);
+    } else {
+      cleanupFullscreen();
     }
   }
 
   function toggleFullscreen() {
     if (isPlayerFullscreen()) {
-      exitPlayerFullscreen().catch(() => {});
-      return;
+      exitFullscreen();
+    } else {
+      enterFullscreen();
     }
-
-    playerActive = true;
-    requestPlayerFullscreen().catch(() => {
-      updateLandscapeMode();
-    });
   }
 
   fsBtn.addEventListener('click', (e) => {
@@ -182,30 +253,28 @@ function initVideoPlayer() {
     toggleFullscreen();
   });
 
-  playerContainer.addEventListener('click', () => {
-    playerActive = true;
-    updateLandscapeMode();
-  });
-
   ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach((eventName) => {
     document.addEventListener(eventName, () => {
-      if (isPlayerFullscreen()) {
-        playerActive = true;
+      if (isNativeFullscreen()) {
+        usingNativeFullscreen = true;
+        playerContainer.classList.add('is-player-fullscreen');
+        document.body.classList.add('player-fullscreen-active');
+        document.documentElement.style.overflow = 'hidden';
+        applyCoverDimensions();
+      } else if (usingNativeFullscreen) {
+        cleanupFullscreen();
+        unlockOrientation();
       }
-      updateLandscapeMode();
+      updateButtonState();
     });
   });
 
+  window.addEventListener('resize', applyCoverDimensions);
   window.addEventListener('orientationchange', () => {
-    if (isMobile() && isLandscape()) {
-      playerActive = true;
-    }
-    setTimeout(updateLandscapeMode, 150);
+    setTimeout(applyCoverDimensions, 150);
   });
 
-  window.addEventListener('resize', updateLandscapeMode);
-
-  updateLandscapeMode();
+  updateButtonState();
 }
 
 loadMovieDetails();
