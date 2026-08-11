@@ -33,8 +33,29 @@
     padding: 12px 16px;
   }
 
+  /* Video Player & Movie Wrapper Alignment Fixes (Mobile Isolated) */
+  #movie-content-wrapper {
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
+  }
+
+  #movie-content-wrapper .player-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 20px 0;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  .video-responsive {
+    width: 100%;
+    padding-bottom: 56.25%; /* Fixed 16:9 Aspect Ratio */
+  }
+
   .movie-info-card {
     padding: 16px;
+    border-radius: 8px;
   }
 
   .movie-info-card h1 {

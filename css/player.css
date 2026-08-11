@@ -1,24 +1,41 @@
-/* Responsive 16:9 Aspect Ratio Aspect Box */
+/* Responsive Video Container & Aspect Ratio Fix */
+.player-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 24px auto;
+  background: #000;
+  border-radius: var(--radius, 8px);
+  overflow: hidden;
+  box-shadow: var(--shadow, 0 10px 25px rgba(0,0,0,0.5));
+  border: 1px solid var(--border, #262626);
+  padding: 0;
+}
+
+/* Perfect 16:9 Aspect Ratio Box */
+.video-responsive,
 .player-wrapper {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
   background-color: #000;
-  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 20px;
 }
 
+.video-responsive iframe,
 .player-wrapper iframe {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: cover;
 }
 
-/* Metadata List */
+/* Metadata List (if used in fallback views) */
 .info-list {
   list-style: none;
   padding: 0;
