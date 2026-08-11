@@ -114,6 +114,9 @@ function initVideoPlayer() {
 
   let orientationLocked = false;
   let usingNativeFullscreen = false;
+  let chromeCollapseTimer = null;
+
+  const CHROME_COLLAPSE_MS = 3200;
 
   function getFullscreenElement() {
     return (
@@ -170,6 +173,29 @@ function initVideoPlayer() {
     orientationLocked = false;
   }
 
+  function clearChromeCollapse() {
+    clearTimeout(chromeCollapseTimer);
+    chromeCollapseTimer = null;
+    playerContainer.classList.remove('yt-chrome-collapsed');
+  }
+
+  function scheduleChromeCollapse() {
+    clearTimeout(chromeCollapseTimer);
+    if (!isPlayerFullscreen()) return;
+    if (!window.matchMedia('(orientation: landscape)').matches) return;
+
+    chromeCollapseTimer = setTimeout(() => {
+      if (isPlayerFullscreen() && window.matchMedia('(orientation: landscape)').matches) {
+        playerContainer.classList.add('yt-chrome-collapsed');
+      }
+    }, CHROME_COLLAPSE_MS);
+  }
+
+  function revealChromeControls() {
+    playerContainer.classList.remove('yt-chrome-collapsed');
+    scheduleChromeCollapse();
+  }
+
   function updateButtonState() {
     const active = isPlayerFullscreen();
     fsBtn.classList.toggle('is-fullscreen', active);
@@ -179,6 +205,7 @@ function initVideoPlayer() {
 
   function cleanupFullscreen() {
     usingNativeFullscreen = false;
+    clearChromeCollapse();
     playerContainer.classList.remove('is-player-fullscreen');
     document.body.classList.remove('player-fullscreen-active');
     document.documentElement.style.overflow = '';
@@ -193,6 +220,8 @@ function initVideoPlayer() {
     document.documentElement.style.overflow = 'hidden';
 
     updateButtonState();
+
+    scheduleChromeCollapse();
 
     requestNativeFullscreen()
       .then(() => {
@@ -235,12 +264,29 @@ function initVideoPlayer() {
         playerContainer.classList.add('is-player-fullscreen');
         document.body.classList.add('player-fullscreen-active');
         document.documentElement.style.overflow = 'hidden';
+        scheduleChromeCollapse();
       } else if (usingNativeFullscreen) {
         cleanupFullscreen();
         unlockOrientation();
       }
       updateButtonState();
     });
+  });
+
+  playerContainer.addEventListener('click', (e) => {
+    if (e.target.closest('.fullscreen-btn')) return;
+    if (isPlayerFullscreen()) revealChromeControls();
+  });
+
+  playerContainer.addEventListener('touchstart', () => {
+    if (isPlayerFullscreen()) revealChromeControls();
+  }, { passive: true });
+
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      if (isPlayerFullscreen()) scheduleChromeCollapse();
+      else clearChromeCollapse();
+    }, 150);
   });
 
   updateButtonState();
