@@ -3,6 +3,8 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-
 
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
+const PLAYER_DEBUG = urlParams.get('playerDebug') === '1';
+const PLAYER_DIAGNOSTIC = urlParams.get('playerDiagnostic') === '1';
 
 const categoryNames = {
   'latest-trailers': 'Latest Trailers',
@@ -45,10 +47,33 @@ async function loadMovieDetails() {
 
     if (embedUrl.includes('youtube.com/embed/')) {
       const baseUrl = embedUrl.split('?')[0];
-      embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1&fs=0&iv_load_policy=3`;
+      if (PLAYER_DIAGNOSTIC) {
+        embedUrl = `${baseUrl}?autoplay=1&controls=1&rel=0&playsinline=1`;
+      } else {
+        embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1&fs=0&iv_load_policy=3`;
+      }
     }
 
-    wrapper.innerHTML = `
+    const playerHtml = PLAYER_DIAGNOSTIC
+      ? `
+      <div class="player-container player-diagnostic">
+        <div class="video-responsive">
+          <iframe
+            id="yt-diagnostic-iframe"
+            src="${embedUrl}"
+            title="${movie.title}"
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowfullscreen="true"
+            webkitallowfullscreen="true"
+            mozallowfullscreen="true"
+          ></iframe>
+        </div>
+      </div>
+      <p class="loading" style="margin-top:12px;font-size:0.85rem;color:#888;">
+        Diagnostic mode: bare YouTube iframe only. Use YouTube&apos;s native fullscreen. Check console for dimension logs.
+      </p>
+    `
+      : `
       <div class="player-container">
         <div class="video-responsive">
           <iframe
@@ -71,6 +96,10 @@ async function loadMovieDetails() {
           </button>
         </div>
       </div>
+    `;
+
+    wrapper.innerHTML = `
+      ${playerHtml}
 
       <div class="movie-info-card">
         <h1>${movie.title}</h1>
@@ -98,7 +127,15 @@ async function loadMovieDetails() {
       </div>
     `;
 
-    initVideoPlayer();
+    if (PLAYER_DIAGNOSTIC) {
+      initDiagnosticPlayer();
+    } else {
+      initVideoPlayer();
+    }
+
+    if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
+      initPlayerDimensionLogging();
+    }
 
   } catch (error) {
     console.error("Error loading movie details:", error);
@@ -242,6 +279,92 @@ function initVideoPlayer() {
   });
 
   updateButtonState();
+}
+
+function logPlayerDimensions(label) {
+  const playerContainer = document.querySelector('.player-container');
+  const videoResponsive = document.querySelector('.video-responsive');
+  const iframe = document.querySelector('.video-responsive iframe');
+
+  const vp = window.visualViewport;
+
+  const row = (name, el) => {
+    if (!el) return { element: name, missing: true };
+    const rect = el.getBoundingClientRect();
+    return {
+      element: name,
+      rect_x: Math.round(rect.x),
+      rect_y: Math.round(rect.y),
+      rect_width: Math.round(rect.width),
+      rect_height: Math.round(rect.height),
+      clientWidth: el.clientWidth,
+      clientHeight: el.clientHeight
+    };
+  };
+
+  const viewport = {
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+    visualViewport_width: vp ? Math.round(vp.width) : null,
+    visualViewport_height: vp ? Math.round(vp.height) : null,
+    visualViewport_offsetTop: vp ? Math.round(vp.offsetTop) : null,
+    orientation: window.matchMedia('(orientation: landscape)').matches ? 'landscape' : 'portrait'
+  };
+
+  const layoutFillsViewport =
+    playerContainer &&
+    iframe &&
+    Math.abs(playerContainer.getBoundingClientRect().y) <= 1 &&
+    Math.abs(iframe.getBoundingClientRect().y) <= 1 &&
+    Math.abs(playerContainer.getBoundingClientRect().width - window.innerWidth) <= 2 &&
+    Math.abs(playerContainer.getBoundingClientRect().height - window.innerHeight) <= 2;
+
+  console.group(`[PlayerDebug] ${label}`);
+  console.log('viewport', viewport);
+  console.table([
+    row('playerContainer', playerContainer),
+    row('videoResponsive', videoResponsive),
+    row('iframe', iframe)
+  ]);
+  console.log('document.fullscreenElement', document.fullscreenElement);
+  console.log('layoutFillsViewport', layoutFillsViewport);
+  if (layoutFillsViewport) {
+    console.info(
+      'If a black/title band is still visible, it is rendered INSIDE the cross-origin YouTube iframe — not from our page layout.'
+    );
+  } else {
+    console.warn('Layout gap detected in OUR page — inspect rect_y and heights above.');
+  }
+  console.groupEnd();
+}
+
+function initPlayerDimensionLogging() {
+  const log = (label) => {
+    requestAnimationFrame(() => {
+      setTimeout(() => logPlayerDimensions(label), 100);
+    });
+  };
+
+  log('initial');
+
+  ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach((eventName) => {
+    document.addEventListener(eventName, () => log(`fullscreenchange → ${document.fullscreenElement ? 'entered' : 'exited'}`));
+  });
+
+  window.addEventListener('orientationchange', () => log('orientationchange'));
+  window.addEventListener('resize', () => log('resize'));
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => log('visualViewport.resize'));
+  }
+}
+
+function initDiagnosticPlayer() {
+  console.info('[PlayerDiagnostic] Bare YouTube iframe — no custom fullscreen UI. Use YouTube native fullscreen to compare.');
+  const iframe = document.getElementById('yt-diagnostic-iframe');
+  if (iframe) {
+    iframe.addEventListener('load', () => logPlayerDimensions('diagnostic iframe loaded'));
+  }
 }
 
 loadMovieDetails();
