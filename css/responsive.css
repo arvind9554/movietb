@@ -1,9 +1,5 @@
 /* ==============================================
    RESPONSIVE.CSS
-   Site ka general responsive layout - navbar, hero,
-   grid, footer, aur movie-info-card ka sizing.
-   Video player / fullscreen / zoom ka poora logic
-   ab player.css mein hai.
    ============================================== */
 
 /* ===== Tablet & below (900px) ===== */
@@ -30,9 +26,9 @@
 
 /* ===== Mobile (640px) ===== */
 @media (max-width: 640px) {
-  html, body {
+  /* Restores perfect natural centering without artificial padding push */
+  body, html {
     overflow-x: hidden;
-    width: 100%;
   }
 
   .container {
@@ -43,18 +39,44 @@
     box-sizing: border-box !important;
   }
 
-  /* Fixed double padding overlap issue */
   #movie-content-wrapper {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 auto !important;
     box-sizing: border-box !important;
+  }
+
+  .player-container {
+    width: 100% !important;
+    margin: 0 0 16px 0 !important;
+    border-radius: 6px;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .video-responsive {
+    position: relative !important;
+    width: 100% !important;
+    padding-bottom: 56.25% !important; /* Standard 16:9 Aspect Ratio */
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .video-responsive iframe {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
   }
 
   .movie-info-card {
     padding: 16px;
-    box-sizing: border-box;
   }
 
   .movie-info-card h1 {
@@ -86,6 +108,7 @@
     font-size: 14px;
   }
 
+  /* Fixed search button padding */
   .search-box button {
     padding: 9px 16px !important;
     font-size: 0.85rem;
@@ -140,10 +163,42 @@
   }
 }
 
-/* ===== Tablet (641px - 1024px) ===== */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .movie-info-card {
-    padding: 24px;
+/* ===== Mobile Landscape Auto Fullscreen Fill ===== */
+@media (orientation: landscape) and (max-height: 500px) {
+  .navbar, 
+  footer, 
+  .movie-info-card, 
+  .section-header {
+    display: none !important;
+  }
+
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  .container, 
+  #movie-content-wrapper,
+  .player-container,
+  .video-responsive {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  .video-responsive {
+    padding-bottom: 0 !important;
+  }
+
+  .video-responsive iframe {
+    width: 100vw !important;
+    height: 100vh !important;
   }
 }
 
