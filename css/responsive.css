@@ -1,5 +1,6 @@
 /* ==============================================
    RESPONSIVE.CSS
+   Site layout & video player mobile symmetry fix
    ============================================== */
 
 /* ===== Tablet & below (900px) ===== */
@@ -26,9 +27,9 @@
 
 /* ===== Mobile (640px) ===== */
 @media (max-width: 640px) {
-  /* Restores perfect natural centering without artificial padding push */
-  body, html {
+  html, body {
     overflow-x: hidden;
+    width: 100%;
   }
 
   .container {
@@ -44,12 +45,14 @@
     max-width: 100% !important;
     margin: 0 auto !important;
     box-sizing: border-box !important;
+    padding: 0 !important;
   }
 
+  /* Video Player Container Exact Symmetry & Right Gap Fix */
   .player-container {
     width: 100% !important;
-    margin: 0 0 16px 0 !important;
     border-radius: 6px;
+    margin-bottom: 16px;
     box-sizing: border-box !important;
     overflow: hidden !important;
   }
@@ -77,6 +80,7 @@
 
   .movie-info-card {
     padding: 16px;
+    box-sizing: border-box;
   }
 
   .movie-info-card h1 {
@@ -108,7 +112,6 @@
     font-size: 14px;
   }
 
-  /* Fixed search button padding */
   .search-box button {
     padding: 9px 16px !important;
     font-size: 0.85rem;
@@ -199,6 +202,13 @@
   .video-responsive iframe {
     width: 100vw !important;
     height: 100vh !important;
+  }
+}
+
+/* ===== Tablet (641px - 1024px) ===== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .movie-info-card {
+    padding: 24px;
   }
 }
 
