@@ -1,107 +1,113 @@
-/* Mobile Optimization */
-@media (max-width: 768px) {
-  .navbar { flex-direction: column; gap: 12px; padding: 15px; }
-  .search-box input { width: 180px; }
-  .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-  .nav-links a { margin-left: 0; font-size: 0.85rem; }
-  .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } /* 2 Grid Column for Mobile */
-  .poster-wrapper { height: 220px; }
-}
+/* ==============================================
+   RESPONSIVE.CSS
+   Naya navbar system: Home/Blog/About hamesha
+   visible rehte hain, hamburger hamesha Categories
+   sidebar kholta hai — dono desktop aur mobile pe.
+   ============================================== */
 
-/* Hamburger button - hidden on desktop */
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-}
-
-.menu-toggle span {
-  width: 24px;
-  height: 2.5px;
-  background: #fff;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.menu-toggle.active span:nth-child(1) {
-  transform: translateY(7.5px) rotate(45deg);
-}
-.menu-toggle.active span:nth-child(2) {
-  opacity: 0;
-}
-.menu-toggle.active span:nth-child(3) {
-  transform: translateY(-7.5px) rotate(-45deg);
-}
-
-@media (max-width: 768px) {
+/* ===== Tablet & below ===== */
+@media (max-width: 900px) {
   .navbar {
     flex-wrap: wrap;
-    position: relative;
+    row-gap: 12px;
+    padding: 14px 18px;
   }
 
-  .menu-toggle {
-    display: flex;
+  .search-box {
+    order: 3;
+    width: 100%;
+  }
+
+  .search-box input {
+    width: 100%;
   }
 
   .nav-links {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    background: #111;
-    border-top: 1px solid #262626;
-    margin-top: 14px;
-    padding: 8px 0;
+    gap: 18px;
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 640px) {
+  .navbar {
+    padding: 12px 16px;
   }
 
-  .nav-links.open {
-    display: flex;
+  .navbar-left {
+    gap: 10px;
+  }
+
+  .logo a {
+    font-size: 1.3rem;
+  }
+
+  .nav-links {
+    gap: 14px;
   }
 
   .nav-links a {
-    width: 100%;
-    padding: 14px 10px;
-    border-bottom: 1px solid #1f1f1f;
+    font-size: 0.85rem;
   }
 
-  .dropdown {
-    width: 100%;
+  .search-box input {
+    font-size: 14px;
   }
 
-  .dropbtn {
-    width: 100%;
-    padding: 14px 10px;
-    justify-content: space-between;
-    color: #ccc;
+  .search-box button {
+    padding: 9px 16px;
+    font-size: 0.85rem;
   }
 
-  .dropdown-content {
-    display: none;
-    position: static;
-    box-shadow: none;
-    border: none;
-    border-radius: 0;
-    background: #1a1a1a;
-    opacity: 1;
-    transform: none;
-    min-width: 100%;
+  .hero {
+    padding: 50px 16px;
+    min-height: auto;
   }
 
-  .dropdown.mobile-open .dropdown-content {
-    display: block;
+  .hero h1 {
+    font-size: 1.9rem;
   }
 
-  .dropdown:hover .dropdown-content {
-    display: none; /* mobile pe hover disable, sirf click se khulega */
+  .hero p {
+    font-size: 0.92rem;
   }
 
-  .dropdown.mobile-open:hover .dropdown-content {
-    display: block;
+  .section-header h2 {
+    font-size: 1.15rem;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+
+  .card-details h3 {
+    font-size: 0.82rem;
+  }
+
+  .categories-sidebar {
+    width: 240px;
+  }
+
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-article h1 {
+    font-size: 24px;
+  }
+}
+
+/* ===== Very small phones ===== */
+@media (max-width: 380px) {
+  .nav-links {
+    gap: 10px;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   }
 }
