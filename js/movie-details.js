@@ -45,10 +45,10 @@ async function loadMovieDetails() {
       embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
     }
 
-    // Clean query parameters to avoid iframe inner borders
+    // Clean base URL and append stretch/fit parameters
     if (embedUrl.includes('youtube.com/embed/')) {
       const baseUrl = embedUrl.split('?')[0];
-      embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1`;
+      embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1`;
     }
 
     wrapper.innerHTML = `

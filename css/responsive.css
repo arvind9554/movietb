@@ -29,33 +29,28 @@
 
 /* ===== Mobile ===== */
 @media (max-width: 640px) {
-  .navbar {
-    padding: 12px 16px;
+  /* Mobile Wrapper Centering Fix */
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
   }
 
-  /* Video Player & Movie Wrapper Alignment Fixes (Mobile Isolated) */
   #movie-content-wrapper {
-    width: 100%;
-    padding: 0;
-    margin: 0 auto;
+    width: 100% !important;
+    margin: 0 auto !important;
   }
 
-  #movie-content-wrapper .player-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 20px 0;
-    border-radius: 8px;
-    box-sizing: border-box;
+  .player-container {
+    border-radius: 6px;
+    margin-bottom: 16px;
   }
 
   .video-responsive {
-    width: 100%;
-    padding-bottom: 56.25%; /* Fixed 16:9 Aspect Ratio */
+    padding-bottom: 56.25%; /* Black bars removal via clean proportion */
   }
 
   .movie-info-card {
     padding: 16px;
-    border-radius: 8px;
   }
 
   .movie-info-card h1 {
@@ -66,6 +61,7 @@
     grid-template-columns: 90px 1fr;
     font-size: 0.85rem;
   }
+}
 
   .navbar-left {
     gap: 10px;
@@ -129,7 +125,6 @@
   .blog-article h1 {
     font-size: 24px;
   }
-}
 
 /* ===== Very small phones ===== */
 @media (max-width: 380px) {
