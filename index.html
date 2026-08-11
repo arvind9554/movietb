@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieTB - Watch Latest Trailers, South Movies & Classic Cinema</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies, trailers...">
+      <button id="search-btn">Search</button>
+    </div>
+    <nav class="nav-links">
+      <a href="category.html?cat=latest-trailers">Trailers</a>
+      <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
+      <a href="category.html?cat=classic-cinema">Hollywood</a>
+      <a href="category.html?cat=movie-reviews">Web Series</a>
+    </nav>
+  </header>
+
+  <!-- Hero / Banner Section -->
+
+  <section class="hero">
+  <span class="hero-badge">Now Streaming</span>
+  <h1>Welcome to MovieTB</h1>
+  <p>Watch Official Trailers, South Dubbed Movies & Classic Cinema for Free.</p>
+</section>
+
+  <!-- Main Content Grids -->
+  <main class="container">
+    
+    <!-- Latest Trailers Category -->
+    <section class="category-section">
+      <div class="section-header">
+        <h2>Latest Trailers</h2>
+        <a href="category.html?cat=latest-trailers" class="view-all">View All →</a>
+      </div>
+      <div class="movie-grid" id="latest-trailers-grid">
+        <p class="loading">Loading movies...</p>
+      </div>
+    </section>
+
+    <!-- South Dubbed Movies Category -->
+    <section class="category-section">
+      <div class="section-header">
+        <h2>Bollywood Movies</h2>
+        <a href="category.html?cat=south-dubbed-movies" class="view-all">View All →</a>
+      </div>
+      <div class="movie-grid" id="south-dubbed-movies-grid">
+        <p class="loading">Loading movies...</p>
+      </div>
+    </section>
+
+    <!-- Hollywood Movies Category -->
+    <section class="category-section">
+      <div class="section-header">
+        <h2>Hollywood Movies</h2>
+        <a href="category.html?cat=classic-cinema" class="view-all">View All →</a>
+      </div>
+      <div class="movie-grid" id="classic-cinema-grid">
+        <p class="loading">Loading movies...</p>
+      </div>
+    </section>
+
+    <!-- Web Series Category -->
+    <section class="category-section" id="web-series">
+  <div class="section-header">
+    <h2>Web Series</h2>
+    <a href="category.html?cat=movie-reviews" class="view-all">View All &rarr;</a>
+  </div>
+  <div class="movie-grid" id="web-series-grid" data-category="movie-reviews">
+    <p class="loading">Loading Web Series...</p>
+  </div>
+</section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="dmca.html">DMCA Disclaimer</a> | 
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
+    <p>&copy; 2026 MovieTB. All content embedded legally from public domains / YouTube.</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

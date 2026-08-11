@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Movie - Admin | MovieTB</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-body">
+
+  <header class="navbar admin-navbar">
+    <div class="logo"><a href="../index.html">Movie<span class="accent">TB</span> <span class="admin-tag">Admin</span></a></div>
+    <button id="logout-btn" class="btn-logout">Logout</button>
+  </header>
+
+  <main class="container admin-main">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>Add New Movie Post</h2>
+        <p class="admin-subtext">Fill in the details below. Poster is optional — if left blank, the YouTube thumbnail will be used automatically.</p>
+      </div>
+
+      <form id="add-movie-form" class="admin-form">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Movie Title</label>
+            <input type="text" id="title" required placeholder="Sarrainodu (4K Ultra HD) Full Hindi Dubbed">
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="category" required>
+              <option value="latest-trailers">Latest Trailers</option>
+             <option value="south-dubbed-movies">Bollywood Movies</option>
+             <option value="classic-cinema">Hollywood Movies</option>
+              <option value="movie-reviews">Movie Reviews</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Language</label>
+            <input type="text" id="language" placeholder="Hindi Dubbed / English" required>
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label>Release Year</label>
+            <input type="number" id="year" placeholder="2024" required>
+          </div>
+          <div class="form-group">
+            <label>Format</label>
+            <input type="text" id="format" placeholder="4K Ultra HD / 1080p HD" value="1080p HD">
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label>Director</label>
+            <input type="text" id="director" placeholder="Boyapati Srinu">
+          </div>
+          <div class="form-group">
+            <label>Star Cast (Comma Separated)</label>
+            <input type="text" id="starCast" placeholder="Allu Arjun, Rakul Preet Singh">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Poster Image URL <span class="optional-tag">Optional</span></label>
+            <input type="url" id="posterUrl" placeholder="https://image-link.com/poster.jpg">
+            <small class="field-hint">Leave blank to auto-use the YouTube video's thumbnail.</small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Embed Video URL (src only, NOT full iframe tag)</label>
+            <input type="url" id="embedUrl" required placeholder="https://www.youtube.com/embed/VIDEO_ID">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Summary (100-150 words SEO description)</label>
+            <textarea id="summary" rows="5" required placeholder="Write movie plot summary here..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Publish Post</button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .navbar { flex-direction: column; gap: 12px; padding: 15px; }
+  .search-box input { width: 180px; }
+  .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .nav-links a { margin-left: 0; font-size: 0.85rem; }
+  .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } /* 2 Grid Column for Mobile */
+  .poster-wrapper { height: 220px; }
+}

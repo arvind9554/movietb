@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results - MovieTB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo"><a href="index.html">MovieTB</a></div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies...">
+      <button id="search-btn">Search</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 id="search-query-heading" class="page-heading">Search Results</h1>
+    <div class="movie-grid" id="search-results-grid">
+      <p class="loading">Searching database...</p>
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/search.js"></script>
+</body>
+</html>
