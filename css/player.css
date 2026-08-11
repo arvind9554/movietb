@@ -1,49 +1,248 @@
-/* Responsive Video Container & Aspect Ratio Fix */
-.player-container {
+/* ==============================================
+   PLAYER.CSS
+   Video Player + Fullscreen + Zoom
+   Movies, Trailers, Web Series - sabhi movie.html
+   se hi load hote hain, isliye ye ek hi file
+   sabke liye kaam karti hai.
+
+   Sirf movie.html mein link karo:
+   <link rel="stylesheet" href="css/player.css">
+   ============================================== */
+
+/* ===== Player wrapper ===== */
+#movie-content-wrapper {
   width: 100%;
   max-width: 1000px;
-  margin: 0 auto 24px auto;
-  background: #000;
-  border-radius: var(--radius, 8px);
-  overflow: hidden;
-  box-shadow: var(--shadow, 0 10px 25px rgba(0,0,0,0.5));
-  border: 1px solid var(--border, #262626);
+  margin: 0 auto;
   padding: 0;
 }
 
-/* Perfect 16:9 Aspect Ratio Box */
-.video-responsive,
-.player-wrapper {
+.player-container {
+  width: 100%;
+  margin: 0 0 24px 0;
+  background: #000;
+  border-radius: var(--radius, 10px);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+/* 16:9 responsive video box */
+.video-responsive {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-  height: 0;
-  background-color: #000;
+  aspect-ratio: 16 / 9;
+  background: #000;
   overflow: hidden;
 }
 
-.video-responsive iframe,
-.player-wrapper iframe {
+/* Purane browsers ke liye fallback jinme aspect-ratio support nahi hai */
+@supports not (aspect-ratio: 16 / 9) {
+  .video-responsive {
+    padding-bottom: 56.25%;
+    height: 0;
+  }
+}
+
+.video-responsive iframe {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0 !important;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* =========================================================
+   TRUE FULLSCREEN (native browser Fullscreen API)
+   Jab video ke apne fullscreen icon se, ya kisi custom JS
+   button se .player-container ko fullscreen kiya jaaye,
+   ye rules poori screen (100vw x 100vh) cover karwate hain
+   - mobile, tablet, desktop, sabhi jagah. Letterboxing
+   (kaale border) hatane ke liye zaroori hai.
+   ========================================================= */
+.player-container:fullscreen,
+.player-container:-webkit-full-screen,
+.player-container:-moz-full-screen,
+.player-container:-ms-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-container:fullscreen .video-responsive,
+.player-container:-webkit-full-screen .video-responsive,
+.player-container:-moz-full-screen .video-responsive,
+.player-container:-ms-fullscreen .video-responsive {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  padding-bottom: 0;
+}
+
+.player-container:fullscreen iframe,
+.player-container:-webkit-full-screen iframe,
+.player-container:-moz-full-screen iframe,
+.player-container:-ms-fullscreen iframe {
   width: 100% !important;
   height: 100% !important;
-  border: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  object-fit: cover;
 }
 
-/* Metadata List (if used in fallback views) */
-.info-list {
-  list-style: none;
-  padding: 0;
-  margin: 15px 0;
+/* =========================================================
+   ROTATE PE AUTO-FULLSCREEN (CSS-only, no JS needed)
+   Jab mobile/tablet ko landscape mein rotate karte hain,
+   player poori screen cover kar lega automatically.
+
+   (hover: none) and (pointer: coarse) = sirf touch devices
+   (phone/tablet) ko target karta hai, desktop/laptop
+   (jinke paas mouse hai aur screen hamesha "landscape"
+   shape ki hoti hai) is rule se bilkul untouched rehte hain.
+   ========================================================= */
+@media (orientation: landscape) and (hover: none) and (pointer: coarse) {
+
+  body:has(.player-container) {
+    overflow: hidden;
+  }
+
+  body:has(.player-container) .navbar,
+  body:has(.player-container) footer,
+  body:has(.player-container) .movie-info-card {
+    display: none;
+  }
+
+  .player-container:not(:fullscreen):not(:-webkit-full-screen) {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    width: 100vw;
+    height: 100dvh; /* dvh = mobile browser ki address-bar height ko bhi account karta hai */
+    max-width: 100vw;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .player-container:not(:fullscreen):not(:-webkit-full-screen) .video-responsive {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    padding-bottom: 0;
+  }
 }
 
-.info-list li {
-  margin-bottom: 8px;
+/* =========================================================
+   PINCH-ZOOM SUPPORT
+   Player area par browser ke native pinch-to-zoom gesture
+   ko explicitly allow karte hain (koi touch-action: none
+   rule isko block na kare, isiliye confirm kar rahe hain).
+   Note: ye page/video-frame ko zoom karega (jaisa photo
+   zoom hota hai), video ke andar YouTube player ka apna
+   content control nahi hota kyunki wo cross-origin iframe
+   hai — uske apne playback controls YouTube khud manage
+   karta hai.
+   ========================================================= */
+.player-container,
+.video-responsive,
+.player-container:fullscreen,
+.player-container:-webkit-full-screen {
+  touch-action: pinch-zoom;
+}
+
+/* ===== Movie Info Card ===== */
+.movie-info-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--bg-elevated);
+  padding: 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.movie-info-card h1 {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.movie-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.tag {
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.meta-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--text-muted);
+  border-radius: 50%;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  font-size: 0.92rem;
+}
+
+.info-label {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 0.72rem;
+  padding-top: 2px;
+}
+
+.info-value {
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.summary-box {
+  color: var(--text-secondary);
   font-size: 0.95rem;
+  line-height: 1.8;
+  background: #0f0f0f;
+  padding: 18px;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+
+.summary-box::before {
+  content: "SYNOPSIS";
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 10px;
 }
