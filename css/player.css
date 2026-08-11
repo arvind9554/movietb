@@ -1,243 +1,798 @@
-/* ==============================================
+/* =========================================================
    PLAYER.CSS
-   Video Player + Fullscreen + Zoom
-   Movies, Trailers, Web Series - sabhi movie.html
-   se hi load hote hain, isliye ye ek hi file
-   sabke liye kaam karti hai.
+   Universal Video Player
+   Movies / Trailers / Web Series
+   Normal + Fullscreen + Mobile Landscape
+   ========================================================= */
 
-   Sirf movie.html mein link karo:
-   <link rel="stylesheet" href="css/player.css">
-   ============================================== */
-
-/* ===== Player wrapper ===== */
-#movie-content-wrapper {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.player-container {
-  width: 100% !important;
-  margin: 0 0 24px 0;
-  background: #000;
-  border-radius: var(--radius, 10px);
-  overflow: hidden !important;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  box-sizing: border-box !important;
-}
-
-/* 16:9 responsive video box */
-.video-responsive {
-  position: relative !important;
-  width: 100% !important;
-  aspect-ratio: 16 / 9;
-  background: #000;
-  overflow: hidden !important;
-}
-
-/* Purane browsers ke liye fallback jinme aspect-ratio support nahi hai */
-@supports not (aspect-ratio: 16 / 9) {
-  .video-responsive {
-    padding-bottom: 56.25% !important;
-    height: 0 !important;
-  }
-}
-
-.video-responsive iframe {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  border: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: block;
-}
 
 /* =========================================================
-   TRUE FULLSCREEN (native browser Fullscreen API)
+   MOVIE CONTENT WRAPPER
    ========================================================= */
+
+#movie-content-wrapper {
+
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PLAYER CONTAINER
+   ========================================================= */
+
+.player-container {
+
+    position: relative;
+
+    width: 100% !important;
+
+    max-width: 100%;
+
+    margin: 0 0 24px 0;
+
+    padding: 0;
+
+    background: #000;
+
+    border-radius: var(--radius, 10px);
+
+    overflow: hidden !important;
+
+    box-shadow: var(--shadow);
+
+    border: 1px solid var(--border);
+
+    box-sizing: border-box !important;
+
+    isolation: isolate;
+}
+
+
+/* =========================================================
+   NORMAL VIDEO
+   16:9
+   ========================================================= */
+
+.video-responsive {
+
+    position: relative !important;
+
+    width: 100% !important;
+
+    aspect-ratio: 16 / 9;
+
+    height: auto;
+
+    background: #000;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   OLD BROWSER FALLBACK
+   ========================================================= */
+
+@supports not (aspect-ratio: 16 / 9) {
+
+    .video-responsive {
+
+        height: 0 !important;
+
+        padding-bottom: 56.25% !important;
+    }
+}
+
+
+/* =========================================================
+   IFRAME
+   ========================================================= */
+
+.video-responsive iframe {
+
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    max-width: 100% !important;
+    max-height: 100% !important;
+
+    border: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: block;
+
+    background: #000;
+}
+
+
+/* =========================================================
+   HTML5 VIDEO
+   ========================================================= */
+
+.video-responsive video {
+
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    max-width: 100% !important;
+    max-height: 100% !important;
+
+    display: block;
+
+    background: #000;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   TRUE BROWSER FULLSCREEN
+   ========================================================= */
+
 .player-container:fullscreen,
 .player-container:-webkit-full-screen,
 .player-container:-moz-full-screen,
 .player-container:-ms-fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  margin: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  background: #000 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    height: 100dvh !important;
+
+    max-width: none !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: none !important;
+
+    border-radius: 0 !important;
+
+    box-shadow: none !important;
+
+    background: #000 !important;
+
+    overflow: hidden !important;
+
+    display: block !important;
+
+    z-index: 2147483647 !important;
 }
+
+
+/* =========================================================
+   FULLSCREEN VIDEO WRAPPER
+   ========================================================= */
 
 .player-container:fullscreen .video-responsive,
 .player-container:-webkit-full-screen .video-responsive,
 .player-container:-moz-full-screen .video-responsive,
 .player-container:-ms-fullscreen .video-responsive {
-  width: 100% !important;
-  height: 100% !important;
-  aspect-ratio: auto !important;
-  padding-bottom: 0 !important;
+
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    height: 100dvh !important;
+
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+
+    aspect-ratio: auto !important;
+
+    padding: 0 !important;
+
+    margin: 0 !important;
+
+    background: #000 !important;
+
+    overflow: hidden !important;
 }
+
+
+/* =========================================================
+   FULLSCREEN IFRAME
+   ========================================================= */
 
 .player-container:fullscreen iframe,
 .player-container:-webkit-full-screen iframe,
 .player-container:-moz-full-screen iframe,
 .player-container:-ms-fullscreen iframe {
-  width: 100% !important;
-  height: 100% !important;
-}
 
-/* =========================================================
-   ROTATE PE AUTO-FULLSCREEN (Touch Devices)
-   ========================================================= */
-@media (orientation: landscape) and (hover: none) and (pointer: coarse) {
+    position: absolute !important;
 
-  body:has(.player-container) {
-    overflow: hidden !important;
-  }
-
-  body:has(.player-container) .navbar,
-  body:has(.player-container) footer,
-  body:has(.player-container) .movie-info-card {
-    display: none !important;
-  }
-
-  .player-container:not(:fullscreen):not(:-webkit-full-screen) {
-    position: fixed !important;
-    inset: 0 !important;
     top: 0 !important;
     left: 0 !important;
-    z-index: 99999 !important;
+
     width: 100vw !important;
     height: 100vh !important;
+
     height: 100dvh !important;
+
     max-width: 100vw !important;
+    max-height: 100dvh !important;
+
+    border: 0 !important;
+
     margin: 0 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
+    padding: 0 !important;
 
-  .player-container:not(:fullscreen):not(:-webkit-full-screen) .video-responsive {
-    width: 100% !important;
-    height: 100% !important;
-    aspect-ratio: auto !important;
-    padding-bottom: 0 !important;
-  }
+    background: #000 !important;
 
-  .player-container:not(:fullscreen):not(:-webkit-full-screen) iframe {
-    width: 100% !important;
-    height: 100% !important;
-  }
+    object-fit: contain !important;
 }
+
 
 /* =========================================================
-   PINCH-ZOOM SUPPORT
+   FULLSCREEN HTML5 VIDEO
    ========================================================= */
-.player-container,
-.video-responsive,
-.player-container:fullscreen,
-.player-container:-webkit-full-screen {
-  touch-action: pinch-zoom !important;
+
+.player-container:fullscreen video,
+.player-container:-webkit-full-screen video,
+.player-container:-moz-full-screen video,
+.player-container:-ms-fullscreen video {
+
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    height: 100dvh !important;
+
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+
+    object-fit: contain !important;
+
+    background: #000 !important;
 }
 
-/* ===== Movie Info Card ===== */
-.movie-info-card {
-  max-width: 1000px;
-  margin: 0 auto;
-  background: var(--bg-elevated);
-  padding: 28px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-sizing: border-box;
+
+/* =========================================================
+   JAVASCRIPT FALLBACK FULLSCREEN
+   ========================================================= */
+
+.player-container.mobile-video-landscape {
+
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    height: 100dvh !important;
+
+    max-width: none !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: none !important;
+
+    border-radius: 0 !important;
+
+    box-shadow: none !important;
+
+    background: #000 !important;
+
+    overflow: hidden !important;
+
+    z-index: 2147483647 !important;
 }
+
+
+.player-container.mobile-video-landscape
+.video-responsive {
+
+    position: absolute !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    height: 100dvh !important;
+
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+
+    aspect-ratio: auto !important;
+
+    padding: 0 !important;
+
+    margin: 0 !important;
+
+    background: #000 !important;
+}
+
+
+.player-container.mobile-video-landscape iframe,
+.player-container.mobile-video-landscape video {
+
+    position: absolute !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    height: 100dvh !important;
+
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+
+    border: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #000 !important;
+
+    object-fit: contain !important;
+}
+
+
+/* =========================================================
+   FULLSCREEN BUTTON
+   ========================================================= */
+
+.fullscreen-btn {
+
+    position: absolute;
+
+    right: 12px;
+    bottom: 12px;
+
+    z-index: 100;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    color: #fff;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    -webkit-tap-highlight-color: transparent;
+
+    touch-action: manipulation;
+}
+
+
+.fullscreen-btn:hover {
+
+    background: rgba(0, 0, 0, 0.9);
+}
+
+
+.fullscreen-btn:active {
+
+    transform: scale(0.94);
+}
+
+
+/* =========================================================
+   MOBILE PLAYER
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    #movie-content-wrapper {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+    }
+
+
+    .player-container {
+
+        width: 100% !important;
+
+        margin-bottom: 16px;
+
+        border-radius: 6px;
+    }
+
+
+    .video-responsive {
+
+        width: 100% !important;
+
+        aspect-ratio: 16 / 9;
+
+        padding: 0 !important;
+    }
+
+
+    .fullscreen-btn {
+
+        width: 40px;
+        height: 40px;
+
+        right: 10px;
+        bottom: 10px;
+
+        font-size: 17px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE LANDSCAPE
+   IMPORTANT:
+   Sirf landscape hone par player ko force fullscreen
+   nahi karega. JavaScript fullscreen state handle karega.
+   ========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    .player-container:fullscreen,
+    .player-container:-webkit-full-screen,
+    .player-container.mobile-video-landscape {
+
+        width: 100vw !important;
+
+        height: 100vh !important;
+
+        height: 100dvh !important;
+
+        max-width: none !important;
+
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        border-radius: 0 !important;
+    }
+}
+
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+.player-container {
+
+    /*
+     * Pinch zoom ko force nahi kar rahe.
+     * Native video/iframe controls ko interfere nahi karega.
+     */
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   MOVIE INFO CARD
+   ========================================================= */
+
+.movie-info-card {
+
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    background: var(--bg-elevated);
+
+    padding: 28px;
+
+    border-radius: var(--radius);
+
+    border: 1px solid var(--border);
+
+    box-sizing: border-box;
+}
+
 
 .movie-info-card h1 {
-  font-size: 1.8rem;
-  margin-bottom: 12px;
-  font-weight: 800;
-  color: #fff;
+
+    font-size: 1.8rem;
+
+    margin-bottom: 12px;
+
+    font-weight: 800;
+
+    color: #fff;
+
+    line-height: 1.3;
+
+    word-break: break-word;
 }
+
+
+/* =========================================================
+   MOVIE TAGS
+   ========================================================= */
 
 .movie-tags {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-  color: var(--text-secondary);
-  font-size: 0.88rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 20px;
+
+    color: var(--text-secondary);
+
+    font-size: 0.88rem;
 }
+
 
 .tag {
-  background: var(--accent);
-  color: #fff;
-  padding: 3px 10px;
-  border-radius: 5px;
-  font-weight: 700;
-  font-size: 0.75rem;
+
+    background: var(--accent);
+
+    color: #fff;
+
+    padding: 3px 10px;
+
+    border-radius: 5px;
+
+    font-weight: 700;
+
+    font-size: 0.75rem;
 }
+
 
 .meta-dot {
-  width: 4px;
-  height: 4px;
-  background: var(--text-muted);
-  border-radius: 50%;
+
+    width: 4px;
+
+    height: 4px;
+
+    flex-shrink: 0;
+
+    background: var(--text-muted);
+
+    border-radius: 50%;
 }
+
+
+/* =========================================================
+   INFO GRID
+   ========================================================= */
 
 .info-grid {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 12px;
-  padding: 16px 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 20px;
-  font-size: 0.92rem;
+
+    display: grid;
+
+    grid-template-columns: 120px minmax(0, 1fr);
+
+    gap: 12px;
+
+    padding: 16px 0;
+
+    border-top: 1px solid var(--border);
+
+    border-bottom: 1px solid var(--border);
+
+    margin-bottom: 20px;
+
+    font-size: 0.92rem;
 }
+
 
 .info-label {
-  color: var(--text-muted);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  font-size: 0.72rem;
-  padding-top: 2px;
+
+    color: var(--text-muted);
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+
+    font-size: 0.72rem;
+
+    padding-top: 2px;
 }
+
 
 .info-value {
-  color: var(--text-primary);
-  line-height: 1.6;
+
+    min-width: 0;
+
+    color: var(--text-primary);
+
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
 }
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
 
 .summary-box {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.8;
-  background: #0f0f0f;
-  padding: 18px;
-  border-radius: 8px;
-  border-left: 3px solid var(--accent);
+
+    color: var(--text-secondary);
+
+    font-size: 0.95rem;
+
+    line-height: 1.8;
+
+    background: #0f0f0f;
+
+    padding: 18px;
+
+    border-radius: 8px;
+
+    border-left: 3px solid var(--accent);
 }
 
+
 .summary-box::before {
-  content: "SYNOPSIS";
-  display: block;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: var(--accent);
-  margin-bottom: 10px;
+
+    content: "SYNOPSIS";
+
+    display: block;
+
+    font-size: 0.7rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color: var(--accent);
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================================================
+   MOBILE MOVIE INFO
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .movie-info-card {
+
+        width: 100%;
+
+        padding: 14px;
+
+        border-radius: 6px;
+    }
+
+
+    .movie-info-card h1 {
+
+        font-size: 1.25rem;
+    }
+
+
+    .info-grid {
+
+        grid-template-columns:
+            85px minmax(0, 1fr);
+
+        font-size: 0.85rem;
+    }
+
+
+    .summary-box {
+
+        padding: 14px;
+
+        font-size: 0.88rem;
+
+        line-height: 1.7;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .movie-info-card {
+
+        padding: 12px;
+    }
+
+
+    .movie-info-card h1 {
+
+        font-size: 1.15rem;
+    }
+
+
+    .info-grid {
+
+        grid-template-columns:
+            75px minmax(0, 1fr);
+    }
+
+
+    .fullscreen-btn {
+
+        width: 38px;
+        height: 38px;
+
+        right: 8px;
+        bottom: 8px;
+
+        font-size: 16px;
+    }
+}
+
+
+/* =========================================================
+   SAFE AREA
+   ========================================================= */
+
+@supports (padding: env(safe-area-inset-top)) {
+
+    .player-container:fullscreen,
+    .player-container.mobile-video-landscape {
+
+        padding-top: env(safe-area-inset-top) !important;
+
+        padding-bottom: env(safe-area-inset-bottom) !important;
+    }
 }
