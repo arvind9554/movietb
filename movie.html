@@ -17,36 +17,8 @@
   <title id="movie-page-title">Movie Details - MovieTB</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/player.css">
   <style>
-    /* ===== Player ===== */
-    .player-container {
-      width: 100%;
-      max-width: 900px;
-      margin: 30px auto 0 auto;
-      background: #000;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.75);
-      border: 1px solid #262626;
-    }
-    .video-responsive { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-    .video-responsive iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
-    .video-responsive:fullscreen,
-    .video-responsive:-webkit-full-screen,
-    .video-responsive:-moz-full-screen {
-      padding-bottom: 0; width: 100%; height: 100%;
-    }
-    .video-responsive:fullscreen iframe,
-    .video-responsive:-webkit-full-screen iframe,
-    .video-responsive:-moz-full-screen iframe {
-      width: 100%; height: 100%;
-    }
-    .player-container:fullscreen,
-    .player-container:-webkit-full-screen {
-      max-width: 100%; border-radius: 0; box-shadow: none;
-    }
-
     /* ===== Info Card ===== */
     .movie-info-card {
       max-width: 900px;
@@ -148,7 +120,6 @@
       .movie-info-card h1 { font-size: 1.4rem; }
       .info-grid { grid-template-columns: 1fr; row-gap: 12px; }
       .info-label { margin-bottom: -4px; }
-      .player-container { margin-top: 18px; border-radius: 10px; }
     }
   </style>
 </head>

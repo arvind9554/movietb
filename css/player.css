@@ -148,62 +148,21 @@
 
 
 /* =========================================================
-   TRUE BROWSER FULLSCREEN
+   TRUE BROWSER FULLSCREEN + JS LANDSCAPE FALLBACK
    ========================================================= */
 
 .player-container:fullscreen,
 .player-container:-webkit-full-screen,
 .player-container:-moz-full-screen,
-.player-container:-ms-fullscreen {
+.player-container:-ms-fullscreen,
+.player-container.mobile-video-landscape {
 
-    position: fixed !important;
-
-    top: 0 !important;
-    left: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-
-    height: 100dvh !important;
-
-    max-width: none !important;
-    max-height: none !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
-
-    border: none !important;
-
-    border-radius: 0 !important;
-
-    box-shadow: none !important;
-
-    background: #000 !important;
-
-    overflow: hidden !important;
-
-    display: block !important;
-
-    z-index: 2147483647 !important;
-}
-
-
-/* =========================================================
-   PROFESSIONAL FULLSCREEN VIDEO
-   ---------------------------------------------------------
-   Full viewport + no left/right empty space
-   Uses cover-style scaling for 16:9 video
-   ========================================================= */
-
-.player-container:fullscreen,
-.player-container:-webkit-full-screen,
-.player-container:-moz-full-screen,
-.player-container:-ms-fullscreen {
     position: fixed !important;
 
     inset: 0 !important;
 
     width: 100vw !important;
+    height: 100vh !important;
     height: 100dvh !important;
 
     min-width: 100vw !important;
@@ -230,18 +189,19 @@
 }
 
 
-/* Fullscreen viewport */
+/* Fullscreen / landscape viewport wrapper */
 .player-container:fullscreen .video-responsive,
 .player-container:-webkit-full-screen .video-responsive,
 .player-container:-moz-full-screen .video-responsive,
-.player-container:-ms-fullscreen .video-responsive {
+.player-container:-ms-fullscreen .video-responsive,
+.player-container.mobile-video-landscape .video-responsive {
 
     position: absolute !important;
 
     inset: 0 !important;
 
-    width: 100vw !important;
-    height: 100dvh !important;
+    width: 100% !important;
+    height: 100% !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -258,37 +218,20 @@
 
 
 /* =========================================================
-   FULLSCREEN IFRAME — COVER MODE
-   ---------------------------------------------------------
-   IMPORTANT:
-   iframe ko 100% x 100% dene se video ke andar
-   side bars aa sakte hain.
-
-   Isliye iframe ko viewport se bada rakha ja raha hai
-   aur center me crop kiya ja raha hai.
+   FULLSCREEN / LANDSCAPE IFRAME — COVER MODE
+   16:9 centered cover — no side bars on wide phones
    ========================================================= */
 
 .player-container:fullscreen iframe,
 .player-container:-webkit-full-screen iframe,
 .player-container:-moz-full-screen iframe,
-.player-container:-ms-fullscreen iframe {
+.player-container:-ms-fullscreen iframe,
+.player-container.mobile-video-landscape iframe {
 
     position: absolute !important;
 
     top: 50% !important;
     left: 50% !important;
-
-    /*
-     * Landscape screen ke liye 16:9 cover.
-     *
-     * width:
-     *   viewport width OR
-     *   viewport height × 16/9
-     *
-     * height:
-     *   viewport height OR
-     *   viewport width × 9/16
-     */
 
     width: max(
         100vw,
@@ -311,8 +254,7 @@
 
     border: 0 !important;
 
-    transform:
-        translate(-50%, -50%) !important;
+    transform: translate(-50%, -50%) !important;
 
     display: block !important;
 
@@ -321,19 +263,22 @@
 
 
 /* =========================================================
-   JAVASCRIPT FALLBACK FULLSCREEN
+   FULLSCREEN / LANDSCAPE HTML5 VIDEO — COVER MODE
    ========================================================= */
 
-.player-container.mobile-video-landscape {
+.player-container:fullscreen video,
+.player-container:-webkit-full-screen video,
+.player-container:-moz-full-screen video,
+.player-container:-ms-fullscreen video,
+.player-container.mobile-video-landscape video {
 
-    position: fixed !important;
+    position: absolute !important;
 
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
 
-    width: 100vw !important;
-    height: 100vh !important;
-
-    height: 100dvh !important;
+    width: 100% !important;
+    height: 100% !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -341,68 +286,40 @@
     margin: 0 !important;
     padding: 0 !important;
 
-    border: none !important;
-
-    border-radius: 0 !important;
-
-    box-shadow: none !important;
-
-    background: #000 !important;
-
-    overflow: hidden !important;
-
-    z-index: 2147483647 !important;
-}
-
-
-.player-container.mobile-video-landscape
-.video-responsive {
-
-    position: absolute !important;
-
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-
-    height: 100dvh !important;
-
-    max-width: 100vw !important;
-    max-height: 100dvh !important;
-
-    aspect-ratio: auto !important;
-
-    padding: 0 !important;
-
-    margin: 0 !important;
-
-    background: #000 !important;
-}
-
-
-.player-container.mobile-video-landscape iframe,
-.player-container.mobile-video-landscape video {
-
-    position: absolute !important;
-
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-
-    height: 100dvh !important;
-
-    max-width: 100vw !important;
-    max-height: 100dvh !important;
-
     border: 0 !important;
 
-    margin: 0 !important;
-    padding: 0 !important;
+    object-fit: cover !important;
+
+    display: block !important;
 
     background: #000 !important;
+}
 
-    object-fit: contain !important;
+
+/* =========================================================
+   HIDE PAGE CONTENT DURING MOBILE LANDSCAPE PLAYER
+   ========================================================= */
+
+body.player-landscape-active {
+    overflow: hidden !important;
+}
+
+body.player-landscape-active .navbar,
+body.player-landscape-active footer,
+body.player-landscape-active .movie-info-card {
+    display: none !important;
+}
+
+body.player-landscape-active .container {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body.player-landscape-active #movie-content-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
 }
 
 
@@ -506,36 +423,6 @@
         bottom: 10px;
 
         font-size: 17px;
-    }
-}
-
-
-/* =========================================================
-   MOBILE LANDSCAPE
-   IMPORTANT:
-   Sirf landscape hone par player ko force fullscreen
-   nahi karega. JavaScript fullscreen state handle karega.
-   ========================================================= */
-
-@media (max-width: 900px) and (orientation: landscape) {
-
-    .player-container:fullscreen,
-    .player-container:-webkit-full-screen,
-    .player-container.mobile-video-landscape {
-
-        width: 100vw !important;
-
-        height: 100vh !important;
-
-        height: 100dvh !important;
-
-        max-width: none !important;
-
-        max-height: none !important;
-
-        margin: 0 !important;
-
-        border-radius: 0 !important;
     }
 }
 
@@ -820,16 +707,16 @@
 
 
 /* =========================================================
-   SAFE AREA
+   SAFE AREA — controls only, video stays edge-to-edge
    ========================================================= */
 
-@supports (padding: env(safe-area-inset-top)) {
+@supports (padding: env(safe-area-inset-bottom)) {
 
-    .player-container:fullscreen,
-    .player-container.mobile-video-landscape {
+    .player-container:fullscreen .fullscreen-btn,
+    .player-container:-webkit-full-screen .fullscreen-btn,
+    .player-container.mobile-video-landscape .fullscreen-btn {
 
-        padding-top: env(safe-area-inset-top) !important;
-
-        padding-bottom: env(safe-area-inset-bottom) !important;
+        right: calc(12px + env(safe-area-inset-right, 0px));
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     }
 }

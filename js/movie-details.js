@@ -63,6 +63,7 @@ async function loadMovieDetails() {
             mozallowfullscreen="true"
           ></iframe>
         </div>
+        <button type="button" class="fullscreen-btn" aria-label="Toggle fullscreen">⛶</button>
       </div>
 
       <div class="movie-info-card">
@@ -91,10 +92,120 @@ async function loadMovieDetails() {
       </div>
     `;
 
+    initVideoPlayer();
+
   } catch (error) {
     console.error("Error loading movie details:", error);
     wrapper.innerHTML = `<p class="loading">Error loading movie data.</p>`;
   }
+}
+
+function initVideoPlayer() {
+  const playerContainer = document.querySelector('.player-container');
+  const fsBtn = document.querySelector('.fullscreen-btn');
+
+  if (!playerContainer || !fsBtn) return;
+
+  let playerActive = false;
+
+  function isMobile() {
+    return window.matchMedia('(max-width: 900px)').matches;
+  }
+
+  function isLandscape() {
+    return window.matchMedia('(orientation: landscape)').matches;
+  }
+
+  function getFullscreenElement() {
+    return (
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      null
+    );
+  }
+
+  function isPlayerFullscreen() {
+    const el = getFullscreenElement();
+    return el === playerContainer;
+  }
+
+  function requestPlayerFullscreen() {
+    const el = playerContainer;
+    if (el.requestFullscreen) return el.requestFullscreen();
+    if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+    if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+    if (el.msRequestFullscreen) return el.msRequestFullscreen();
+    return Promise.reject(new Error('Fullscreen not supported'));
+  }
+
+  function exitPlayerFullscreen() {
+    if (document.exitFullscreen) return document.exitFullscreen();
+    if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+    if (document.msExitFullscreen) return document.msExitFullscreen();
+    return Promise.resolve();
+  }
+
+  function updateLandscapeMode() {
+    const mobile = isMobile();
+    const landscape = isLandscape();
+    const fullscreen = isPlayerFullscreen();
+    const shouldExpand = mobile && landscape && (playerActive || fullscreen);
+
+    playerContainer.classList.toggle('mobile-video-landscape', shouldExpand);
+    document.body.classList.toggle('player-landscape-active', shouldExpand);
+
+    if (shouldExpand || fullscreen) {
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = '';
+    }
+  }
+
+  function toggleFullscreen() {
+    if (isPlayerFullscreen()) {
+      exitPlayerFullscreen().catch(() => {});
+      return;
+    }
+
+    playerActive = true;
+    requestPlayerFullscreen().catch(() => {
+      updateLandscapeMode();
+    });
+  }
+
+  fsBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFullscreen();
+  });
+
+  playerContainer.addEventListener('click', () => {
+    playerActive = true;
+    updateLandscapeMode();
+  });
+
+  ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach((eventName) => {
+    document.addEventListener(eventName, () => {
+      if (isPlayerFullscreen()) {
+        playerActive = true;
+      }
+      updateLandscapeMode();
+    });
+  });
+
+  window.addEventListener('orientationchange', () => {
+    if (isMobile() && isLandscape()) {
+      playerActive = true;
+    }
+    setTimeout(updateLandscapeMode, 150);
+  });
+
+  window.addEventListener('resize', updateLandscapeMode);
+
+  updateLandscapeMode();
 }
 
 loadMovieDetails();
