@@ -91,6 +91,20 @@
 
         padding-bottom: 56.25% !important;
     }
+
+    /* Fullscreen must not inherit the padding-top aspect-ratio hack */
+    .player-container.is-player-fullscreen .video-responsive,
+    .player-container:fullscreen .video-responsive,
+    .player-container:-webkit-full-screen .video-responsive,
+    .player-container:-moz-full-screen .video-responsive,
+    .player-container:-ms-fullscreen .video-responsive {
+
+        height: 100% !important;
+
+        padding: 0 !important;
+
+        padding-bottom: 0 !important;
+    }
 }
 
 
@@ -155,16 +169,18 @@
 
     position: fixed !important;
 
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    inset: 0 !important;
 
     width: 100vw !important;
+    width: 100dvw !important;
+
     height: 100vh !important;
     height: 100dvh !important;
 
     min-width: 100vw !important;
+    min-width: 100dvw !important;
+
+    min-height: 100vh !important;
     min-height: 100dvh !important;
 
     max-width: none !important;
@@ -180,7 +196,9 @@
 
     overflow: hidden !important;
 
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 
     box-shadow: none !important;
 
@@ -195,10 +213,7 @@
 
     position: fixed !important;
 
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    inset: 0 !important;
 
     width: 100% !important;
     height: 100% !important;
@@ -219,7 +234,9 @@
 
     overflow: hidden !important;
 
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 
     box-shadow: none !important;
 
@@ -236,13 +253,13 @@
 
     position: absolute !important;
 
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    inset: 0 !important;
 
     width: 100% !important;
     height: 100% !important;
+
+    min-width: 100% !important;
+    min-height: 100% !important;
 
     max-width: none !important;
     max-height: none !important;
@@ -254,7 +271,7 @@
 
     overflow: hidden !important;
 
-    background: transparent !important;
+    background: #000 !important;
 }
 
 
@@ -270,8 +287,7 @@
 
     position: absolute !important;
 
-    top: 0 !important;
-    left: 0 !important;
+    inset: 0 !important;
 
     width: 100% !important;
     height: 100% !important;
@@ -333,8 +349,13 @@
    HIDE PAGE CONTENT DURING FULLSCREEN
    ========================================================= */
 
+html.player-fullscreen-active,
 body.player-fullscreen-active {
     overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
     background: #000 !important;
 }
 
@@ -348,12 +369,16 @@ body.player-fullscreen-active .container {
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 body.player-fullscreen-active #movie-content-wrapper {
     margin: 0 !important;
     padding: 0 !important;
     max-width: none !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 
@@ -511,7 +536,7 @@ body.player-fullscreen-active #movie-content-wrapper {
     }
 
 
-    .video-responsive {
+    .player-container:not(.is-player-fullscreen):not(:fullscreen) .video-responsive {
 
         width: 100% !important;
 
@@ -819,5 +844,177 @@ body.player-fullscreen-active #movie-content-wrapper {
 
         right: calc(8px + env(safe-area-inset-right, 0px));
         bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+
+/* =========================================================
+   MOBILE LANDSCAPE FULLSCREEN
+   Highest specificity — must override portrait/mobile rules
+   ========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    html.player-fullscreen-active,
+    body.player-fullscreen-active {
+
+        overflow: hidden !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        width: 100% !important;
+
+        height: 100% !important;
+
+        background: #000 !important;
+    }
+
+
+    body.player-fullscreen-active .navbar,
+    body.player-fullscreen-active footer,
+    body.player-fullscreen-active .movie-info-card,
+    body.player-fullscreen-active .container,
+    body.player-fullscreen-active #movie-content-wrapper {
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        max-width: none !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+    }
+
+
+    body.player-fullscreen-active .player-container.is-player-fullscreen,
+    body.player-fullscreen-active .player-container:fullscreen,
+    body.player-fullscreen-active .player-container:-webkit-full-screen,
+    body.player-fullscreen-active .player-container:-moz-full-screen,
+    body.player-fullscreen-active .player-container:-ms-fullscreen {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        width: 100dvw !important;
+
+        height: 100vh !important;
+        height: 100dvh !important;
+
+        min-width: 100vw !important;
+        min-width: 100dvw !important;
+
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        border: 0 !important;
+
+        border-radius: 0 !important;
+
+        background: #000 !important;
+
+        overflow: hidden !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        z-index: 2147483647 !important;
+    }
+
+
+    body.player-fullscreen-active .player-container.is-player-fullscreen .video-responsive,
+    body.player-fullscreen-active .player-container:fullscreen .video-responsive,
+    body.player-fullscreen-active .player-container:-webkit-full-screen .video-responsive,
+    body.player-fullscreen-active .player-container:-moz-full-screen .video-responsive,
+    body.player-fullscreen-active .player-container:-ms-fullscreen .video-responsive {
+
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        width: 100% !important;
+
+        height: 100% !important;
+
+        min-width: 100% !important;
+
+        min-height: 100% !important;
+
+        max-width: none !important;
+
+        max-height: none !important;
+
+        aspect-ratio: auto !important;
+
+        padding: 0 !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+
+        background: #000 !important;
+    }
+
+
+    body.player-fullscreen-active .player-container.is-player-fullscreen iframe,
+    body.player-fullscreen-active .player-container:fullscreen iframe,
+    body.player-fullscreen-active .player-container:-webkit-full-screen iframe,
+    body.player-fullscreen-active .player-container:-moz-full-screen iframe,
+    body.player-fullscreen-active .player-container:-ms-fullscreen iframe {
+
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        width: 100% !important;
+
+        height: 100% !important;
+
+        min-width: 100% !important;
+
+        min-height: 100% !important;
+
+        max-width: none !important;
+
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        border: 0 !important;
+
+        transform: none !important;
+
+        background: #000 !important;
+    }
+
+
+    body.player-fullscreen-active .player-container.is-player-fullscreen .player-controls,
+    body.player-fullscreen-active .player-container:fullscreen .player-controls,
+    body.player-fullscreen-active .player-container:-webkit-full-screen .player-controls {
+
+        z-index: 100;
+
+        height: 64px;
+
+        background: transparent;
+
+        pointer-events: none;
     }
 }
