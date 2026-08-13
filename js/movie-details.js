@@ -430,3 +430,61 @@ function initDiagnosticPlayer() {
 }
 
 loadMovieDetails();
+
+// Dynamic YouTube Iframe Tracking Fix for GA4
+function initYouTubeTracking() {
+    // 1. Load YouTube Iframe API if not already loaded
+    if (!window.YT) {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    // 2. Attach events once player iframe exists
+    var checkIframeExist = setInterval(function () {
+        var iframe = document.querySelector('iframe[src*="youtube.com"]');
+        if (iframe) {
+            clearInterval(checkIframeExist);
+
+            // Ensure enablejsapi=1 is present
+            var src = iframe.getAttribute('src');
+            if (src && src.indexOf('enablejsapi=1') === -1) {
+                iframe.setAttribute('src', src + (src.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1');
+            }
+
+            // Bind YouTube Player Events
+            window.onYouTubeIframeAPIReady = function () {
+                new YT.Player(iframe, {
+                    events: {
+                        'onStateChange': function (event) {
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                if (typeof gtag === 'function') {
+                                    gtag('event', 'video_start', {
+                                        'video_title': document.title,
+                                        'video_provider': 'youtube'
+                                    });
+                                }
+                            } else if (event.data === YT.PlayerState.ENDED) {
+                                if (typeof gtag === 'function') {
+                                    gtag('event', 'video_complete', {
+                                        'video_title': document.title,
+                                        'video_provider': 'youtube'
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            // Trigger if API was already ready
+            if (window.YT && window.YT.Player) {
+                window.onYouTubeIframeAPIReady();
+            }
+        }
+    }, 500);
+}
+
+// Run tracking setup on DOM load
+document.addEventListener('DOMContentLoaded', initYouTubeTracking);
