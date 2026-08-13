@@ -431,8 +431,9 @@ function initDiagnosticPlayer() {
 
 loadMovieDetails();
 
-// Dynamic YouTube Iframe Tracking with Progress Points (25%, 50%, 75%)
+// Reliable YouTube Iframe Progress Tracking
 function initYouTubeTracking() {
+    // 1. Ensure YouTube API Script is attached
     if (!window.YT) {
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -440,47 +441,49 @@ function initYouTubeTracking() {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
 
-    var checkIframeExist = setInterval(function () {
+    // 2. Poll for Iframe and attach player directly
+    var trackerInterval = setInterval(function () {
         var iframe = document.querySelector('iframe[src*="youtube.com"]');
-        if (iframe) {
-            clearInterval(checkIframeExist);
+        if (iframe && window.YT && window.YT.Player) {
+            clearInterval(trackerInterval);
 
+            // Ensure JS API parameter
             var src = iframe.getAttribute('src');
             if (src && src.indexOf('enablejsapi=1') === -1) {
                 iframe.setAttribute('src', src + (src.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1');
             }
 
-            window.onYouTubeIframeAPIReady = function () {
-                var trackedPoints = { 25: false, 50: false, 75: false };
-                var progressInterval;
+            var trackedPoints = { 25: false, 50: false, 75: false };
+            var progressCheckTimer = null;
 
-                new YT.Player(iframe, {
-                    events: {
-                        'onStateChange': function (event) {
-                            var player = event.target;
+            new YT.Player(iframe, {
+                events: {
+                    'onStateChange': function (event) {
+                        var player = event.target;
 
-                            if (event.data === YT.PlayerState.PLAYING) {
-                                if (typeof gtag === 'function' && !player.hasStarted) {
-                                    gtag('event', 'video_start', {
-                                        'video_title': document.title,
-                                        'video_provider': 'youtube'
-                                    });
-                                    player.hasStarted = true;
-                                }
+                        // Video Started
+                        if (event.data === YT.PlayerState.PLAYING) {
+                            if (typeof gtag === 'function' && !player.hasTrackedStart) {
+                                gtag('event', 'video_start', {
+                                    'video_title': document.title,
+                                    'video_provider': 'youtube'
+                                });
+                                player.hasTrackedStart = true;
+                            }
 
-                                // Check progress every second
-                                clearInterval(progressInterval);
-                                progressInterval = setInterval(function () {
+                            // Track progress every second
+                            if (!progressCheckTimer) {
+                                progressCheckTimer = setInterval(function () {
                                     var duration = player.getDuration();
                                     var currentTime = player.getCurrentTime();
                                     if (duration > 0) {
                                         var percent = Math.floor((currentTime / duration) * 100);
-                                        [25, 50, 75].forEach(function (point) {
-                                            if (percent >= point && !trackedPoints[point]) {
-                                                trackedPoints[point] = true;
+                                        [25, 50, 75].forEach(function (pt) {
+                                            if (percent >= pt && !trackedPoints[pt]) {
+                                                trackedPoints[pt] = true;
                                                 if (typeof gtag === 'function') {
                                                     gtag('event', 'video_progress', {
-                                                        'video_percent': point,
+                                                        'video_percent': pt,
                                                         'video_title': document.title
                                                     });
                                                 }
@@ -488,27 +491,26 @@ function initYouTubeTracking() {
                                         });
                                     }
                                 }, 1000);
-
-                            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-                                clearInterval(progressInterval);
                             }
+                        } else {
+                            if (progressCheckTimer) {
+                                clearInterval(progressCheckTimer);
+                                progressCheckTimer = null;
+                            }
+                        }
 
-                            if (event.data === YT.PlayerState.ENDED) {
-                                if (typeof gtag === 'function') {
-                                    gtag('event', 'video_complete', {
-                                        'video_title': document.title,
-                                        'video_provider': 'youtube'
-                                    });
-                                }
+                        // Video Complete
+                        if (event.data === YT.PlayerState.ENDED) {
+                            if (typeof gtag === 'function') {
+                                gtag('event', 'video_complete', {
+                                    'video_title': document.title,
+                                    'video_provider': 'youtube'
+                                });
                             }
                         }
                     }
-                });
-            };
-
-            if (window.YT && window.YT.Player) {
-                window.onYouTubeIframeAPIReady();
-            }
+                }
+            });
         }
     }, 500);
 }
