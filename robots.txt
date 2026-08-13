@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /admin/
 
-Sitemap: https://movietb.vercel.app/sitemap.xml
+Sitemap: https://www.movietb.com/sitemap.xml

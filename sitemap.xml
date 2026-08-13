@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage -->
   <url>
-    <loc>https://movietb.vercel.app/</loc>
+    <loc>https://www.movietb.com/</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -10,7 +10,7 @@
 
   <!-- DMCA Page -->
   <url>
-    <loc>https://movietb.vercel.app/dmca</loc>
+    <loc>https://www.movietb.com/dmca</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
@@ -18,7 +18,7 @@
 
   <!-- Privacy Policy Page -->
   <url>
-    <loc>https://movietb.vercel.app/privacy-policy</loc>
+    <loc>https://www.movietb.com/privacy-policy</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
