@@ -1,6 +1,30 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// ===== Google Analytics YouTube Auto-Tracking Fix =====
+document.addEventListener("DOMContentLoaded", function () {
+    function enableYouTubeApi() {
+        var iframes = document.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="youtube-nocookie.com"]');
+        iframes.forEach(function (iframe) {
+            var src = iframe.getAttribute('src');
+            if (src && src.indexOf('enablejsapi=1') === -1) {
+                var separator = src.indexOf('?') === -1 ? '?' : '&';
+                iframe.setAttribute('src', src + separator + 'enablejsapi=1');
+            }
+        });
+    }
+
+    // Run on initial load
+    enableYouTubeApi();
+
+    // Observe dynamically added iframes (movie player & modals)
+    var observer = new MutationObserver(function () {
+        enableYouTubeApi();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+
 // Search Redirection Logic
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
