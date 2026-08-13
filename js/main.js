@@ -94,8 +94,7 @@ export function createMovieCard(movie, id) {
 const categories = [
   { id: 'latest-trailers', containerId: 'trailers-grid' },
   { id: 'south-dubbed-movies', containerId: 'south-dubbed-grid' },
-  { id: 'classic-cinema', containerId: 'classics-grid' },
-  { id: 'movie-reviews', containerId: 'web-series-grid' } // Movie Reviews ki jagah Web Series
+  { id: 'classic-cinema', containerId: 'classics-grid' }
 ];
 
 async function loadCategoryMovies() {

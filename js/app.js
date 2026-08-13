@@ -83,16 +83,19 @@ const categories = [
   'latest-trailers',
   'south-dubbed-movies',
   'classic-cinema',
-  'Web Series'
+  { id: 'movie-reviews', gridId: 'web-series-grid' }
 ];
 
 async function loadHomepageMovies() {
   for (const cat of categories) {
-    const gridContainer = document.getElementById(`${cat}-grid`);
+    const catId = typeof cat === 'string' ? cat : cat.id;
+    const gridContainer = document.getElementById(
+      typeof cat === 'string' ? `${cat}-grid` : cat.gridId
+    );
     if (!gridContainer) continue;
 
     try {
-      const q = query(collection(db, "movies"), where("category", "==", cat), limit(4));
+      const q = query(collection(db, "movies"), where("category", "==", catId), limit(4));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
@@ -107,7 +110,7 @@ async function loadHomepageMovies() {
       gridContainer.innerHTML = html;
 
     } catch (error) {
-      console.error(`Error loading ${cat}:`, error);
+      console.error(`Error loading ${catId}:`, error);
       gridContainer.innerHTML = `<p class="loading">Failed to load content.</p>`;
     }
   }
