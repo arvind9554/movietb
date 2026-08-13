@@ -4,8 +4,9 @@
 <link rel="canonical" href="https://movietb.vercel.app/">
 <meta name="monetag" content="8ee95dcfb76800a5c27870af7ac1c3d3">
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
+  <!-- Preconnects & Optimized Google Tag -->
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <script defer src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -150,28 +151,38 @@
     <div class="footer-bottom">
       <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
       <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
-
-<script async="async" data-cfasync="false" src="https://pl30802305.effectivecpmnetwork.com/6bd8d71c6af73623cf100229dec66a69/invoke.js"></script>
-<div id="container-6bd8d71c6af73623cf100229dec66a69"></div>
-
-
     </div>
   </footer>
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/app.js"></script>
 
-<script>
-  atOptions = {
-    'key' : 'a13c336df3e4e494e17a3ee1da410f2f',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/a13c336df3e4e494e17a3ee1da410f2f/invoke.js"></script>
+<!-- Container Div for CPM Ad -->
+  <div id="container-6bd8d71c6af73623cf100229dec66a69"></div>
 
+  <!-- Deferred Ads Script -->
+  <script>
+    window.addEventListener('load', function() {
+      // Load CPM Ad
+      var adScript1 = document.createElement('script');
+      adScript1.src = "https://pl30802305.effectivecpmnetwork.com/6bd8d71c6af73623cf100229dec66a69/invoke.js";
+      adScript1.async = true;
+      adScript1.setAttribute('data-cfasync', 'false');
+      document.body.appendChild(adScript1);
+
+      // Load HighPerformance Format Ad
+      window.atOptions = {
+        'key' : 'a13c336df3e4e494e17a3ee1da410f2f',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+      var adScript2 = document.createElement('script');
+      adScript2.src = "https://www.highperformanceformat.com/a13c336df3e4e494e17a3ee1da410f2f/invoke.js";
+      document.body.appendChild(adScript2);
+    });
+  </script>
 
 </body>
 </html>
