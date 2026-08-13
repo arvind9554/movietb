@@ -9,7 +9,8 @@ const headingMap = {
   'latest-trailers': 'Latest Trailers',
   'south-dubbed-movies': 'Bollywood Movies',
   'classic-cinema': 'Hollywood Movies',
-  'movie-reviews': 'Web Series'
+  'movie-reviews': 'Web Series',
+  'story-tv': 'Story TV'
 };
 
 async function loadCategoryMovies() {

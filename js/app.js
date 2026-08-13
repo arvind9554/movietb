@@ -83,7 +83,8 @@ const categories = [
   'latest-trailers',
   'south-dubbed-movies',
   'classic-cinema',
-  { id: 'movie-reviews', gridId: 'web-series-grid' }
+  { id: 'movie-reviews', gridId: 'web-series-grid' },
+  'story-tv'
 ];
 
 async function loadHomepageMovies() {
