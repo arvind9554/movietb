@@ -431,9 +431,8 @@ function initDiagnosticPlayer() {
 
 loadMovieDetails();
 
-// Dynamic YouTube Iframe Tracking Fix for GA4
+// Dynamic YouTube Iframe Tracking with Progress Points (25%, 50%, 75%)
 function initYouTubeTracking() {
-    // 1. Load YouTube Iframe API if not already loaded
     if (!window.YT) {
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -441,31 +440,60 @@ function initYouTubeTracking() {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
 
-    // 2. Attach events once player iframe exists
     var checkIframeExist = setInterval(function () {
         var iframe = document.querySelector('iframe[src*="youtube.com"]');
         if (iframe) {
             clearInterval(checkIframeExist);
 
-            // Ensure enablejsapi=1 is present
             var src = iframe.getAttribute('src');
             if (src && src.indexOf('enablejsapi=1') === -1) {
                 iframe.setAttribute('src', src + (src.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1');
             }
 
-            // Bind YouTube Player Events
             window.onYouTubeIframeAPIReady = function () {
+                var trackedPoints = { 25: false, 50: false, 75: false };
+                var progressInterval;
+
                 new YT.Player(iframe, {
                     events: {
                         'onStateChange': function (event) {
+                            var player = event.target;
+
                             if (event.data === YT.PlayerState.PLAYING) {
-                                if (typeof gtag === 'function') {
+                                if (typeof gtag === 'function' && !player.hasStarted) {
                                     gtag('event', 'video_start', {
                                         'video_title': document.title,
                                         'video_provider': 'youtube'
                                     });
+                                    player.hasStarted = true;
                                 }
-                            } else if (event.data === YT.PlayerState.ENDED) {
+
+                                // Check progress every second
+                                clearInterval(progressInterval);
+                                progressInterval = setInterval(function () {
+                                    var duration = player.getDuration();
+                                    var currentTime = player.getCurrentTime();
+                                    if (duration > 0) {
+                                        var percent = Math.floor((currentTime / duration) * 100);
+                                        [25, 50, 75].forEach(function (point) {
+                                            if (percent >= point && !trackedPoints[point]) {
+                                                trackedPoints[point] = true;
+                                                if (typeof gtag === 'function') {
+                                                    gtag('event', 'video_progress', {
+                                                        'video_percent': point,
+                                                        'video_title': document.title
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
+                                }, 1000);
+
+                            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                                clearInterval(progressInterval);
+                            }
+
+                            if (event.data === YT.PlayerState.ENDED) {
                                 if (typeof gtag === 'function') {
                                     gtag('event', 'video_complete', {
                                         'video_title': document.title,
@@ -478,7 +506,6 @@ function initYouTubeTracking() {
                 });
             };
 
-            // Trigger if API was already ready
             if (window.YT && window.YT.Player) {
                 window.onYouTubeIframeAPIReady();
             }
@@ -486,5 +513,4 @@ function initYouTubeTracking() {
     }, 500);
 }
 
-// Run tracking setup on DOM load
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
