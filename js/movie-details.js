@@ -11,7 +11,8 @@ const categoryNames = {
   'south-dubbed-movies': 'Bollywood Movies',
   'classic-cinema': 'Hollywood Movies',
   'movie-reviews': 'Web Series',
-  'story-tv': 'Story TV'
+  'story-tv': 'Story TV',
+  'bhojpuri-movies': 'Bhojpuri Movies',
 };
 
 async function loadMovieDetails() {

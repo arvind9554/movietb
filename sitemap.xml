@@ -1,26 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage -->
+
+  <!-- Homepage (Main Root) -->
   <url>
     <loc>https://www.movietb.com/</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- Homepage Explicit Link -->
+  <url>
+    <loc>https://www.movietb.com/index.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Categories Page -->
+  <url>
+    <loc>https://www.movietb.com/category.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Movie Details Page -->
+  <url>
+    <loc>https://www.movietb.com/movie.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog Page -->
+  <url>
+    <loc>https://www.movietb.com/blog.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://www.movietb.com/about.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Search Page -->
+  <url>
+    <loc>https://www.movietb.com/search.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
   <!-- DMCA Page -->
   <url>
-    <loc>https://www.movietb.com/dmca</loc>
-    <lastmod>2026-08-11</lastmod>
+    <loc>https://www.movietb.com/dmca.html</loc>
+    <lastmod>2026-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <!-- Privacy Policy Page -->
   <url>
-    <loc>https://www.movietb.com/privacy-policy</loc>
-    <lastmod>2026-08-11</lastmod>
+    <loc>https://www.movietb.com/privacy-policy.html</loc>
+    <lastmod>2026-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
+
 </urlset>

@@ -17,7 +17,8 @@ const CATEGORY_LABELS = {
   'south-dubbed-movies': 'South Dubbed',
   'classic-cinema': 'Hollywood',
   'movie-reviews': 'Web Series',
-  'story-tv': 'Story TV'
+  'story-tv': 'Story TV',
+  'bhojpuri-movies': 'Bhojpuri Movies',
 };
 
 const PLACEHOLDER_POSTER = 'https://via.placeholder.com/300x450?text=MovieTB';

@@ -84,7 +84,8 @@ const categories = [
   'south-dubbed-movies',
   'classic-cinema',
   { id: 'movie-reviews', gridId: 'web-series-grid' },
-  'story-tv'
+  'story-tv',
+  'bhojpuri-movies',
 ];
 
 async function loadHomepageMovies() {
