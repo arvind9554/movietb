@@ -9,14 +9,6 @@
     <priority>1.0</priority>
   </url>
 
-  <!-- Homepage Explicit Link -->
-  <url>
-    <loc>https://www.movietb.com/index.html</loc>
-    <lastmod>2026-08-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-
   <!-- Categories Page -->
   <url>
     <loc>https://www.movietb.com/category.html</loc>
