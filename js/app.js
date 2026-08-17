@@ -81,6 +81,7 @@ async function loadHeroBackgroundTrailer() {
 
 const categories = [
   'latest-trailers',
+  'hollywood-english',
   'south-dubbed-movies',
   'classic-cinema',
   { id: 'movie-reviews', gridId: 'web-series-grid' },

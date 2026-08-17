@@ -8,6 +8,7 @@ const PLAYER_DIAGNOSTIC = urlParams.get('playerDiagnostic') === '1';
 
 const categoryNames = {
   'latest-trailers': 'Latest Trailers',
+  'hollywood-english': 'Hollywood (English)',
   'south-dubbed-movies': 'Bollywood Movies',
   'classic-cinema': 'Hollywood Movies',
   'movie-reviews': 'Web Series',

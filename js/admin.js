@@ -14,6 +14,7 @@ import {
 
 const CATEGORY_LABELS = {
   'latest-trailers': 'Latest Trailers',
+  'hollywood-english': 'Bollywood (English)',
   'south-dubbed-movies': 'South Dubbed',
   'classic-cinema': 'Hollywood',
   'movie-reviews': 'Web Series',
