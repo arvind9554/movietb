@@ -10,7 +10,7 @@ const categoryNames = {
   'latest-trailers': 'Latest Trailers',
   'hollywood-english': 'Hollywood (English)',
   'south-dubbed-movies': 'Bollywood Movies',
-  'classic-cinema': 'Hollywood Movies',
+  'classic-cinema': 'Hollywood Hindi',
   'movie-reviews': 'Web Series',
   'story-tv': 'Story TV',
   'bhojpuri-movies': 'Bhojpuri Movies',
