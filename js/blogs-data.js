@@ -1,7 +1,7 @@
 export const blogs = [
   {
     id: 1,
-    title: "2026 Ki Sabse Awaited Hollywood Hindi",
+    title: "2026 Ki Sabse Awaited Hollywood (Hindi)",
     image: "https://picsum.photos/seed/hollywood2026/800/450",
     category: "Hollywood",
     date: "5 Aug 2026",
