@@ -1,83 +1,384 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<link rel="canonical" href="https://www.movietb.com/about" />
-<meta name="monetag" content="be3612b8a8bfa09677a3cf45b8a4b3b8">
+  <link rel="canonical" href="https://www.movietb.com/about" />
 
-<!-- Favicon / Apple Touch Icon -->
-  <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
+  <meta name="monetag" content="be3612b8a8bfa09677a3cf45b8a4b3b8">
+
+  <!-- Favicon / Apple Touch Icon -->
+  <link rel="icon" type="image/png" href="https://www.movietb.com/assets/images/logo.png" />
   <link rel="apple-touch-icon" href="https://www.movietb.com/assets/images/logo.png" />
 
-  <!-- Open Graph / Social Sharing Tags (PNG/JPG Recommended for og:image) -->
+  <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.movietb.com/" />
-  <meta property="og:title" content="MovieTB - Watch Latest Movies & Series" />
-  <meta property="og:description" content="Explore and watch your favorite movies and web series online." />
+  <meta property="og:url" content="https://www.movietb.com/about" />
+  <meta property="og:title" content="About Us - MovieTB" />
+  <meta property="og:description" content="Learn more about MovieTB, our mission, content categories, and commitment to providing a simple entertainment discovery experience." />
   <meta property="og:image" content="https://www.movietb.com/assets/images/placeholder.jpg" />
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://www.movietb.com/" />
-  <meta name="twitter:title" content="MovieTB - Watch Latest Movies & Series" />
-  <meta name="twitter:description" content="Explore and watch your favorite movies and web series online." />
+  <meta name="twitter:url" content="https://www.movietb.com/about" />
+  <meta name="twitter:title" content="About Us - MovieTB" />
+  <meta name="twitter:description" content="Learn more about MovieTB, our mission, content categories, and entertainment discovery experience." />
   <meta name="twitter:image" content="https://www.movietb.com/assets/images/placeholder.jpg" />
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-KTG82NK7YD');
-</script>
+    gtag('config', 'G-KTG82NK7YD');
+  </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "MovieTB",
-  "url": "https://www.movietb.com/"
-}
-</script>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MovieTB",
+    "url": "https://www.movietb.com/",
+    "description": "MovieTB is an entertainment discovery platform for movies, trailers, web series and related content."
+  }
+  </script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>About Us - MovieTB</title>
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- About Page Styling -->
+  <style>
+    .about-page {
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 60px 20px 80px;
+    }
+
+    .about-hero {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .about-badge {
+      display: inline-block;
+      padding: 7px 16px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      background: rgba(229, 9, 20, 0.12);
+      border: 1px solid rgba(229, 9, 20, 0.3);
+      color: #e50914;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .about-hero h1 {
+      margin: 0 0 16px;
+      color: #fff;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .about-hero h1 .accent {
+      color: #e50914;
+    }
+
+    .about-hero p {
+      max-width: 720px;
+      margin: 0 auto;
+      color: #aaa;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .about-section {
+      margin-bottom: 28px;
+      padding: 30px;
+      background: linear-gradient(
+        145deg,
+        rgba(25, 25, 25, 0.98),
+        rgba(17, 17, 17, 0.98)
+      );
+      border: 1px solid #292929;
+      border-radius: 16px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .about-section h2 {
+      margin: 0 0 15px;
+      color: #fff;
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .about-section h2::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: -2px;
+      border-radius: 4px;
+      background: #e50914;
+    }
+
+    .about-section p {
+      margin: 0 0 14px;
+      color: #bdbdbd;
+      line-height: 1.85;
+      font-size: 0.96rem;
+    }
+
+    .about-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .about-list li {
+      position: relative;
+      padding: 15px 16px 15px 42px;
+      color: #c8c8c8;
+      line-height: 1.6;
+      background: #101010;
+      border: 1px solid #242424;
+      border-radius: 10px;
+    }
+
+    .about-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 15px;
+      top: 14px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(229, 9, 20, 0.14);
+      color: #e50914;
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .about-categories {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .about-category {
+      padding: 18px;
+      text-align: center;
+      background: #101010;
+      border: 1px solid #242424;
+      border-radius: 12px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .about-category:hover {
+      transform: translateY(-3px);
+      border-color: rgba(229, 9, 20, 0.45);
+    }
+
+    .about-category strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .about-category span {
+      color: #858585;
+      font-size: 0.8rem;
+    }
+
+    .about-highlight {
+      margin-top: 20px;
+      padding: 20px;
+      background: #0d0d0d;
+      border-left: 3px solid #e50914;
+      border-radius: 8px;
+      color: #c8c8c8;
+      line-height: 1.75;
+    }
+
+    .about-highlight strong {
+      color: #fff;
+    }
+
+    .about-contact {
+      text-align: center;
+      margin-top: 40px;
+      padding: 35px 25px;
+      border-radius: 16px;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(229, 9, 20, 0.13),
+          transparent 55%
+        ),
+        #141414;
+      border: 1px solid #292929;
+    }
+
+    .about-contact h2 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 1.5rem;
+    }
+
+    .about-contact p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #aaa;
+      line-height: 1.8;
+    }
+
+    .about-contact a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 11px 22px;
+      border-radius: 8px;
+      background: #e50914;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .about-contact a:hover {
+      background: #c90812;
+      transform: translateY(-2px);
+    }
+
+    .about-disclaimer {
+      margin-top: 25px;
+      text-align: center;
+      color: #666;
+      font-size: 0.78rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 700px) {
+      .about-page {
+        padding: 40px 14px 60px;
+      }
+
+      .about-hero {
+        margin-bottom: 32px;
+      }
+
+      .about-hero h1 {
+        font-size: 2rem;
+      }
+
+      .about-hero p {
+        font-size: 0.94rem;
+      }
+
+      .about-section {
+        padding: 22px;
+        border-radius: 13px;
+      }
+
+      .about-list {
+        grid-template-columns: 1fr;
+      }
+
+      .about-categories {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 430px) {
+      .about-categories {
+        grid-template-columns: 1fr;
+      }
+
+      .about-section h2 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
+  <!-- Navigation Bar -->
   <header class="navbar">
     <div class="navbar-left">
-      <button class="menu-toggle" id="menu-toggle" aria-label="Categories Menu">
+
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        aria-label="Categories Menu"
+      >
         <span></span>
         <span></span>
         <span></span>
       </button>
-      <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+
+      <div class="logo">
+        <a href="index.html">
+          Movie<span class="accent">TB</span>
+        </a>
+      </div>
+
     </div>
 
     <div class="search-box">
-      <input type="text" id="search-input" placeholder="Search movies, trailers...">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search movies, trailers..."
+      >
       <button id="search-btn">Search</button>
     </div>
 
     <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="blog.html">Blog</a>
-      <a href="about.html">About</a>
+      <a href="about.html" aria-current="page">About</a>
     </nav>
   </header>
 
+
   <!-- Left Sidebar - Categories -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
   <aside class="categories-sidebar" id="categories-sidebar">
+
     <div class="sidebar-header">
       <span>Categories</span>
-      <button class="sidebar-close" id="sidebar-close" aria-label="Close">&times;</button>
+
+      <button
+        class="sidebar-close"
+        id="sidebar-close"
+        aria-label="Close"
+      >
+        &times;
+      </button>
     </div>
+
     <nav class="sidebar-links">
       <a href="category.html?cat=latest-trailers">Trailers</a>
       <a href="category.html?cat=hollywood-english">Hollywood (English)</a>
@@ -87,66 +388,390 @@
       <a href="category.html?cat=story-tv">Story TV</a>
       <a href="category.html?cat=bhojpuri-movies">Bhojpuri Movies</a>
     </nav>
+
   </aside>
 
-  <main class="container" style="padding: 60px 20px; max-width: 900px; margin: 0 auto;">
-    <h1 style="margin-bottom: 20px;">About MovieTB</h1>
-    <p style="color: #ccc; line-height: 1.8; margin-bottom: 16px;">
-      MovieTB ek entertainment platform hai jahan aap latest trailers, South dubbed movies, Hollywood classics aur web series ke updates paa sakte hain — sab kuch ek jagah, bilkul free.
+
+  <!-- =========================
+       ABOUT PAGE
+  ========================== -->
+
+  <main class="about-page">
+
+    <!-- Hero -->
+    <section class="about-hero">
+
+      <span class="about-badge">
+        About MovieTB
+      </span>
+
+      <h1>
+        Welcome to <span class="accent">MovieTB</span>
+      </h1>
+
+      <p>
+        A simple entertainment platform designed to help movie and series
+        lovers discover trailers, movies, web series and other
+        entertainment content in one convenient place.
+      </p>
+
+    </section>
+
+
+    <!-- Who We Are -->
+    <section class="about-section">
+
+      <h2>Who We Are</h2>
+
+      <p>
+        MovieTB is an independent entertainment website created for people
+        who enjoy discovering new movies, trailers, web series and
+        regional entertainment content.
+      </p>
+
+      <p>
+        Our platform brings different categories of entertainment content
+        together in a clean and easy-to-navigate interface, making it
+        easier for visitors to discover content they may be interested in.
+      </p>
+
+    </section>
+
+
+    <!-- Our Mission -->
+    <section class="about-section">
+
+      <h2>Our Mission</h2>
+
+      <p>
+        Our mission is to make entertainment discovery simple, fast and
+        convenient. We aim to continuously improve MovieTB so visitors
+        can quickly find relevant movie information, trailers and
+        entertainment updates without unnecessary complexity.
+      </p>
+
+      <div class="about-highlight">
+        <strong>Our focus:</strong>
+        simple navigation, organized categories, useful movie information,
+        and a better overall browsing experience across desktop and
+        mobile devices.
+      </div>
+
+    </section>
+
+
+    <!-- What We Offer -->
+    <section class="about-section">
+
+      <h2>What You Can Find on MovieTB</h2>
+
+      <p>
+        MovieTB organizes entertainment content into several categories
+        so visitors can easily browse content based on their interests.
+      </p>
+
+      <ul class="about-list">
+
+        <li>
+          Latest trailers and upcoming movie updates
+        </li>
+
+        <li>
+          Bollywood and Hindi entertainment content
+        </li>
+
+        <li>
+          Hollywood movies and related content
+        </li>
+
+        <li>
+          Web series and episodic entertainment
+        </li>
+
+        <li>
+          Story TV and regional entertainment
+        </li>
+
+        <li>
+          Bhojpuri movies and regional content
+        </li>
+
+      </ul>
+
+    </section>
+
+
+    <!-- Categories -->
+    <section class="about-section">
+
+      <h2>Explore Our Categories</h2>
+
+      <p>
+        Browse MovieTB by category and discover content that matches
+        your interests.
+      </p>
+
+      <div class="about-categories">
+
+        <div class="about-category">
+          <strong>Latest Trailers</strong>
+          <span>Upcoming & new trailers</span>
+        </div>
+
+        <div class="about-category">
+          <strong>Bollywood</strong>
+          <span>Hindi movie content</span>
+        </div>
+
+        <div class="about-category">
+          <strong>Hollywood</strong>
+          <span>International cinema</span>
+        </div>
+
+        <div class="about-category">
+          <strong>Web Series</strong>
+          <span>Series & episodic content</span>
+        </div>
+
+        <div class="about-category">
+          <strong>Story TV</strong>
+          <span>Story-based entertainment</span>
+        </div>
+
+        <div class="about-category">
+          <strong>Bhojpuri</strong>
+          <span>Regional entertainment</span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Content & Sources -->
+    <section class="about-section">
+
+      <h2>Content & Sources</h2>
+
+      <p>
+        MovieTB may display movie information, thumbnails, trailers,
+        embedded media and links to external platforms or publicly
+        accessible sources.
+      </p>
+
+      <p>
+        Where third-party content is embedded or linked, the respective
+        platform or content owner remains responsible for that content.
+        MovieTB does not claim ownership of third-party copyrighted
+        material unless explicitly stated.
+      </p>
+
+      <p>
+        If you believe that any content displayed or linked through
+        MovieTB infringes your rights, please review our
+        <a href="dmca.html" style="color:#e50914;">
+          DMCA Disclaimer
+        </a>
+        and contact us with the relevant details.
+      </p>
+
+    </section>
+
+
+    <!-- User Experience -->
+    <section class="about-section">
+
+      <h2>Built for a Better User Experience</h2>
+
+      <p>
+        We understand that visitors want a website that is fast,
+        straightforward and easy to use. That is why we continuously
+        work on improving the design, search experience, category
+        navigation and mobile responsiveness of MovieTB.
+      </p>
+
+      <p>
+        Whether you are browsing from a smartphone, tablet or desktop,
+        our goal is to keep the experience simple and comfortable.
+      </p>
+
+    </section>
+
+
+    <!-- Continuous Improvement -->
+    <section class="about-section">
+
+      <h2>We're Constantly Improving</h2>
+
+      <p>
+        MovieTB is an evolving project. We regularly work on improving
+        existing features, adding useful categories, improving the
+        interface and making content easier to discover.
+      </p>
+
+      <p>
+        Your feedback helps us understand what visitors need and where
+        the platform can be improved.
+      </p>
+
+    </section>
+
+
+    <!-- Contact -->
+    <section class="about-contact">
+
+      <h2>Have a Suggestion?</h2>
+
+      <p>
+        Found something that could be improved, have a suggestion for a
+        new feature, or want to report an issue? We would love to hear
+        from you.
+      </p>
+
+      <a href="mailto:contact@movietb.com">
+        Contact MovieTB
+      </a>
+
+    </section>
+
+
+    <!-- Small Disclaimer -->
+    <p class="about-disclaimer">
+      MovieTB is an independent entertainment website. Names, logos,
+      trademarks and third-party content belong to their respective
+      owners. MovieTB does not claim ownership of third-party material
+      unless explicitly stated.
     </p>
-    <p style="color: #ccc; line-height: 1.8; margin-bottom: 16px;">
-      Hamara maqsad simple hai: movie lovers ko trusted aur legally embedded content dena, bina kisi hassle ke. Hum public domain aur YouTube se content embed karte hain, taaki aapko ek clean aur fast experience mile.
-    </p>
-    <p style="color: #ccc; line-height: 1.8;">
-      Agar aapke paas koi suggestion ya feedback hai, toh humein zaroor batayein — hum apni site ko behtar banate rehte hain.
-    </p>
+
   </main>
 
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
   <footer class="site-footer">
+
     <div class="footer-glow" aria-hidden="true"></div>
+
     <div class="footer-main">
+
       <div class="footer-brand">
-        <a href="index.html" class="footer-logo">Movie<span class="accent">TB</span></a>
-        <span class="footer-accent-line" aria-hidden="true"></span>
-        <p class="footer-tagline">Your destination for official trailers, movies and web series.</p>
+
+        <a href="index.html" class="footer-logo">
+          Movie<span class="accent">TB</span>
+        </a>
+
+        <span
+          class="footer-accent-line"
+          aria-hidden="true"
+        ></span>
+
+        <p class="footer-tagline">
+          Your destination for official trailers, movies and web series.
+        </p>
+
       </div>
-      <nav class="footer-col" aria-label="Footer quick links">
-        <h3 class="footer-heading">Quick Links</h3>
+
+
+      <nav
+        class="footer-col"
+        aria-label="Footer quick links"
+      >
+
+        <h3 class="footer-heading">
+          Quick Links
+        </h3>
+
         <ul class="footer-links-list">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="about.html">About</a></li>
+          <li>
+            <a href="index.html">Home</a>
+          </li>
+
+          <li>
+            <a href="blog.html">Blog</a>
+          </li>
+
+          <li>
+            <a href="about.html">About</a>
+          </li>
         </ul>
+
       </nav>
-      <nav class="footer-col" aria-label="Footer legal links">
-        <h3 class="footer-heading">Legal</h3>
+
+
+      <nav
+        class="footer-col"
+        aria-label="Footer legal links"
+      >
+
+        <h3 class="footer-heading">
+          Legal
+        </h3>
+
         <ul class="footer-links-list">
-          <li><a href="dmca.html">DMCA Disclaimer</a></li>
-          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+
+          <li>
+            <a href="dmca.html">
+              DMCA Disclaimer
+            </a>
+          </li>
+
+          <li>
+            <a href="privacy-policy.html">
+              Privacy Policy
+            </a>
+          </li>
+
         </ul>
+
       </nav>
+
     </div>
-    <p class="footer-legal">All content embedded legally from public domains / YouTube.</p>
-    <div class="footer-divider" aria-hidden="true"></div>
+
+
+    <p class="footer-legal">
+      Content and external media are provided subject to their respective
+      sources, owners and applicable policies.
+    </p>
+
+    <div
+      class="footer-divider"
+      aria-hidden="true"
+    ></div>
+
+
     <div class="footer-bottom">
-      <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
-      <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
+
+      <p class="footer-copy">
+        &copy; 2026 MovieTB. All rights reserved.
+      </p>
+
+      <p class="developer-credit">
+        Developer : Arvind Kumar Pandey
+      </p>
+
     </div>
+
   </footer>
 
+
+  <!-- Main JavaScript -->
   <script type="module" src="js/main.js"></script>
 
-<script>
-  atOptions = {
-    'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
 
+  <!-- Banner Advertisement -->
+  <script>
+    atOptions = {
+      'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
+      'format' : 'iframe',
+      'height' : 60,
+      'width' : 468,
+      'params' : {}
+    };
+  </script>
+
+  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
 
 </body>
 </html>
