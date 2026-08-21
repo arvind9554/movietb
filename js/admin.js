@@ -14,9 +14,9 @@ import {
 
 const CATEGORY_LABELS = {
   'latest-trailers': 'Latest Trailers',
-  'hollywood-english': 'Bollywood (English)',
+  'hollywood-english': 'Hollywood (English)',
   'south-dubbed-movies': 'South Dubbed',
-  'classic-cinema': 'Hollywood',
+  'classic-cinema': 'Hollywood (Hindi)',
   'movie-reviews': 'Web Series',
   'story-tv': 'Story TV',
   'bhojpuri-movies': 'Bhojpuri Movies',
