@@ -1,6 +1,6 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createMovieCard, createTrailerCard, getYouTubeId } from './main.js';
+import { createMovieCard, getYouTubeId } from './main.js';
 
 function normalizeEmbedUrl(url) {
   if (!url) return '';
@@ -43,38 +43,6 @@ function getDocTimestampMs(docSnap) {
   return 0;
 }
 
-function resolvePosterUrl(movie) {
-  const ytId = getYouTubeId(normalizeEmbedUrl(movie.embedUrl || movie.trailerUrl || ''));
-  if (movie.posterUrl && movie.posterUrl.trim()) {
-    return movie.posterUrl.trim();
-  }
-  if (ytId) {
-    return `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
-  }
-  return '';
-}
-
-function setHeroFeaturedMovie(movie, docId) {
-  const playBtn = document.getElementById('hero-play-btn');
-  const detailsBtn = document.getElementById('hero-details-btn');
-  const bgImage = document.getElementById('hero-bg-image');
-
-  const movieUrl = `movie.html?id=${docId}`;
-
-  if (playBtn) {
-    playBtn.href = movieUrl;
-  }
-  if (detailsBtn) {
-    detailsBtn.href = movieUrl;
-  }
-
-  const poster = resolvePosterUrl(movie);
-  if (bgImage && poster) {
-    bgImage.style.backgroundImage = `url('${poster}'), radial-gradient(ellipse 80% 60% at 70% 40%, rgba(229, 9, 20, 0.18) 0%, transparent 55%), linear-gradient(135deg, #1a0a0a 0%, #0d0d0d 40%, #050505 100%)`;
-    bgImage.classList.add('has-poster');
-  }
-}
-
 async function loadHeroBackgroundTrailer() {
   const hero = document.getElementById('hero');
   const videoBg = document.getElementById('hero-video-bg');
@@ -94,8 +62,6 @@ async function loadHeroBackgroundTrailer() {
     )[0];
 
     const movie = latestDoc.data();
-    setHeroFeaturedMovie(movie, latestDoc.id);
-
     const videoId = getYouTubeId(normalizeEmbedUrl(movie.embedUrl || movie.trailerUrl || ''));
     if (!videoId) return;
 
@@ -113,44 +79,8 @@ async function loadHeroBackgroundTrailer() {
   }
 }
 
-async function loadTrailerCarousel() {
-  const track = document.getElementById('latest-trailers-track');
-  const carouselRoot = document.getElementById('trailer-carousel');
-  if (!track) return;
-
-  try {
-    const q = query(
-      collection(db, 'movies'),
-      where('category', '==', 'latest-trailers'),
-      limit(20)
-    );
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      track.innerHTML = `<p class="loading">No trailers available.</p>`;
-      return;
-    }
-
-    const sortedDocs = [...querySnapshot.docs].sort(
-      (a, b) => getDocTimestampMs(b) - getDocTimestampMs(a)
-    );
-
-    let html = '';
-    sortedDocs.forEach((docSnap) => {
-      html += createTrailerCard(docSnap.data(), docSnap.id);
-    });
-    track.innerHTML = html;
-
-    document.dispatchEvent(new CustomEvent('trailer-carousel-ready', {
-      detail: { root: carouselRoot }
-    }));
-  } catch (error) {
-    console.error('Error loading trailer carousel:', error);
-    track.innerHTML = `<p class="loading">Failed to load trailers.</p>`;
-  }
-}
-
 const categories = [
+  'latest-trailers',
   'hollywood-english',
   'south-dubbed-movies',
   'classic-cinema',
@@ -168,7 +98,7 @@ async function loadHomepageMovies() {
     if (!gridContainer) continue;
 
     try {
-      const q = query(collection(db, 'movies'), where('category', '==', catId), limit(4));
+      const q = query(collection(db, "movies"), where("category", "==", catId), limit(4));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
@@ -181,6 +111,7 @@ async function loadHomepageMovies() {
         html += createMovieCard(doc.data(), doc.id);
       });
       gridContainer.innerHTML = html;
+
     } catch (error) {
       console.error(`Error loading ${catId}:`, error);
       gridContainer.innerHTML = `<p class="loading">Failed to load content.</p>`;
@@ -189,5 +120,4 @@ async function loadHomepageMovies() {
 }
 
 loadHomepageMovies();
-loadTrailerCarousel();
 loadHeroBackgroundTrailer();

@@ -90,39 +90,6 @@ export function createMovieCard(movie, id) {
   `;
 }
 
-// Trailer card for carousel (play overlay, cinematic layout)
-export function createTrailerCard(movie, id) {
-  const { primary, fallback } = resolvePoster(movie);
-  const safeTitle = (movie.title || 'Trailer').replace(/"/g, '&quot;');
-
-  return `
-    <article
-      class="trailer-card"
-      tabindex="0"
-      role="button"
-      aria-label="Watch trailer: ${safeTitle}"
-      onclick="window.location.href='movie.html?id=${id}'"
-      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='movie.html?id=${id}';}"
-    >
-      <div class="poster-wrapper">
-        <img
-          src="${primary}"
-          alt="${safeTitle}"
-          loading="lazy"
-          onerror="this.onerror=null;this.src='${fallback}';this.onerror=function(){this.onerror=null;this.src='https://via.placeholder.com/300x450?text=No+Poster';}"
-        >
-        <div class="poster-overlay" aria-hidden="true"></div>
-        <span class="trailer-play" aria-hidden="true">&#9654;</span>
-        <span class="badge">${movie.format || 'HD'}</span>
-      </div>
-      <div class="card-details">
-        <h3>${movie.title}</h3>
-        <div class="card-meta">${movie.year || ''}${movie.year && movie.language ? ' • ' : ''}${movie.language || ''}</div>
-      </div>
-    </article>
-  `;
-}
-
 // Load Home Page Categories Automatically
 const categories = [
   { id: 'latest-trailers', containerId: 'trailers-grid' },

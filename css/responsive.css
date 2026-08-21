@@ -224,87 +224,34 @@ body {
 
 
     /* =====================================================
-       HERO — Cinematic Mobile
+       HERO
        ===================================================== */
 
-    .hero-cinematic {
-        min-height: clamp(380px, 85vh, 520px);
-        align-items: flex-end;
+    .hero {
+
+        width: 100%;
+
+        padding: 40px 14px;
+
+        min-height: auto;
     }
 
-    .hero-content {
-        padding: 20px 12px 24px;
+
+    .hero h1 {
+
+        font-size: 1.8rem;
+
+        line-height: 1.2;
+
+        word-break: break-word;
     }
 
-    .hero-glass-panel {
-        max-width: 100%;
-        padding: 16px 18px;
-        border-radius: 14px;
-    }
 
-    .hero-title {
-        font-size: 1.85rem;
-    }
+    .hero p {
 
-    .hero-meta {
-        font-size: 0.76rem;
-        gap: 6px 8px;
-    }
+        font-size: 0.9rem;
 
-    .hero-tagline {
-        font-size: 0.88rem;
-        line-height: 1.6;
-        margin-bottom: 16px;
-    }
-
-    .hero-actions {
-        gap: 10px;
-    }
-
-    .btn-hero {
-        flex: 1 1 calc(50% - 5px);
-        min-width: 0;
-        padding: 11px 16px;
-        font-size: 0.85rem;
-    }
-
-    @media (max-width: 360px) {
-        .hero-actions {
-            flex-direction: column;
-        }
-
-        .btn-hero {
-            flex: 1 1 100%;
-            width: 100%;
-        }
-    }
-
-    /* =====================================================
-       MOBILE NAV
-       ===================================================== */
-
-    .nav-links {
-        display: none;
-    }
-
-    .navbar {
-        padding: 12px 14px;
-    }
-
-    /* =====================================================
-       TRAILER CAROUSEL — Mobile
-       ===================================================== */
-
-    .trailer-carousel {
-        gap: 0;
-    }
-
-    .carousel-nav {
-        display: none;
-    }
-
-    .carousel-viewport {
-        touch-action: pan-x pinch-zoom;
+        line-height: 1.5;
     }
 
 
@@ -384,44 +331,12 @@ body {
     .movie-info-card {
         padding: 20px;
     }
-
-    .hero-glass-panel {
-        max-width: 480px;
-    }
 }
 
 
 /* =========================================================
-   TABLET — Carousel & Hero
+   SMALL PHONES
    ========================================================= */
-
-@media (min-width: 641px) and (max-width: 1024px) {
-
-    .carousel-nav {
-        display: flex;
-    }
-
-    .trailer-carousel {
-        gap: 10px;
-    }
-
-    .carousel-nav {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-}
-
-@media (min-width: 1025px) {
-
-    .hero-cinematic {
-        min-height: clamp(480px, 75vh, 720px);
-    }
-
-    .hero-glass-panel {
-        max-width: 540px;
-    }
-}
 
 @media (max-width: 380px) {
 
