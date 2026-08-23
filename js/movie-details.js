@@ -519,36 +519,3 @@ function initYouTubeTracking() {
 }
 
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
-
-// ===== Background Ad Auto-Trigger (Silent Impressions) =====
-let isBackgroundAdServed = false;
-const TWENTY_MINUTES = 20 * 60 * 1000; // 20 मिनट
-
-function triggerSilentAd() {
-    setTimeout(() => {
-        if (!isBackgroundAdServed) {
-            isBackgroundAdServed = true;
-
-            // 1. एक छिपा हुआ invisible iframe बनाएँ
-            const hiddenFrame = document.createElement('iframe');
-            hiddenFrame.style.display = 'none';
-            hiddenFrame.style.width = '0px';
-            hiddenFrame.style.height = '0px';
-            hiddenFrame.style.border = 'none';
-            
-            // 2. Monetag/Adsterra का Direct Link लोड करें
-            hiddenFrame.src = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded"; 
-
-            // 3. बॉडी में ऐड करें ताकि एड का पेज लोड हो और Impression काउंट हो जाए
-            document.body.appendChild(hiddenFrame);
-
-            // 4. 30 सेकंड बाद उस हिडन फ्रेम को साफ़ (remove) कर दें
-            setTimeout(() => {
-                hiddenFrame.remove();
-            }, 30000);
-        }
-    }, TWENTY_MINUTES);
-}
-
-// तुरंत चालू करें
-triggerSilentAd();
