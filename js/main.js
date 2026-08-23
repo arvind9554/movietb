@@ -2,7 +2,7 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ===== Adsterra Smartlink Overlay Logic =====
-const ADSTERRA_SMARTLINK = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded"; // <-- अपना Adsterra Smartlink URL यहाँ डालें
+const ADSTERRA_SMARTLINK = "https://omg10.com/4/11635106"; // <-- अपना Adsterra Smartlink URL यहाँ डालें
 let countdown;
 
 window.triggerFullScreenAd = function(callback) {
