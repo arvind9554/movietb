@@ -935,3 +935,33 @@ a { color: var(--text-primary); text-decoration: none; }
     background: #fff;
     border: none;
 }
+
+
+#closeAdBtn {
+    background: rgba(0, 0, 0, 0.4); /* हल्का पारदर्शी बैकग्राउंड */
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 20px;
+    font-weight: bold;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%; /* गोल बटन */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px); /* ग्लास फील */
+    transition: all 0.3s ease;
+}
+
+#closeAdBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+#closeAdBtn:not(:disabled):hover {
+    background: rgba(255, 0, 0, 0.7); /* होवर करने पर हल्का लाल */
+    border-color: #ff4d4d;
+    transform: scale(1.05);
+}

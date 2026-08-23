@@ -29,7 +29,7 @@ window.triggerFullScreenAd = function(callback) {
 
         if (timeLeft <= 0) {
             clearInterval(countdown);
-            timerText.innerText = "You can now skip the ad";
+            timerText.innerText = "";
             closeBtn.disabled = false;
         }
     }, 1000);
