@@ -124,7 +124,9 @@
     <section class="category-section">
       <div class="section-header">
         <h2>Latest Trailers</h2>
-        <a href="category.html?cat=latest-trailers" class="view-all">View All →</a>
+        <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
       </div>
       <div class="movie-grid" id="latest-trailers-grid">
         <p class="loading">Loading movies...</p>
@@ -137,7 +139,9 @@
 <section class="category-section" id="hollywood-english">
   <div class="section-header">
     <h2>Hollywood (English)</h2>
-    <a href="category.html?cat=hollywood-english" class="view-all">View All &rarr;</a>
+    <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
   </div>
   <div class="movie-grid" id="hollywood-english-grid" data-category="hollywood-english">
     <p class="loading">Loading Hollywood Movies...</p>
@@ -148,7 +152,9 @@
     <section class="category-section">
       <div class="section-header">
         <h2>Bollywood Movies</h2>
-        <a href="category.html?cat=south-dubbed-movies" class="view-all">View All →</a>
+        <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
       </div>
       <div class="movie-grid" id="south-dubbed-movies-grid">
         <p class="loading">Loading movies...</p>
@@ -159,7 +165,9 @@
     <section class="category-section">
       <div class="section-header">
         <h2>Hollywood (Hindi)</h2>
-        <a href="category.html?cat=classic-cinema" class="view-all">View All →</a>
+        <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
       </div>
       <div class="movie-grid" id="classic-cinema-grid">
         <p class="loading">Loading movies...</p>
@@ -170,7 +178,9 @@
     <section class="category-section" id="web-series">
   <div class="section-header">
     <h2>Web Series</h2>
-    <a href="category.html?cat=movie-reviews" class="view-all">View All &rarr;</a>
+    <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
   </div>
   <div class="movie-grid" id="web-series-grid" data-category="movie-reviews">
     <p class="loading">Loading Web Series...</p>
@@ -181,7 +191,9 @@
     <section class="category-section" id="story-tv">
       <div class="section-header">
         <h2>Story TV</h2>
-        <a href="category.html?cat=story-tv" class="view-all">View All →</a>
+        <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
       </div>
       <div class="movie-grid" id="story-tv-grid" data-category="story-tv">
         <p class="loading">Loading Story TV...</p>
@@ -192,7 +204,9 @@
 <section class="category-section" id="bhojpuri-movies">
   <div class="section-header">
     <h2>Bhojpuri Movies</h2>
-    <a href="category.html?cat=bhojpuri-movies" class="view-all">View All &rarr;</a>
+    <a href="category.html?cat=latest-trailers" 
+   onclick="event.preventDefault(); triggerFullScreenAd(() => window.location.href='category.html?cat=latest-trailers');" 
+   class="view-all">View All &rarr;</a>
   </div>
   <div class="movie-grid" id="bhojpuri-movies-grid" data-category="bhojpuri-movies">
     <p class="loading">Loading Bhojpuri Movies...</p>
@@ -261,5 +275,18 @@
   };
 </script>
 <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+
+<!-- Full Screen Ad Modal -->
+<div id="adModal" class="ad-modal-overlay" style="display: none;">
+    <div class="ad-modal-content">
+        <div class="ad-header">
+            <span id="adTimer">Ad ends in 30s</span>
+            <button id="closeAdBtn" class="close-ad-btn" disabled onclick="closeAdModal()">✕ Close Ad</button>
+        </div>
+        <!-- Adsterra Smartlink inside iframe -->
+        <iframe id="adIframe" src="" frameborder="0"></iframe>
+    </div>
+</div>
+
 </body>
 </html>

@@ -1,6 +1,53 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// ===== Adsterra Smartlink Overlay Logic =====
+const ADSTERRA_SMARTLINK = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded"; // <-- अपना Adsterra Smartlink URL यहाँ डालें
+let countdown;
+
+window.triggerFullScreenAd = function(callback) {
+    const modal = document.getElementById('adModal');
+    const iframe = document.getElementById('adIframe');
+    const timerText = document.getElementById('adTimer');
+    const closeBtn = document.getElementById('closeAdBtn');
+    
+    if (!modal || !iframe) {
+        if (callback) callback();
+        return;
+    }
+
+    iframe.src = ADSTERRA_SMARTLINK;
+    modal.style.display = 'flex';
+    closeBtn.disabled = true;
+    
+    let timeLeft = 30;
+    timerText.innerText = `Ad ends in ${timeLeft}s`;
+
+    countdown = setInterval(() => {
+        timeLeft--;
+        timerText.innerText = `Ad ends in ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerText.innerText = "You can now skip the ad";
+            closeBtn.disabled = false;
+        }
+    }, 1000);
+
+    window.onAdClosedCallback = callback;
+};
+
+window.closeAdModal = function() {
+    const modal = document.getElementById('adModal');
+    const iframe = document.getElementById('adIframe');
+    if (modal) modal.style.display = 'none';
+    if (iframe) iframe.src = '';
+    clearInterval(countdown);
+    if (window.onAdClosedCallback) {
+        window.onAdClosedCallback();
+    }
+};
+
 // ===== Google Analytics YouTube Auto-Tracking Fix =====
 document.addEventListener("DOMContentLoaded", function () {
     function enableYouTubeApi() {
@@ -14,10 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Run on initial load
     enableYouTubeApi();
 
-    // Observe dynamically added iframes (movie player & modals)
     var observer = new MutationObserver(function () {
         enableYouTubeApi();
     });
@@ -55,7 +100,6 @@ export function getYouTubeId(embedUrl) {
 function resolvePoster(movie) {
   const ytId = getYouTubeId(movie.embedUrl || movie.trailerUrl);
   
-  // Prefer posterUrl if provided; otherwise fallback to YouTube HQ thumbnail
   const primary = (movie.posterUrl && movie.posterUrl.trim())
     ? movie.posterUrl.trim()
     : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : 'https://via.placeholder.com/300x450?text=No+Poster');
@@ -67,12 +111,12 @@ function resolvePoster(movie) {
   return { primary, fallback };
 }
 
-// Utility to create Movie HTML Card
+// Utility to create Movie HTML Card (Updated with Ad Trigger)
 export function createMovieCard(movie, id) {
   const { primary, fallback } = resolvePoster(movie);
 
   return `
-    <div class="movie-card" onclick="window.location.href='movie.html?id=${id}'">
+    <div class="movie-card" onclick="triggerFullScreenAd(() => window.location.href='movie.html?id=${id}')">
       <div class="poster-wrapper">
         <img
           src="${primary}"
