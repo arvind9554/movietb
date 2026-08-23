@@ -206,5 +206,21 @@ if (menuToggle) {
   });
 }
 
+// ===== 20 Min Auto Ad Trigger Logic =====
+function startMovieAdTimer() {
+    const TWENTY_MINUTES = 20 * 60 * 1000; // 20 मिनट (1200000 ms)
+
+    setTimeout(() => {
+        if (typeof window.triggerFullScreenAd === 'function') {
+            window.triggerFullScreenAd(() => {
+                console.log('20 मिनट एड खत्म हुआ, प्लेबैक जारी है।');
+            });
+        }
+    }, TWENTY_MINUTES);
+}
+
+// पेज लोड होते ही 20 मिनट का टाइमर चालू हो जाएगा
+document.addEventListener('DOMContentLoaded', startMovieAdTimer);
+
 if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
 if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
