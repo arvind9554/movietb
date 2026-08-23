@@ -2,7 +2,7 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ===== Adsterra Smartlink Overlay Logic =====
-const ADSTERRA_SMARTLINK = "https://omg10.com/4/11635106"; // <-- अपना monetag Smartlink URL यहाँ डालें
+const MONETAG_DIRECTLINK = "https://omg10.com/4/11635106"; // <-- अपना monetag Smartlink URL यहाँ डालें
 let countdown;
 
 window.triggerFullScreenAd = function(callback) {
@@ -16,7 +16,7 @@ window.triggerFullScreenAd = function(callback) {
         return;
     }
 
-    iframe.src = ADSTERRA_SMARTLINK;
+    iframe.src = MONETAG_DIRECTLINK;
     modal.style.display = 'flex';
     closeBtn.disabled = true;
     
