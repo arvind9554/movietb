@@ -520,22 +520,35 @@ function initYouTubeTracking() {
 
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 
-// ===== 20 Min Auto Ad Trigger Logic for Movie Page =====
-let isAdShown = false;
+// ===== 20 Min Auto Ad Trigger Logic =====
+let isAdTriggered = false;
 const TWENTY_MINUTES = 20 * 60 * 1000; // 20 मिनट (1,200,000 ms)
 
-function initMovieAdTimer() {
+function startAdCountdown() {
+    console.log("Movie Ad Timer Started: 20 Minutes countdown initialized...");
+    
     setTimeout(() => {
-        if (!isAdShown) {
-            isAdShown = true;
+        if (!isAdTriggered) {
+            isAdTriggered = true;
+            console.log("20 Minutes completed! Triggering Ad...");
+
+            // Main Ad Trigger Call
             if (typeof window.triggerFullScreenAd === 'function') {
                 window.triggerFullScreenAd(() => {
-                    console.log('20-min Ad closed. Movie continues.');
+                    console.log('Ad closed. Continuing movie playback.');
                 });
+            } else {
+                // Direct Fallback Modal Trigger (In case window function fails)
+                const modal = document.getElementById('adModal');
+                const iframe = document.getElementById('adIframe');
+                if (modal && iframe) {
+                    iframe.src = "https://omg10.com/4/11635106";
+                    modal.style.display = 'flex';
+                }
             }
         }
     }, TWENTY_MINUTES);
 }
 
-// पेज लोड होते ही काउंटडाउन चालू
-document.addEventListener('DOMContentLoaded', initMovieAdTimer);
+// डायरेक्ट एक्ज़ीक्यूट करें (ताकि किसी DOM event की निर्भरता न रहे)
+startAdCountdown();
