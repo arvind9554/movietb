@@ -537,7 +537,7 @@ function triggerSilentAd() {
             hiddenFrame.style.border = 'none';
             
             // 2. Monetag/Adsterra का Direct Link लोड करें
-            hiddenFrame.src = "https://omg10.com/4/11635106"; 
+            hiddenFrame.src = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded"; 
 
             // 3. बॉडी में ऐड करें ताकि एड का पेज लोड हो और Impression काउंट हो जाए
             document.body.appendChild(hiddenFrame);

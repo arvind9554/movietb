@@ -1,26 +1,51 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ===== Monetag Direct Link Logic (High CPM & Direct Impressions) =====
-const MONETAG_DIRECTLINK = "https://omg10.com/4/11635382";
+// ===== Adsterra Smartlink Overlay Logic =====
+const ADSTERRA_SMARTLINK = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded"; // <-- अपना monetag Smartlink URL यहाँ डालें
+let countdown;
 
 window.triggerFullScreenAd = function(callback) {
-    // 1. Monetag Direct Link को नए टैब में खोलें (ताकि कैप्चा ब्लॉक न हो और 100% View काउंट हो)
-    try {
-        window.open(MONETAG_DIRECTLINK, "_blank");
-    } catch (e) {
-        console.error("Ad popup blocked:", e);
+    const modal = document.getElementById('adModal');
+    const iframe = document.getElementById('adIframe');
+    const timerText = document.getElementById('adTimer');
+    const closeBtn = document.getElementById('closeAdBtn');
+    
+    if (!modal || !iframe) {
+        if (callback) callback();
+        return;
     }
 
-    // 2. तुरंत यूज़र को उनके डेस्टिनेशन (जैसे मूवी पेज) पर भेजें
-    if (callback && typeof callback === 'function') {
-        callback();
-    }
+    iframe.src = ADSTERRA_SMARTLINK;
+    modal.style.display = 'flex';
+    closeBtn.disabled = true;
+    
+    let timeLeft = 15;
+    timerText.innerText = `Ad ends in ${timeLeft}s`;
+
+    countdown = setInterval(() => {
+        timeLeft--;
+        timerText.innerText = `Ad ends in ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerText.innerText = "You can now skip the ad";
+            closeBtn.disabled = false;
+        }
+    }, 1000);
+
+    window.onAdClosedCallback = callback;
 };
 
 window.closeAdModal = function() {
     const modal = document.getElementById('adModal');
+    const iframe = document.getElementById('adIframe');
     if (modal) modal.style.display = 'none';
+    if (iframe) iframe.src = '';
+    clearInterval(countdown);
+    if (window.onAdClosedCallback) {
+        window.onAdClosedCallback();
+    }
 };
 
 // ===== Google Analytics YouTube Auto-Tracking Fix =====
@@ -180,6 +205,7 @@ if (menuToggle) {
     }
   });
 }
+
 
 if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
 if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
