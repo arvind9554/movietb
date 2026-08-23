@@ -519,3 +519,23 @@ function initYouTubeTracking() {
 }
 
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
+
+// ===== 20 Min Auto Ad Trigger Logic for Movie Page =====
+let isAdShown = false;
+const TWENTY_MINUTES = 20 * 60 * 1000; // 20 मिनट (1,200,000 ms)
+
+function initMovieAdTimer() {
+    setTimeout(() => {
+        if (!isAdShown) {
+            isAdShown = true;
+            if (typeof window.triggerFullScreenAd === 'function') {
+                window.triggerFullScreenAd(() => {
+                    console.log('20-min Ad closed. Movie continues.');
+                });
+            }
+        }
+    }, TWENTY_MINUTES);
+}
+
+// पेज लोड होते ही काउंटडाउन चालू
+document.addEventListener('DOMContentLoaded', initMovieAdTimer);
