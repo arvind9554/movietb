@@ -47,7 +47,6 @@ window.closeAdModal = function() {
         window.onAdClosedCallback();
     }
 };
-
 // ===== Google Analytics YouTube Auto-Tracking Fix =====
 document.addEventListener("DOMContentLoaded", function () {
     function enableYouTubeApi() {
