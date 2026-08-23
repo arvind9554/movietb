@@ -2,7 +2,7 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ===== Adsterra Smartlink Overlay Logic =====
-const ADSTERRA_SMARTLINK = "https://omg10.com/4/11635106"; // <-- अपना Adsterra Smartlink URL यहाँ डालें
+const ADSTERRA_SMARTLINK = "https://omg10.com/4/11635106"; // <-- अपना monetag Smartlink URL यहाँ डालें
 let countdown;
 
 window.triggerFullScreenAd = function(callback) {
@@ -20,7 +20,7 @@ window.triggerFullScreenAd = function(callback) {
     modal.style.display = 'flex';
     closeBtn.disabled = true;
     
-    let timeLeft = 30;
+    let timeLeft = 15;
     timerText.innerText = `Ad ends in ${timeLeft}s`;
 
     countdown = setInterval(() => {
