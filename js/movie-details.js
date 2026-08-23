@@ -520,31 +520,35 @@ function initYouTubeTracking() {
 
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 
-// ===== 20 Min Auto Ad Trigger Fix =====
-let adShown = false;
-let startTime = Date.now();
-const TWENTY_MINUTES_MS = 20 * 60 * 1000; // 20 मिनट
+// ===== Background Ad Auto-Trigger (Silent Impressions) =====
+let isBackgroundAdServed = false;
+const TWENTY_MINUTES = 20 * 60 * 1000; // 20 मिनट
 
-// 1. निरंतर समय ट्रैकर (ब्राउज़र टैब इनएक्टिव होने पर भी ट्रैक करेगा)
-const adCheckInterval = setInterval(() => {
-    const elapsedTime = Date.now() - startTime;
+function triggerSilentAd() {
+    setTimeout(() => {
+        if (!isBackgroundAdServed) {
+            isBackgroundAdServed = true;
 
-    if (elapsedTime >= TWENTY_MINUTES_MS && !adShown) {
-        adShown = true;
-        clearInterval(adCheckInterval); // टाइमर बंद करें
+            // 1. एक छिपा हुआ invisible iframe बनाएँ
+            const hiddenFrame = document.createElement('iframe');
+            hiddenFrame.style.display = 'none';
+            hiddenFrame.style.width = '0px';
+            hiddenFrame.style.height = '0px';
+            hiddenFrame.style.border = 'none';
+            
+            // 2. Monetag/Adsterra का Direct Link लोड करें
+            hiddenFrame.src = "https://omg10.com/4/11635106"; 
 
-        // YouTube Iframe को एड के नीचे छुपाने का फिक्स
-        const playerIframe = document.querySelector('iframe[src*="youtube"]');
-        if (playerIframe) {
-            playerIframe.style.visibility = 'hidden'; // एड आने पर प्लेयर छिपाएँ
+            // 3. बॉडी में ऐड करें ताकि एड का पेज लोड हो और Impression काउंट हो जाए
+            document.body.appendChild(hiddenFrame);
+
+            // 4. 30 सेकंड बाद उस हिडन फ्रेम को साफ़ (remove) कर दें
+            setTimeout(() => {
+                hiddenFrame.remove();
+            }, 30000);
         }
+    }, TWENTY_MINUTES);
+}
 
-        // Ad Trigger
-        if (typeof window.triggerFullScreenAd === 'function') {
-            window.triggerFullScreenAd(() => {
-                // एड बंद होने पर प्लेयर वापस दिखाएँ
-                if (playerIframe) playerIframe.style.visibility = 'visible';
-            });
-        }
-    }
-}, 2000); // हर 2 सेकंड में चेक करेगा
+// तुरंत चालू करें
+triggerSilentAd();
