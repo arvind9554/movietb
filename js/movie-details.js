@@ -520,35 +520,31 @@ function initYouTubeTracking() {
 
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 
-// ===== 20 Min Auto Ad Trigger Logic =====
-let isAdTriggered = false;
-const TWENTY_MINUTES = 20 * 60 * 1000; // 20 मिनट (1,200,000 ms)
+// ===== 20 Min Auto Ad Trigger Fix =====
+let adShown = false;
+let startTime = Date.now();
+const TWENTY_MINUTES_MS = 20 * 60 * 1000; // 20 मिनट
 
-function startAdCountdown() {
-    console.log("Movie Ad Timer Started: 20 Minutes countdown initialized...");
-    
-    setTimeout(() => {
-        if (!isAdTriggered) {
-            isAdTriggered = true;
-            console.log("20 Minutes completed! Triggering Ad...");
+// 1. निरंतर समय ट्रैकर (ब्राउज़र टैब इनएक्टिव होने पर भी ट्रैक करेगा)
+const adCheckInterval = setInterval(() => {
+    const elapsedTime = Date.now() - startTime;
 
-            // Main Ad Trigger Call
-            if (typeof window.triggerFullScreenAd === 'function') {
-                window.triggerFullScreenAd(() => {
-                    console.log('Ad closed. Continuing movie playback.');
-                });
-            } else {
-                // Direct Fallback Modal Trigger (In case window function fails)
-                const modal = document.getElementById('adModal');
-                const iframe = document.getElementById('adIframe');
-                if (modal && iframe) {
-                    iframe.src = "https://omg10.com/4/11635106";
-                    modal.style.display = 'flex';
-                }
-            }
+    if (elapsedTime >= TWENTY_MINUTES_MS && !adShown) {
+        adShown = true;
+        clearInterval(adCheckInterval); // टाइमर बंद करें
+
+        // YouTube Iframe को एड के नीचे छुपाने का फिक्स
+        const playerIframe = document.querySelector('iframe[src*="youtube"]');
+        if (playerIframe) {
+            playerIframe.style.visibility = 'hidden'; // एड आने पर प्लेयर छिपाएँ
         }
-    }, TWENTY_MINUTES);
-}
 
-// डायरेक्ट एक्ज़ीक्यूट करें (ताकि किसी DOM event की निर्भरता न रहे)
-startAdCountdown();
+        // Ad Trigger
+        if (typeof window.triggerFullScreenAd === 'function') {
+            window.triggerFullScreenAd(() => {
+                // एड बंद होने पर प्लेयर वापस दिखाएँ
+                if (playerIframe) playerIframe.style.visibility = 'visible';
+            });
+        }
+    }
+}, 2000); // हर 2 सेकंड में चेक करेगा
