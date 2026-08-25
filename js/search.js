@@ -27,29 +27,30 @@ async function performSearch() {
     });
 
     if (!searchQuery || !searchQuery.trim()) {
-      showFallback(container, allMovies, "Please enter a search term. Showing latest movies:");
+      showFallback(container, allMovies, "Please enter a search term.", false);
       return;
     }
 
     const cleanQuery = searchQuery.toLowerCase().trim();
 
-    // Specific Intent Checks
+    // Intent Flags
+    const isHollywoodTarget = cleanQuery.includes('hollywood');
+    const isBollywoodTarget = cleanQuery.includes('bollywood');
+    const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
+    const isSouthTarget = cleanQuery.includes('south');
     const isTrailerTarget = cleanQuery.includes('trailer') || cleanQuery.includes('teaser');
     const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
     const isSeriesTarget = cleanQuery.includes('series') || cleanQuery.includes('webseries') || cleanQuery.includes('web series');
-    const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
     const has2026 = cleanQuery.includes('2026');
-    const isHindiTarget = cleanQuery.includes('hindi') || cleanQuery.includes('bollywood') || cleanQuery.includes('dubbed');
-    const isHollywoodTarget = cleanQuery.includes('hollywood') || cleanQuery.includes('english');
 
-    // Remove filler stop words
-    const queryWords = cleanQuery
-      .replace(/\b(movie|movies|film|films|ki|sabse|all|in|show|code|full)\b/g, '')
+    // Extract search keywords excluding intent tokens
+    const keywords = cleanQuery
+      .replace(/\b(2026|hollywood|bollywood|bhojpuri|south|movie|movies|film|films|ki|sabse|awaited|all|in|show|full)\b/g, '')
       .trim()
       .split(/\s+/)
       .filter(w => w.length > 0);
 
-    let scoredMovies = [];
+    let filteredMovies = [];
 
     allMovies.forEach((movie) => {
       const title = String(movie.title || '').toLowerCase();
@@ -62,87 +63,58 @@ async function performSearch() {
 
       const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags} ${type}`;
 
-      // 🛑 STRICT RULE 1: Block Web Series if user didn't ask for Series
-      if (!isSeriesTarget) {
-        if (cat.includes('series') || cat.includes('web-series') || cat.includes('webseries') || 
-            type.includes('series') || type.includes('webseries') || title.includes('season') || title.includes('s01')) {
-          return; // Strictly Reject Web Series
-        }
-      }
+      // 🛑 STRICT RULE 1: Block Non-Movie Formats (Trailers, Series, Story TV)
+      if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01'))) return;
+      if (!isTrailerTarget && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
+      if (!isStoryTvTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
 
-      // 🛑 STRICT RULE 2: Block Trailers/Teasers if user didn't ask for Trailers
-      if (!isTrailerTarget) {
-        if (cat.includes('trailer') || cat.includes('teaser') || cat.includes('latest-trailers') || 
-            title.includes('official trailer') || title.includes('official teaser') || tags.includes('trailer')) {
-          return; // Strictly Reject Trailers
-        }
-      }
-
-      // 🛑 STRICT RULE 3: Block Story TV & Shows if user didn't ask for Story TV
-      if (!isStoryTvTarget) {
-        if (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('tv show') || 
-            cat.includes('serial') || title.includes('story tv')) {
-          return; // Strictly Reject Story TV
-        }
-      }
-
-      // 🛑 STRICT RULE 4: Block Bhojpuri unless requested
-      if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) {
-        return;
-      }
-
-      let score = 0;
-
-      // Exact Phrase Match
-      if (fullMovieText.includes(cleanQuery)) {
-        score += 20;
-      }
-
-      // Year Filter (2026)
-      if (has2026) {
-        if (year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026')) {
-          score += 15;
-        } else {
-          score -= 10;
-        }
-      }
-
-      // Language Match
-      if (isHindiTarget) {
-        if (lang.includes('hindi') || cat.includes('hindi') || cat.includes('bollywood') || 
-            lang.includes('dubbed') || cat.includes('dubbed') || fullMovieText.includes('hindi')) {
-          score += 10;
-        }
-      }
-
+      // 🛑 STRICT RULE 2: Hollywood Isolation Filter
       if (isHollywoodTarget) {
-        if (lang.includes('english') || cat.includes('hollywood') || fullMovieText.includes('hollywood')) {
-          score += 10;
-        }
+        // Checking for explicitly non-Hollywood indicators
+        const isHollywoodExplicit = cat.includes('hollywood') || tags.includes('hollywood') || title.includes('hollywood');
+        const isEnglishLang = lang.includes('english') || cat.includes('english');
+        
+        // Strict Reject: If it's Bollywood / South / Indian content without explicit Hollywood tag
+        const isIndianContent = cat.includes('bollywood') || cat.includes('south') || cat.includes('bhojpuri') ||
+                                lang.includes('bhojpuri') || title.includes('baahubali') || title.includes('baaghi') || 
+                                title.includes('bichhoo') || cat.includes('hindi movie');
+
+        if (!isHollywoodExplicit && !isEnglishLang) return;
+        if (isIndianContent && !isHollywoodExplicit) return;
       }
 
-      // Keyword Match
-      queryWords.forEach((word) => {
+      // 🛑 STRICT RULE 3: Bollywood Isolation Filter
+      if (isBollywoodTarget && !cat.includes('bollywood') && !tags.includes('bollywood')) return;
+
+      // 🛑 STRICT RULE 4: Bhojpuri Strict Block
+      if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) return;
+
+      // 🛑 STRICT RULE 5: Year 2026 Enforcement
+      if (has2026) {
+        const is2026 = year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026');
+        if (!is2026) return;
+      }
+
+      // Scoring matching movies
+      let score = 0;
+      if (fullMovieText.includes(cleanQuery)) score += 20;
+
+      keywords.forEach((word) => {
         if (title.includes(word)) score += 5;
         if (cat.includes(word)) score += 3;
-        if (lang.includes(word)) score += 3;
-        if (tags.includes(word)) score += 2;
       });
 
-      if (score > 0) {
-        scoredMovies.push({ movie, score });
-      }
+      score += 1; // Passed all strict checks
+      filteredMovies.push({ movie, score });
     });
 
-    // Sort by highest relevance
-    scoredMovies.sort((a, b) => b.score - a.score);
-    const matchedMovies = scoredMovies.map(item => item.movie);
+    filteredMovies.sort((a, b) => b.score - a.score);
+    const matchedMovies = filteredMovies.map(item => item.movie);
 
-    // Render Results or Fallback
     if (matchedMovies.length > 0) {
       renderMoviesList(container, matchedMovies);
     } else {
-      showFallback(container, allMovies, `No exact movies match "${searchQuery}". Here are top recommended movies:`);
+      showFallback(container, allMovies, `No exact movies match "${searchQuery}". Here are top Hollywood movies:`, isHollywoodTarget);
     }
 
   } catch (error) {
@@ -159,17 +131,18 @@ function renderMoviesList(container, movies) {
   container.innerHTML = html;
 }
 
-function showFallback(container, allMovies, message) {
+function showFallback(container, allMovies, message, isHollywoodOnly) {
   const fallbackMovies = allMovies.filter(movie => {
     const cat = String(movie.category || '').toLowerCase();
     const title = String(movie.title || '').toLowerCase();
-    const type = String(movie.type || '').toLowerCase();
 
-    return !cat.includes('trailer') && 
-           !cat.includes('story tv') && 
-           !cat.includes('series') && 
-           !type.includes('series') && 
-           !title.includes('trailer');
+    const isFormatOk = !cat.includes('trailer') && !cat.includes('story tv') && !cat.includes('series');
+    if (!isFormatOk) return false;
+
+    if (isHollywoodOnly) {
+      return cat.includes('hollywood') || title.includes('hollywood');
+    }
+    return true;
   }).slice(0, 8);
 
   let html = `
