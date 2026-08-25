@@ -38,24 +38,44 @@ async function performSearch() {
 
     const cleanQuery = searchQuery.toLowerCase().trim();
 
-    // 1. Direct Multi-Field Filtering
+    // Smart Hindi & Dubbed Intent Check
+    const containsHindi = cleanQuery.includes('hindi');
+    const containsDubbed = cleanQuery.includes('dubbed');
+
+    // 1. Direct Multi-Field Filtering with Flexible Language Matching
     let matchedMovies = allMovies.filter((movie) => {
-      const titleMatch = movie.title && movie.title.toLowerCase().includes(cleanQuery);
-      const castMatch = movie.starCast && movie.starCast.toLowerCase().includes(cleanQuery);
-      const categoryMatch = movie.category && movie.category.toLowerCase().includes(cleanQuery);
-      const langMatch = movie.language && movie.language.toLowerCase().includes(cleanQuery);
-      const descMatch = movie.description && movie.description.toLowerCase().includes(cleanQuery);
-      const yearMatch = movie.releaseYear && String(movie.releaseYear).includes(cleanQuery);
+      const title = String(movie.title || '').toLowerCase();
+      const cast = String(movie.starCast || '').toLowerCase();
+      const category = String(movie.category || '').toLowerCase();
+      const language = String(movie.language || '').toLowerCase();
+      const desc = String(movie.description || '').toLowerCase();
+      const year = String(movie.releaseYear || movie.year || '').toLowerCase();
       const tagsMatch = movie.tags && Array.isArray(movie.tags) && movie.tags.some(tag => tag.toLowerCase().includes(cleanQuery));
 
-      return titleMatch || castMatch || categoryMatch || langMatch || descMatch || yearMatch || tagsMatch;
+      // Standard Match
+      let isMatch = title.includes(cleanQuery) || 
+                    cast.includes(cleanQuery) || 
+                    category.includes(cleanQuery) || 
+                    language.includes(cleanQuery) || 
+                    desc.includes(cleanQuery) || 
+                    year.includes(cleanQuery) || 
+                    tagsMatch;
+
+      // Special Fix: Agar search me 'Hindi' ya 'Dubbed' word aae
+      if (!isMatch && (containsHindi || containsDubbed)) {
+        if (containsHindi && (language.includes('hindi') || category.includes('hindi') || language.includes('dubbed') || category.includes('dubbed'))) {
+          isMatch = true;
+        }
+      }
+
+      return isMatch;
     });
 
     // 2. Intent-Based Smart Filtering (If no direct match found)
     if (matchedMovies.length === 0) {
       const is2026 = cleanQuery.includes('2026');
       const isHollywood = cleanQuery.includes('hollywood') || cleanQuery.includes('english');
-      const isBollywood = cleanQuery.includes('bollywood') || cleanQuery.includes('hindi');
+      const isBollywood = cleanQuery.includes('bollywood');
       const isAwaited = cleanQuery.includes('awaited') || cleanQuery.includes('upcoming') || cleanQuery.includes('trailer');
 
       matchedMovies = allMovies.filter((movie) => {
@@ -63,19 +83,19 @@ async function performSearch() {
 
         if (is2026) {
           const yearStr = String(movie.releaseYear || movie.year || '');
-          isMatch = isMatch && (yearStr.includes('2026') || (movie.title && movie.title.includes('2026')));
+          isMatch = isMatch && (yearStr.includes('2026') || String(movie.title || '').includes('2026'));
         }
 
         if (isHollywood) {
           const langStr = String(movie.language || '').toLowerCase();
           const catStr = String(movie.category || '').toLowerCase();
-          isMatch = isMatch && (langStr.includes('english') || catStr.includes('hollywood'));
+          isMatch = isMatch && (langStr.includes('english') || catStr.includes('hollywood') || langStr.includes('dubbed'));
         }
 
-        if (isBollywood) {
+        if (isBollywood || containsHindi) {
           const langStr = String(movie.language || '').toLowerCase();
           const catStr = String(movie.category || '').toLowerCase();
-          isMatch = isMatch && (langStr.includes('hindi') || catStr.includes('bollywood'));
+          isMatch = isMatch && (langStr.includes('hindi') || catStr.includes('bollywood') || langStr.includes('dubbed') || catStr.includes('dubbed'));
         }
 
         if (isAwaited) {
