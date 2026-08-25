@@ -9,15 +9,10 @@ async function performSearch() {
   const container = document.getElementById('search-results-grid');
   const heading = document.getElementById('search-query-heading');
 
-  if (!container) {
-    console.error("search-results-grid element not found in DOM");
-    return;
-  }
+  if (!container) return;
 
   if (heading) {
     heading.innerText = searchQuery ? `Search Results for: "${searchQuery}"` : 'Search Results';
-  } else {
-    console.warn("search-query-heading element not found in DOM");
   }
 
   try {
@@ -36,76 +31,88 @@ async function performSearch() {
       return;
     }
 
-    const cleanQuery = searchQuery.toLowerCase().trim();
+    const rawQuery = searchQuery.toLowerCase().trim();
 
-    // Smart Hindi & Dubbed Intent Check
-    const containsHindi = cleanQuery.includes('hindi');
-    const containsDubbed = cleanQuery.includes('dubbed');
+    // 1. Detect Intent Filters
+    const has2026 = rawQuery.includes('2026');
+    const isMovieOnly = rawQuery.includes('movie') || rawQuery.includes('film');
+    const isSeriesOnly = rawQuery.includes('web series') || rawQuery.includes('series');
+    const isBhojpuri = rawQuery.includes('bhojpuri');
+    const isHindi = rawQuery.includes('hindi');
+    const isHollywood = rawQuery.includes('hollywood') || rawQuery.includes('english');
 
-    // 1. Direct Multi-Field Filtering with Flexible Language Matching
-    let matchedMovies = allMovies.filter((movie) => {
+    // Remove stop words to extract actual content keywords
+    const keywords = rawQuery
+      .replace(/\b(movie|movies|film|films|ki|sabse|all|in|show|code|full)\b/g, '')
+      .trim()
+      .split(/\s+/)
+      .filter(k => k.length > 0);
+
+    // 2. Score & Filter Movies Accurately
+    let scoredMovies = [];
+
+    allMovies.forEach((movie) => {
       const title = String(movie.title || '').toLowerCase();
-      const cast = String(movie.starCast || '').toLowerCase();
-      const category = String(movie.category || '').toLowerCase();
-      const language = String(movie.language || '').toLowerCase();
-      const desc = String(movie.description || '').toLowerCase();
-      const year = String(movie.releaseYear || movie.year || '').toLowerCase();
-      const tagsMatch = movie.tags && Array.isArray(movie.tags) && movie.tags.some(tag => tag.toLowerCase().includes(cleanQuery));
+      const cat = String(movie.category || '').toLowerCase();
+      const lang = String(movie.language || '').toLowerCase();
+      const year = String(movie.releaseYear || movie.year || '');
+      const type = String(movie.type || '').toLowerCase(); // 'movie' or 'series'
 
-      // Standard Match
-      let isMatch = title.includes(cleanQuery) || 
-                    cast.includes(cleanQuery) || 
-                    category.includes(cleanQuery) || 
-                    language.includes(cleanQuery) || 
-                    desc.includes(cleanQuery) || 
-                    year.includes(cleanQuery) || 
-                    tagsMatch;
+      let score = 0;
 
-      // Special Fix: Agar search me 'Hindi' ya 'Dubbed' word aae
-      if (!isMatch && (containsHindi || containsDubbed)) {
-        if (containsHindi && (language.includes('hindi') || category.includes('hindi') || language.includes('dubbed') || category.includes('dubbed'))) {
-          isMatch = true;
+      // Strict Exclusion Check: Agar user ne Bhojpuri search nahi kiya, par movie Bhojpuri hai to reject karo
+      if (!isBhojpuri && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) {
+        return;
+      }
+
+      // Strict Type Check: Movie vs Web Series
+      if (isMovieOnly && (cat.includes('series') || cat.includes('show') || type.includes('series'))) {
+        return;
+      }
+      if (isSeriesOnly && !cat.includes('series') && !type.includes('series')) {
+        return;
+      }
+
+      // Year Match Check (2026)
+      if (has2026) {
+        if (year.includes('2026') || title.includes('2026')) {
+          score += 10;
+        } else {
+          // Agar 2026 search kiya hai aur movie 2026 ki nahi hai to reject karo
+          return;
         }
       }
 
-      return isMatch;
+      // Language Check
+      if (isHindi) {
+        if (lang.includes('hindi') || cat.includes('hindi') || lang.includes('dubbed') || cat.includes('dubbed')) {
+          score += 5;
+        } else {
+          return; // Skip non-Hindi content
+        }
+      }
+
+      if (isHollywood) {
+        if (lang.includes('english') || cat.includes('hollywood')) {
+          score += 5;
+        }
+      }
+
+      // Dynamic Keyword Score
+      keywords.forEach((word) => {
+        if (title.includes(word)) score += 5;
+        if (cat.includes(word)) score += 3;
+        if (lang.includes(word)) score += 2;
+      });
+
+      if (score > 0) {
+        scoredMovies.push({ movie, score });
+      }
     });
 
-    // 2. Intent-Based Smart Filtering (If no direct match found)
-    if (matchedMovies.length === 0) {
-      const is2026 = cleanQuery.includes('2026');
-      const isHollywood = cleanQuery.includes('hollywood') || cleanQuery.includes('english');
-      const isBollywood = cleanQuery.includes('bollywood');
-      const isAwaited = cleanQuery.includes('awaited') || cleanQuery.includes('upcoming') || cleanQuery.includes('trailer');
-
-      matchedMovies = allMovies.filter((movie) => {
-        let isMatch = true;
-
-        if (is2026) {
-          const yearStr = String(movie.releaseYear || movie.year || '');
-          isMatch = isMatch && (yearStr.includes('2026') || String(movie.title || '').includes('2026'));
-        }
-
-        if (isHollywood) {
-          const langStr = String(movie.language || '').toLowerCase();
-          const catStr = String(movie.category || '').toLowerCase();
-          isMatch = isMatch && (langStr.includes('english') || catStr.includes('hollywood') || langStr.includes('dubbed'));
-        }
-
-        if (isBollywood || containsHindi) {
-          const langStr = String(movie.language || '').toLowerCase();
-          const catStr = String(movie.category || '').toLowerCase();
-          isMatch = isMatch && (langStr.includes('hindi') || catStr.includes('bollywood') || langStr.includes('dubbed') || catStr.includes('dubbed'));
-        }
-
-        if (isAwaited) {
-          const catStr = String(movie.category || '').toLowerCase();
-          isMatch = isMatch && (movie.isUpcoming || movie.isAwaited || catStr.includes('trailer') || catStr.includes('latest-trailers'));
-        }
-
-        return isMatch;
-      });
-    }
+    // Score ke mutabiq Sort karo (Sabse relevant top par)
+    scoredMovies.sort((a, b) => b.score - a.score);
+    const matchedMovies = scoredMovies.map(item => item.movie);
 
     // 3. Render Results or Fallback
     if (matchedMovies.length > 0) {
@@ -120,7 +127,6 @@ async function performSearch() {
   }
 }
 
-// Render direct search results
 function renderMoviesList(container, movies) {
   let html = '';
   movies.forEach((movie) => {
@@ -129,19 +135,16 @@ function renderMoviesList(container, movies) {
   container.innerHTML = html;
 }
 
-// Fallback logic for empty results
 function showFallback(container, allMovies, message) {
-  const fallbackMovies = allMovies.slice(0, 8); // Top 8 movies
+  const fallbackMovies = allMovies.slice(0, 8);
   let html = `
     <div style="grid-column: 1 / -1; margin-bottom: 12px; color: #b3b3b3;">
       <p>${message}</p>
     </div>
   `;
-  
   fallbackMovies.forEach((movie) => {
     html += createMovieCard(movie, movie.id);
   });
-
   container.innerHTML = html;
 }
 
