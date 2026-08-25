@@ -33,14 +33,15 @@ async function performSearch() {
 
     const cleanQuery = searchQuery.toLowerCase().trim();
 
-    // Query Intents
+    // Specific Intent Checks
+    const isTrailerTarget = cleanQuery.includes('trailer') || cleanQuery.includes('teaser');
+    const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
+    const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
     const has2026 = cleanQuery.includes('2026');
     const isHindiTarget = cleanQuery.includes('hindi') || cleanQuery.includes('bollywood') || cleanQuery.includes('dubbed');
     const isHollywoodTarget = cleanQuery.includes('hollywood') || cleanQuery.includes('english');
-    const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
-    const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
 
-    // Split words for dynamic search
+    // Remove filler stop words
     const queryWords = cleanQuery
       .replace(/\b(movie|movies|film|films|ki|sabse|all|in|show|code|full)\b/g, '')
       .trim()
@@ -57,35 +58,46 @@ async function performSearch() {
       const desc = String(movie.description || '').toLowerCase();
       const tags = Array.isArray(movie.tags) ? movie.tags.join(' ').toLowerCase() : String(movie.tags || '').toLowerCase();
 
-      // Combined search text for this movie
       const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags}`;
 
-      // 1. Exclude Unwanted Content (Story TV & Bhojpuri) unless explicitly searched
-      if (!isStoryTvTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('tv show') || cat.includes('serial'))) {
-        return;
+      // 🛑 STRICT RULE 1: Block Trailers/Teasers if user didn't ask for Trailers
+      if (!isTrailerTarget) {
+        if (cat.includes('trailer') || cat.includes('teaser') || cat.includes('latest-trailers') || 
+            title.includes('official trailer') || title.includes('official teaser') || tags.includes('trailer')) {
+          return; // Strictly Reject Trailers
+        }
       }
+
+      // 🛑 STRICT RULE 2: Block Story TV & Shows if user didn't ask for Story TV
+      if (!isStoryTvTarget) {
+        if (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('tv show') || 
+            cat.includes('serial') || title.includes('story tv')) {
+          return; // Strictly Reject Story TV
+        }
+      }
+
+      // 🛑 STRICT RULE 3: Block Bhojpuri unless requested
       if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) {
         return;
       }
 
       let score = 0;
 
-      // 2. Exact Query Phrase Match (High Score)
+      // Exact Phrase Match
       if (fullMovieText.includes(cleanQuery)) {
         score += 20;
       }
 
-      // 3. Year Filter Check (2026)
+      // Year Filter (2026)
       if (has2026) {
         if (year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026')) {
           score += 15;
         } else {
-          // If user explicitly asked for 2026, lower non-2026 movies score
           score -= 10;
         }
       }
 
-      // 4. Hindi & Dubbed Flexible Checking
+      // Language Match
       if (isHindiTarget) {
         if (lang.includes('hindi') || cat.includes('hindi') || cat.includes('bollywood') || 
             lang.includes('dubbed') || cat.includes('dubbed') || fullMovieText.includes('hindi')) {
@@ -93,14 +105,13 @@ async function performSearch() {
         }
       }
 
-      // 5. Hollywood Checking
       if (isHollywoodTarget) {
         if (lang.includes('english') || cat.includes('hollywood') || fullMovieText.includes('hollywood')) {
           score += 10;
         }
       }
 
-      // 6. Keyword Breakdown Match Score
+      // Keyword Match
       queryWords.forEach((word) => {
         if (title.includes(word)) score += 5;
         if (cat.includes(word)) score += 3;
@@ -113,11 +124,11 @@ async function performSearch() {
       }
     });
 
-    // Highest score movies will come first
+    // Sort by highest relevance
     scoredMovies.sort((a, b) => b.score - a.score);
     const matchedMovies = scoredMovies.map(item => item.movie);
 
-    // 7. Render Results or Fallback
+    // Render Results or Fallback
     if (matchedMovies.length > 0) {
       renderMoviesList(container, matchedMovies);
     } else {
@@ -139,7 +150,13 @@ function renderMoviesList(container, movies) {
 }
 
 function showFallback(container, allMovies, message) {
-  const fallbackMovies = allMovies.slice(0, 8);
+  // Filter out trailers and story tv from fallback recommendations as well
+  const fallbackMovies = allMovies.filter(movie => {
+    const cat = String(movie.category || '').toLowerCase();
+    const title = String(movie.title || '').toLowerCase();
+    return !cat.includes('trailer') && !cat.includes('story tv') && !title.includes('trailer');
+  }).slice(0, 8);
+
   let html = `
     <div style="grid-column: 1 / -1; margin-bottom: 12px; color: #b3b3b3;">
       <p>${message}</p>
@@ -148,6 +165,7 @@ function showFallback(container, allMovies, message) {
   fallbackMovies.forEach((movie) => {
     html += createMovieCard(movie, movie.id);
   });
+
   container.innerHTML = html;
 }
 
