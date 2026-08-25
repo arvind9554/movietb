@@ -36,6 +36,7 @@ async function performSearch() {
     // Specific Intent Checks
     const isTrailerTarget = cleanQuery.includes('trailer') || cleanQuery.includes('teaser');
     const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
+    const isSeriesTarget = cleanQuery.includes('series') || cleanQuery.includes('webseries') || cleanQuery.includes('web series');
     const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
     const has2026 = cleanQuery.includes('2026');
     const isHindiTarget = cleanQuery.includes('hindi') || cleanQuery.includes('bollywood') || cleanQuery.includes('dubbed');
@@ -56,11 +57,20 @@ async function performSearch() {
       const lang = String(movie.language || '').toLowerCase();
       const year = String(movie.releaseYear || movie.year || movie.date || '').toLowerCase();
       const desc = String(movie.description || '').toLowerCase();
+      const type = String(movie.type || '').toLowerCase();
       const tags = Array.isArray(movie.tags) ? movie.tags.join(' ').toLowerCase() : String(movie.tags || '').toLowerCase();
 
-      const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags}`;
+      const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags} ${type}`;
 
-      // 🛑 STRICT RULE 1: Block Trailers/Teasers if user didn't ask for Trailers
+      // 🛑 STRICT RULE 1: Block Web Series if user didn't ask for Series
+      if (!isSeriesTarget) {
+        if (cat.includes('series') || cat.includes('web-series') || cat.includes('webseries') || 
+            type.includes('series') || type.includes('webseries') || title.includes('season') || title.includes('s01')) {
+          return; // Strictly Reject Web Series
+        }
+      }
+
+      // 🛑 STRICT RULE 2: Block Trailers/Teasers if user didn't ask for Trailers
       if (!isTrailerTarget) {
         if (cat.includes('trailer') || cat.includes('teaser') || cat.includes('latest-trailers') || 
             title.includes('official trailer') || title.includes('official teaser') || tags.includes('trailer')) {
@@ -68,7 +78,7 @@ async function performSearch() {
         }
       }
 
-      // 🛑 STRICT RULE 2: Block Story TV & Shows if user didn't ask for Story TV
+      // 🛑 STRICT RULE 3: Block Story TV & Shows if user didn't ask for Story TV
       if (!isStoryTvTarget) {
         if (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('tv show') || 
             cat.includes('serial') || title.includes('story tv')) {
@@ -76,7 +86,7 @@ async function performSearch() {
         }
       }
 
-      // 🛑 STRICT RULE 3: Block Bhojpuri unless requested
+      // 🛑 STRICT RULE 4: Block Bhojpuri unless requested
       if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) {
         return;
       }
@@ -150,11 +160,16 @@ function renderMoviesList(container, movies) {
 }
 
 function showFallback(container, allMovies, message) {
-  // Filter out trailers and story tv from fallback recommendations as well
   const fallbackMovies = allMovies.filter(movie => {
     const cat = String(movie.category || '').toLowerCase();
     const title = String(movie.title || '').toLowerCase();
-    return !cat.includes('trailer') && !cat.includes('story tv') && !title.includes('trailer');
+    const type = String(movie.type || '').toLowerCase();
+
+    return !cat.includes('trailer') && 
+           !cat.includes('story tv') && 
+           !cat.includes('series') && 
+           !type.includes('series') && 
+           !title.includes('trailer');
   }).slice(0, 8);
 
   let html = `
