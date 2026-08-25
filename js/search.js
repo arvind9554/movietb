@@ -1,6 +1,6 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createMovieCard } from './main.js';
+import { createMovieCard, renderSkeletonCards } from './main.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const searchQuery = urlParams.get('q');
@@ -14,6 +14,9 @@ async function performSearch() {
   if (heading) {
     heading.innerText = searchQuery ? `Search Results for: "${searchQuery}"` : 'Search Results';
   }
+
+  // 🌟 Show Pro Skeleton Loader immediately while fetching data
+  renderSkeletonCards(container, 8);
 
   try {
     const snapshot = await getDocs(collection(db, "movies"));
@@ -70,11 +73,9 @@ async function performSearch() {
 
       // 🛑 STRICT RULE 2: Hollywood Isolation Filter
       if (isHollywoodTarget) {
-        // Checking for explicitly non-Hollywood indicators
         const isHollywoodExplicit = cat.includes('hollywood') || tags.includes('hollywood') || title.includes('hollywood');
         const isEnglishLang = lang.includes('english') || cat.includes('english');
         
-        // Strict Reject: If it's Bollywood / South / Indian content without explicit Hollywood tag
         const isIndianContent = cat.includes('bollywood') || cat.includes('south') || cat.includes('bhojpuri') ||
                                 lang.includes('bhojpuri') || title.includes('baahubali') || title.includes('baaghi') || 
                                 title.includes('bichhoo') || cat.includes('hindi movie');

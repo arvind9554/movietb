@@ -2,7 +2,7 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ===== Adsterra Smartlink Overlay Logic =====
-const ADSTERRA_SMARTLINK = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded"; // <-- अपना monetag Smartlink URL यहाँ डालें
+const ADSTERRA_SMARTLINK = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded";
 let countdown;
 
 window.triggerFullScreenAd = function(callback) {
@@ -47,6 +47,25 @@ window.closeAdModal = function() {
         window.onAdClosedCallback();
     }
 };
+
+// ===== Skeleton Shimmer Loading Cards Builder =====
+export function renderSkeletonCards(container, count = 4) {
+    if (!container) return;
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        html += `
+          <div class="skeleton-card">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-info">
+              <div class="skeleton-text-title"></div>
+              <div class="skeleton-text-sub"></div>
+            </div>
+          </div>
+        `;
+    }
+    container.innerHTML = html;
+}
+
 // ===== Google Analytics YouTube Auto-Tracking Fix =====
 document.addEventListener("DOMContentLoaded", function () {
     function enableYouTubeApi() {
@@ -145,6 +164,8 @@ async function loadCategoryMovies() {
     const container = document.getElementById(cat.containerId);
     if (!container) continue;
 
+    renderSkeletonCards(container, 4); // Render Skeleton while fetching
+
     try {
       const q = query(
         collection(db, "movies"),
@@ -158,7 +179,7 @@ async function loadCategoryMovies() {
         continue;
       }
 
-      container.innerHTML = ''; // Clear loading text
+      container.innerHTML = ''; // Clear loading skeleton
 
       querySnapshot.forEach((docSnap) => {
         const movie = docSnap.data();
@@ -204,7 +225,6 @@ if (menuToggle) {
     }
   });
 }
-
 
 if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
 if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
