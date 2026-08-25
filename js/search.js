@@ -30,7 +30,7 @@ async function performSearch() {
     });
 
     if (!searchQuery || !searchQuery.trim()) {
-      showFallback(container, allMovies, "Please enter a search term. Showing latest movies:", null);
+      showFallback(container, allMovies, "Please enter a search term. Showing latest content:", null);
       return;
     }
 
@@ -44,10 +44,18 @@ async function performSearch() {
     const isSouthTarget = cleanQuery.includes('south');
     const isTrailerTarget = cleanQuery.includes('trailer') || cleanQuery.includes('teaser');
     const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
-    const isSeriesTarget = cleanQuery.includes('series') || cleanQuery.includes('webseries') || cleanQuery.includes('web series');
+    
+    // Updated Series & Episode Intent Detection
+    const isSeriesTarget = cleanQuery.includes('series') || 
+                           cleanQuery.includes('webseries') || 
+                           cleanQuery.includes('web series') || 
+                           cleanQuery.includes('episode') || 
+                           cleanQuery.includes('ep') || 
+                           cleanQuery.includes('season');
+
     const has2026 = cleanQuery.includes('2026');
 
-    // Extract search keywords excluding intent tokens
+    // Extract search keywords excluding common query intent tokens (Keep 'episode' / numbers intact)
     const keywords = cleanQuery
       .replace(/\b(2026|hollywood|bollywood|hindi|south|bhojpuri|movie|movies|film|films|ki|sabse|awaited|all|in|show|full)\b/g, '')
       .trim()
@@ -68,11 +76,12 @@ async function performSearch() {
       const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags} ${type}`;
 
       // 🛑 STRICT EXCLUSIONS
-      if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01'))) return;
+      // Allow Series/Episodes if user explicitly targeted series/episodes/seasons
+      if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01') || title.includes('episode') || title.includes('ep '))) return;
       if (!isTrailerTarget && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
-      if (!isStoryTvTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
+      if (!isStoryTvTarget && !isSeriesTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
 
-      // Hollywood Strict Check
+      // Hollywood Isolation Check
       if (isHollywoodTarget) {
         const isHollywoodExplicit = cat.includes('hollywood') || tags.includes('hollywood') || title.includes('hollywood');
         const isEnglishLang = lang.includes('english') || cat.includes('english');
@@ -84,35 +93,30 @@ async function performSearch() {
         if (isIndianContent && !isHollywoodExplicit) return;
       }
 
-      // Bhojpuri Strict Check
+      // Bhojpuri Isolation Check
       if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) return;
 
       let score = 0;
 
-      // Exact query match
-      if (fullMovieText.includes(cleanQuery)) score += 20;
+      // Exact query match (e.g. "episode 1")
+      if (fullMovieText.includes(cleanQuery)) score += 30;
+
+      // Check each keyword
+      keywords.forEach((word) => {
+        if (title.includes(word)) score += 10;
+        if (cat.includes(word)) score += 5;
+        if (tags.includes(word)) score += 5;
+      });
 
       // Year Match
-      if (has2026) {
-        if (year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026')) {
-          score += 15;
-        }
+      if (has2026 && (year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026'))) {
+        score += 15;
       }
 
       // Language Match
       if (isHindiTarget && (lang.includes('hindi') || cat.includes('hindi') || fullMovieText.includes('hindi'))) {
         score += 10;
       }
-
-      if (isBollywoodTarget && (cat.includes('bollywood') || tags.includes('bollywood'))) {
-        score += 10;
-      }
-
-      // Keyword Matches
-      keywords.forEach((word) => {
-        if (title.includes(word)) score += 5;
-        if (cat.includes(word)) score += 3;
-      });
 
       if (score > 0) {
         filteredMovies.push({ movie, score });
@@ -125,8 +129,8 @@ async function performSearch() {
     if (matchedMovies.length > 0) {
       renderMoviesList(container, matchedMovies);
     } else {
-      const targetCategory = isHollywoodTarget ? 'Hollywood' : (isHindiTarget || isBollywoodTarget ? 'Hindi' : 'Recommended');
-      showFallback(container, allMovies, `No exact movies match "${searchQuery}". Here are top ${targetCategory} movies:`, targetCategory);
+      const targetCategory = isSeriesTarget ? 'Series / Shows' : (isHollywoodTarget ? 'Hollywood' : (isHindiTarget || isBollywoodTarget ? 'Hindi' : 'Recommended'));
+      showFallback(container, allMovies, `No exact matches for "${searchQuery}". Here are top ${targetCategory}:`, targetCategory);
     }
 
   } catch (error) {
@@ -149,13 +153,15 @@ function showFallback(container, allMovies, message, categoryType) {
     const lang = String(movie.language || '').toLowerCase();
     const title = String(movie.title || '').toLowerCase();
 
-    const isFormatOk = !cat.includes('trailer') && !cat.includes('story tv') && !cat.includes('series');
+    const isFormatOk = !cat.includes('trailer') && !cat.includes('story tv');
     if (!isFormatOk) return false;
 
     if (categoryType === 'Hollywood') {
       return cat.includes('hollywood') || title.includes('hollywood');
     } else if (categoryType === 'Hindi') {
       return lang.includes('hindi') || cat.includes('hindi') || cat.includes('bollywood');
+    } else if (categoryType === 'Series / Shows') {
+      return cat.includes('series') || title.includes('episode') || title.includes('season') || cat.includes('story tv');
     }
     return true;
   }).slice(0, 8);
