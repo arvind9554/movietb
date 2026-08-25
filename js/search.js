@@ -31,78 +31,81 @@ async function performSearch() {
       return;
     }
 
-    const rawQuery = searchQuery.toLowerCase().trim();
+    const cleanQuery = searchQuery.toLowerCase().trim();
 
-    // 1. Detect Intent Filters
-    const has2026 = rawQuery.includes('2026');
-    const isMovieOnly = rawQuery.includes('movie') || rawQuery.includes('film');
-    const isSeriesOnly = rawQuery.includes('web series') || rawQuery.includes('series');
-    const isBhojpuri = rawQuery.includes('bhojpuri');
-    const isHindi = rawQuery.includes('hindi');
-    const isHollywood = rawQuery.includes('hollywood') || rawQuery.includes('english');
+    // Query Intents
+    const has2026 = cleanQuery.includes('2026');
+    const isHindiTarget = cleanQuery.includes('hindi') || cleanQuery.includes('bollywood') || cleanQuery.includes('dubbed');
+    const isHollywoodTarget = cleanQuery.includes('hollywood') || cleanQuery.includes('english');
+    const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
+    const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
 
-    // Remove stop words to extract actual content keywords
-    const keywords = rawQuery
+    // Split words for dynamic search
+    const queryWords = cleanQuery
       .replace(/\b(movie|movies|film|films|ki|sabse|all|in|show|code|full)\b/g, '')
       .trim()
       .split(/\s+/)
-      .filter(k => k.length > 0);
+      .filter(w => w.length > 0);
 
-    // 2. Score & Filter Movies Accurately
     let scoredMovies = [];
 
     allMovies.forEach((movie) => {
       const title = String(movie.title || '').toLowerCase();
       const cat = String(movie.category || '').toLowerCase();
       const lang = String(movie.language || '').toLowerCase();
-      const year = String(movie.releaseYear || movie.year || '');
-      const type = String(movie.type || '').toLowerCase(); // 'movie' or 'series'
+      const year = String(movie.releaseYear || movie.year || movie.date || '').toLowerCase();
+      const desc = String(movie.description || '').toLowerCase();
+      const tags = Array.isArray(movie.tags) ? movie.tags.join(' ').toLowerCase() : String(movie.tags || '').toLowerCase();
+
+      // Combined search text for this movie
+      const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags}`;
+
+      // 1. Exclude Unwanted Content (Story TV & Bhojpuri) unless explicitly searched
+      if (!isStoryTvTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('tv show') || cat.includes('serial'))) {
+        return;
+      }
+      if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) {
+        return;
+      }
 
       let score = 0;
 
-      // Strict Exclusion Check: Agar user ne Bhojpuri search nahi kiya, par movie Bhojpuri hai to reject karo
-      if (!isBhojpuri && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) {
-        return;
+      // 2. Exact Query Phrase Match (High Score)
+      if (fullMovieText.includes(cleanQuery)) {
+        score += 20;
       }
 
-      // Strict Type Check: Movie vs Web Series
-      if (isMovieOnly && (cat.includes('series') || cat.includes('show') || type.includes('series'))) {
-        return;
-      }
-      if (isSeriesOnly && !cat.includes('series') && !type.includes('series')) {
-        return;
-      }
-
-      // Year Match Check (2026)
+      // 3. Year Filter Check (2026)
       if (has2026) {
-        if (year.includes('2026') || title.includes('2026')) {
+        if (year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026')) {
+          score += 15;
+        } else {
+          // If user explicitly asked for 2026, lower non-2026 movies score
+          score -= 10;
+        }
+      }
+
+      // 4. Hindi & Dubbed Flexible Checking
+      if (isHindiTarget) {
+        if (lang.includes('hindi') || cat.includes('hindi') || cat.includes('bollywood') || 
+            lang.includes('dubbed') || cat.includes('dubbed') || fullMovieText.includes('hindi')) {
           score += 10;
-        } else {
-          // Agar 2026 search kiya hai aur movie 2026 ki nahi hai to reject karo
-          return;
         }
       }
 
-      // Language Check
-      if (isHindi) {
-        if (lang.includes('hindi') || cat.includes('hindi') || lang.includes('dubbed') || cat.includes('dubbed')) {
-          score += 5;
-        } else {
-          return; // Skip non-Hindi content
+      // 5. Hollywood Checking
+      if (isHollywoodTarget) {
+        if (lang.includes('english') || cat.includes('hollywood') || fullMovieText.includes('hollywood')) {
+          score += 10;
         }
       }
 
-      if (isHollywood) {
-        if (lang.includes('english') || cat.includes('hollywood')) {
-          score += 5;
-        }
-      }
-
-      // Dynamic Keyword Score
-      keywords.forEach((word) => {
+      // 6. Keyword Breakdown Match Score
+      queryWords.forEach((word) => {
         if (title.includes(word)) score += 5;
         if (cat.includes(word)) score += 3;
-        if (lang.includes(word)) score += 2;
+        if (lang.includes(word)) score += 3;
+        if (tags.includes(word)) score += 2;
       });
 
       if (score > 0) {
@@ -110,11 +113,11 @@ async function performSearch() {
       }
     });
 
-    // Score ke mutabiq Sort karo (Sabse relevant top par)
+    // Highest score movies will come first
     scoredMovies.sort((a, b) => b.score - a.score);
     const matchedMovies = scoredMovies.map(item => item.movie);
 
-    // 3. Render Results or Fallback
+    // 7. Render Results or Fallback
     if (matchedMovies.length > 0) {
       renderMoviesList(container, matchedMovies);
     } else {
