@@ -20,7 +20,7 @@ window.triggerFullScreenAd = function(callback) {
     modal.style.display = 'flex';
     closeBtn.disabled = true;
     
-    let timeLeft = 15;
+    let timeLeft = 10;
     timerText.innerText = `Ad ends in ${timeLeft}s`;
 
     countdown = setInterval(() => {
