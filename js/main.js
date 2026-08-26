@@ -1,49 +1,36 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ===== HilltopAds Video Slider / Script Overlay Logic =====
+// ===== Adsterra Smartlink Overlay Logic =====
+const ADSTERRA_SMARTLINK = "https://www.profitableratecpmnetwork.com/r2kjdk4pk?key=ac4d5c8ec2eb751cad50a433621feded";
 let countdown;
 
 window.triggerFullScreenAd = function(callback) {
     const modal = document.getElementById('adModal');
+    const iframe = document.getElementById('adIframe');
     const timerText = document.getElementById('adTimer');
     const closeBtn = document.getElementById('closeAdBtn');
-    const adContainer = document.getElementById('adIframe')?.parentNode || document.getElementById('adModal');
     
-    if (!modal) {
+    if (!modal || !iframe) {
         if (callback) callback();
         return;
     }
 
+    iframe.src = ADSTERRA_SMARTLINK;
     modal.style.display = 'flex';
-    if (closeBtn) closeBtn.disabled = true;
-
-    // Load HilltopAds script dynamically inside container
-    const existingScript = document.getElementById('hilltop-ad-script');
-    if (!existingScript) {
-        const s = document.createElement('script');
-        s.id = 'hilltop-ad-script';
-        s.src = "//unfoldedtrade.com/b.XEVqsPdUGdlP0hYZWVcS/teKmf9ouRZVUzl/k-PzTqcDzrN/TpQwwIN/zvM/tyNuz/MK1CN/DMAD3NNzwH";
-        s.async = true;
-        s.referrerPolicy = 'no-referrer-when-downgrade';
-        if (adContainer) {
-            adContainer.appendChild(s);
-        } else {
-            document.body.appendChild(s);
-        }
-    }
+    closeBtn.disabled = true;
     
-    let timeLeft = 10;
-    if (timerText) timerText.innerText = `Ad ends in ${timeLeft}s`;
+    let timeLeft = 15;
+    timerText.innerText = `Ad ends in ${timeLeft}s`;
 
     countdown = setInterval(() => {
         timeLeft--;
-        if (timerText) timerText.innerText = `Ad ends in ${timeLeft}s`;
+        timerText.innerText = `Ad ends in ${timeLeft}s`;
 
         if (timeLeft <= 0) {
             clearInterval(countdown);
-            if (timerText) timerText.innerText = "";
-            if (closeBtn) closeBtn.disabled = false;
+            timerText.innerText = "";
+            closeBtn.disabled = false;
         }
     }, 1000);
 
@@ -56,11 +43,6 @@ window.closeAdModal = function() {
     if (modal) modal.style.display = 'none';
     if (iframe) iframe.src = '';
     clearInterval(countdown);
-    
-    // Remove injected ad script on close to reset clean state for next click
-    const script = document.getElementById('hilltop-ad-script');
-    if (script) script.remove();
-
     if (window.onAdClosedCallback) {
         window.onAdClosedCallback();
     }
