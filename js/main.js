@@ -82,12 +82,12 @@ function resolvePoster(movie) {
   return { primary, fallback };
 }
 
-// Utility to create Movie HTML Card (Cleaned - Direct Navigation)
+// Utility to create Movie HTML Card (Updated with Ad Trigger)
 export function createMovieCard(movie, id) {
   const { primary, fallback } = resolvePoster(movie);
 
   return `
-    <div class="movie-card" onclick="window.location.href='movie.html?id=${id}'">
+    <div class="movie-card" onclick="triggerFullScreenAd(() => window.location.href='movie.html?id=${id}')">
       <div class="poster-wrapper">
         <img
           src="${primary}"
