@@ -13,7 +13,7 @@ export const blogs = [
 <p>Marvel Studios is setting up what promises to be the single most explosive chapter in superhero cinema history. <em>Avengers: Doomsday</em> brings together Earth's remaining mightiest heroes to face a catastrophic threat that spans across infinite realities. Directed by the visionary Russo Brothers, this movie marks a monumental turning point for the Marvel Cinematic Universe (MCU).</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="assets/images/avengers-doomsday.jpg" alt="Avengers Doomsday Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/avengers-doomsday-poster.jpg" alt="Avengers Doomsday Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
 <h2>The Shocking Cast: Robert Downey Jr. as Doctor Doom</h2>
