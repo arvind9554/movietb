@@ -35,7 +35,7 @@ export const blogs = [
     title: "Spider-Man: Brand New Day (2026) - Tom Holland's Next Chapter Begins",
     image: "assets/images/spiderman-brand-new-day.jpg",
     category: "Hollywood",
-    date: "1 Sep 2026",
+    date: "14 Aug 2026",
     author: "Arvind Kumar Pandey",
     excerpt: "Tom Holland returns as Peter Parker in Spider-Man: Brand New Day, navigating a world where no one remembers his identity.",
     content: `
@@ -65,7 +65,7 @@ export const blogs = [
     title: "Christopher Nolan's The Odyssey (2026) - Sci-Fi Epic Breakdown",
     image: "assets/images/the-odyssey.jpg",
     category: "Hollywood",
-    date: "1 Sep 2026",
+    date: "25 Aug 2026",
     author: "Arvind Kumar Pandey",
     excerpt: "Director Christopher Nolan returns to cinema with The Odyssey, an ambitious blend of ancient myth and futuristic science fiction.",
     content: `
@@ -90,9 +90,9 @@ export const blogs = [
   {
     id: 4,
     title: "The Hunger Games: Sunrise on the Reaping (2026) - Prequel Detailed Review",
-    image: "images/hunger-games-sunrise.jpg",
+    image: "assets/images/hunger-games-sunrise.jpg",
     category: "Hollywood",
-    date: "1 Sep 2026",
+    date: "27 Aug 2026",
     author: "Arvind Kumar Pandey",
     excerpt: "Explore the dark origins of the 50th Hunger Games and a young Haymitch Abernathy in Sunrise on the Reaping.",
     content: `
@@ -101,7 +101,7 @@ export const blogs = [
 <p>Lionsgate expands its hit dystopian universe with <em>The Hunger Games: Sunrise on the Reaping</em>. Set 24 years before the original trilogy during the 50th Annual Hunger Games (Second Quarter Quell), this dark prequel sheds light on one of Panem's most legendary victors.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="images/hunger-games-sunrise.jpg" alt="Sunrise on the Reaping Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/hunger-games-sunrise-poster.jpg" alt="Sunrise on the Reaping Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
 <h2>The Story of Haymitch Abernathy</h2>
@@ -117,9 +117,9 @@ export const blogs = [
   {
     id: 5,
     title: "Dune: Messiah (2026) - Denis Villeneuve's Epic Sci-Fi Finale",
-    image: "images/dune-messiah.jpg",
+    image: "assets/images/dune-messiah.jpg",
     category: "Hollywood",
-    date: "1 Sep 2026",
+    date: "3 Sep 2026",
     author: "Arvind Kumar Pandey",
     excerpt: "Timothée Chalamet and Zendaya return in Dune: Messiah as Paul Atreides faces the cosmic consequences of his holy war.",
     content: `
@@ -128,7 +128,7 @@ export const blogs = [
 <p>Director Denis Villeneuve completes his acclaimed sci-fi trilogy with <em>Dune: Messiah</em>, adapting Frank Herbert’s seminal sequel novel. Twelve years after Paul Atreides claimed the imperial throne, the universe grapples with the terrifying cosmic jihad waged in his name.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="images/dune-messiah.jpg" alt="Dune Messiah Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/dune-messiah-poster.jpg" alt="Dune Messiah Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
 <h2>Power, Prophecy, and Tragedy</h2>
