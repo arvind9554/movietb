@@ -227,7 +227,7 @@ export const blogs = [
     title: "War 2 (2026) - Hrithik Roshan and Jr. NTR's YRF Spy Universe Clash",
     image: "assets/images/war-2.jpg",
     category: "Bollywood",
-    date: "1 Sep 2026",
+    date: "18 Sep 2026",
     author: "Arvind Kumar Pandey",
     excerpt: "Hrithik Roshan's Major Kabir faces off against Jr. NTR in Ayan Mukerji's War 2, the next major chapter in the YRF Spy Universe.",
     content: `
@@ -236,7 +236,7 @@ export const blogs = [
 <p>Yash Raj Films expands its multi-billion rupee Spy Universe with <strong>War 2</strong>, directed by visionary filmmaker Ayan Mukerji. Following the high-stakes narrative established in <em>War</em>, <em>Pathaan</em>, and <em>Tiger 3</em>, this blockbuster installment brings together two of India's biggest screen titans for a high-concept action collision.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="assets/images/war-2.jpg" alt="War 2 Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/war-2-poster.jpg" alt="War 2 Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
 <h2>Hrithik Roshan vs Jr. NTR: The Clash of Titans</h2>
@@ -274,7 +274,7 @@ export const blogs = [
 <p>Breaking long-standing industry conventions, Yash Raj Films introduces <strong>Alpha</strong>, directed by Shiv Rawail (known for his acclaimed series <em>The Railway Men</em>). As the very first female-fronted standalone installment in the YRF Spy Universe, <em>Alpha</em> pushes narrative limits with intense physical warfare, tactical covert ops, and psychological depth.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="assets/images/alpha-movie.jpg" alt="Alpha Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/alpha-movie-poster.jpg" alt="Alpha Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
 <h2>Alia Bhatt & Sharvari Wagh as Elite Agents</h2>
@@ -303,7 +303,7 @@ export const blogs = [
     title: "Housefull 5 (2026) - Akshay Kumar's Epic Comedy on a Cruise Ship",
     image: "assets/images/housefull-5.jpg",
     category: "Bollywood",
-    date: "1 Sep 2026",
+    date: "4 Aug 2026",
     author: "Arvind Kumar Pandey",
     excerpt: "Akshay Kumar, Riteish Deshmukh, and a stellar star cast return for ocean-sized laughter in Tarun Mansukhani's Housefull 5.",
     content: `
@@ -312,7 +312,7 @@ export const blogs = [
 <p>Producer Sajid Nadiadwala brings back India’s most successful slapstick comedy franchise with <strong>Housefull 5</strong>. Directed by Tarun Mansukhani (director of <em>Dostana</em>), this massive fifth installment takes slapstick humor, mistaken identities, and chaotic situational comedy to the high seas aboard a ultra-luxury international cruise liner.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="assets/images/housefull-5.jpg" alt="Housefull 5 Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/housefull-5-poster.jpg" alt="Housefull 5 Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
 <h2>A Massive Ensemble Star Cast</h2>
