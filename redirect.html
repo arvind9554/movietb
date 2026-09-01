@@ -143,6 +143,112 @@
             color: #38bdf8;
             font-weight: bold;
         }
+
+/* ==========================================
+   PREMIUM HOW TO UNLOCK GUIDE SECTION
+========================================== */
+.guide-section {
+    max-width: 1000px;
+    margin: 50px auto 30px auto;
+    padding: 0 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.guide-title {
+    color: #38bdf8;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.guide-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: left;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.guide-card:hover {
+    transform: translateY(-5px);
+    border-color: #38bdf8;
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
+}
+
+.guide-step-num {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: rgba(15, 23, 42, 0.85);
+    color: #38bdf8;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #38bdf8;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+.guide-img-wrapper {
+    width: 100%;
+    height: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    position: relative;
+}
+
+.guide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.guide-card h4 {
+    color: #f8fafc;
+    font-size: 15px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.guide-card p {
+    color: #94a3b8;
+    font-size: 12.5px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Responsive Fix for Mobile Displays */
+@media (max-width: 768px) {
+    .guide-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
     </style>
 </head>
 <body>
