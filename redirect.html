@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Your Link - MovieTB</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid #334155;
+        }
+        h2 { color: #38bdf8; margin-bottom: 10px; }
+        p.instructions {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        /* Step 1 Active Button */
+        .btn-ad {
+            background: #ef4444;
+            color: #ffffff;
+        }
+        .btn-ad:hover { background: #dc2626; }
+        
+        /* Disabled State */
+        .btn-disabled {
+            background: #475569 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+
+        /* Step 2 Unlocked Button */
+        .btn-movie {
+            background: #22c55e;
+            color: #ffffff;
+        }
+        .btn-movie:hover { background: #16a34a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Link Unlock Portal</h2>
+    <p class="instructions">
+        ⚠️ <strong>ध्यान दें:</strong> मूवी का लिंक पाने के लिए पहले <strong>Step 1 (Ad Button)</strong> पर क्लिक करें। एड खुलने के बाद 10 सेकंड Wait , जिसके बाद <strong>Step 2 (Movie Button)</strong> ऑटोमैटिक चालू (Enable) हो जाएगा।
+    </p>
+
+    <!-- STEP 1: AD BUTTON -->
+    <button id="adBtn" class="btn btn-ad">
+        🔓 Step 1: Watch Ad to Unlock Link
+    </button>
+
+    <!-- STEP 2: MOVIE BUTTON (Initially Disabled) -->
+    <button id="movieBtn" class="btn btn-disabled" disabled>
+        🔒 Step 2: Watch / Download Movie
+    </button>
+</div>
+
+<script>
+    // URL से Target Movie Link निकालने के लिए
+    const urlParams = new URLSearchParams(window.location.search);
+    const finalTarget = urlParams.get('target') || "index.html"; 
+
+    // HilltopAds Direct Link URL (यहाँ अपना Link पेस्ट करें)
+    const HILLTOP_DIRECT_LINK = "https://fluffy-machine.com/PQr6nR";
+
+    const adBtn = document.getElementById('adBtn');
+    const movieBtn = document.getElementById('movieBtn');
+
+    // Step 1: Ad Button Click Event with 10-Second Timer
+    adBtn.addEventListener('click', () => {
+        // 1. Direct Ad Link को new tab में खोलें
+        window.open(HILLTOP_DIRECT_LINK, '_blank');
+
+        // 2. Button को Disable करें और 10-Second Countdown शुरू करें
+        adBtn.disabled = true;
+        let waitTime = 10;
+        adBtn.innerText = `⏳ Please wait ${waitTime}s to verify ad...`;
+
+        const timer = setInterval(() => {
+            waitTime--;
+            adBtn.innerText = `⏳ Please wait ${waitTime}s to verify ad...`;
+
+            if (waitTime <= 0) {
+                clearInterval(timer);
+                
+                // 3. 10s पूरा होने पर Step 1 Completed तथा Step 2 Enable
+                adBtn.innerText = "✅ Step 1 Verified!";
+                adBtn.classList.add('btn-disabled');
+
+                movieBtn.classList.remove('btn-disabled');
+                movieBtn.classList.add('btn-movie');
+                movieBtn.disabled = false;
+                movieBtn.innerText = "🚀 Step 2: Click to Open Movie";
+            }
+        }, 1000);
+    });
+
+    // Step 2: Movie Button Click Event
+    movieBtn.addEventListener('click', () => {
+        if (!movieBtn.disabled) {
+            window.location.href = finalTarget;
+        }
+    });
+</script>
+
+</body>
+</html>
