@@ -82,27 +82,27 @@ function resolvePoster(movie) {
   return { primary, fallback };
 }
 
-// Utility to create Movie HTML Card (Fixed - Direct Navigation)
+// Utility to create Movie HTML Card (Fixed - Redirect Navigation)
 export function createMovieCard(movie, id) {
-  const { primary, fallback } = resolvePoster(movie);
+    const { primary, fallback } = resolvePoster(movie);
 
-  return `
-    <div class="movie-card" onclick="window.location.href='movie.html?id=${id}'">
-      <div class="poster-wrapper">
-        <img
-          src="${primary}"
-          alt="${movie.title}"
-          loading="lazy"
-          onerror="this.onerror=null;this.src='${fallback}';this.onerror=function(){this.onerror=null;this.src='https://via.placeholder.com/300x450?text=No+Poster';}"
-        >
-        <span class="badge">${movie.format || 'HD'}</span>
-      </div>
-      <div class="card-details">
-        <h3>${movie.title}</h3>
-        <div class="card-meta">${movie.year || ''} • ${movie.language || ''}</div>
-      </div>
+    return `
+    <div class="movie-card" onclick="window.location.href='redirect.html?target=movie.html?id=${id}'">
+        <div class="poster-wrapper">
+            <img 
+              src="${primary}"
+              alt="${movie.title}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='${fallback}';this.onerror=function(){this.onerror=null;this.src='http...';"
+            />
+            <span class="badge">${movie.format || 'HD'}</span>
+        </div>
+        <div class="card-details">
+            <h3>${movie.title}</h3>
+            <div class="card-meta">${movie.year || ''} • ${movie.language || ''}</div>
+        </div>
     </div>
-  `;
+    `;
 }
 
 // Load Home Page Categories Automatically
