@@ -5,15 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unlock Your Link - MovieTB</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             background-color: #0f172a;
             color: #ffffff;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* TOP SLOWER MOVIE SLIDER */
+        .slider-container {
+            width: 100%;
+            overflow: hidden;
+            background: #1e293b;
+            padding: 12px 0;
+            border-bottom: 2px solid #334155;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .slider-track {
+            display: flex;
+            width: calc(160px * 10);
+            animation: scroll 30s linear infinite;
+        }
+        .slider-track:hover {
+            animation-play-state: paused;
+        }
+        .slide-item {
+            width: 140px;
+            height: 200px;
+            margin: 0 10px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            border: 1px solid #334155;
+        }
+        .slide-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide-item .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-160px * 5)); }
+        }
+
+        /* CENTER UNLOCK CARD */
+        .main-wrapper {
+            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            padding: 20px;
+            flex-grow: 1;
         }
         .container {
             background: #1e293b;
@@ -22,10 +87,10 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             text-align: center;
             max-width: 450px;
-            width: 90%;
+            width: 100%;
             border: 1px solid #334155;
         }
-        h2 { color: #38bdf8; margin-bottom: 10px; }
+        h2 { color: #38bdf8; margin-bottom: 12px; font-size: 22px; }
         p.instructions {
             font-size: 14px;
             color: #94a3b8;
@@ -64,35 +129,72 @@
             color: #ffffff;
         }
         .btn-movie:hover { background: #16a34a; }
+
+        /* FOOTER STATS INFO */
+        .footer-info {
+            background: #0b1120;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            border-top: 1px solid #1e293b;
+        }
+        .footer-info span {
+            color: #38bdf8;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<div class="unlock-card">
-  <h2>Movies Unlock Portal</h2>
-  
-  <p class="instruction-text">
-    ⚠️ <strong>ध्यान दें:</strong> Movies section dekhne ke liye pehle <strong>Step 1</strong> par click karein. 
-    Ad open hone ke baad <strong>10 seconds</strong> wait karein, jiske baad <strong>Step 2</strong> automatically enable ho jayega.
-  </p>
+    <!-- TOP SLOW-MOTION MOVIE POSTER SLIDER -->
+    <div class="slider-container">
+        <div class="slider-track">
+            <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://image.tmdb.org/t/p/w500/1E5ba3K22GDR33AR3A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+HD'"></div>
+            <div class="slide-item"><span class="badge">LATEST</span><img src="https://image.tmdb.org/t/p/w500/8cdWjvB2A8K3R33A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Trending'"></div>
+            <div class="slide-item"><span class="badge">TRENDING</span><img src="https://image.tmdb.org/t/p/w500/udDclC23A8K3R33A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=4K+Movie'"></div>
+            <div class="slide-item"><span class="badge">1080P</span><img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEmtA23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=New+Release'"></div>
+            <div class="slide-item"><span class="badge">NEW</span><img src="https://image.tmdb.org/t/p/w500/r2J023A8K3R33A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Popular'"></div>
+            <!-- Duplicate Items for Infinite Loop Effect -->
+            <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://image.tmdb.org/t/p/w500/1E5ba3K22GDR33AR3A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+HD'"></div>
+            <div class="slide-item"><span class="badge">LATEST</span><img src="https://image.tmdb.org/t/p/w500/8cdWjvB2A8K3R33A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Trending'"></div>
+            <div class="slide-item"><span class="badge">TRENDING</span><img src="https://image.tmdb.org/t/p/w500/udDclC23A8K3R33A23A.jpg" alt="Movie Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=4K+Movie'"></div>
+        </div>
+    </div>
 
-  <!-- Step 1 Button -->
-  <button id="adBtn" class="btn btn-red">
-    🔓 Step 1: Watch Ad to Unlock Movies
-  </button>
+    <!-- MAIN UNLOCK CARD -->
+    <div class="main-wrapper">
+        <div class="container">
+            <h2>Movies Unlock Portal</h2>
+            
+            <p class="instructions">
+                ⚠️ <strong>ध्यान दें:</strong> Movies section dekhne ke liye pehle <strong>Step 1</strong> par click karein. 
+                Ad open hone ke baad <strong>10 seconds</strong> wait karein, jiske baad <strong>Step 2</strong> automatically enable ho jayega.
+            </p>
 
-  <!-- Step 2 Button (Initially Disabled) -->
-  <button id="movieBtn" class="btn btn-disabled" disabled>
-    🔒 Step 2: Access Movies Section
-  </button>
-</div>
+            <!-- Step 1 Button -->
+            <button id="adBtn" class="btn btn-ad">
+                🔓 Step 1: Watch Ad to Unlock Movies
+            </button>
+
+            <!-- Step 2 Button (Initially Disabled) -->
+            <button id="movieBtn" class="btn btn-disabled" disabled>
+                🔒 Step 2: Access Movies Section
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER STATS -->
+    <div class="footer-info">
+        🔒 Fast Streaming Server Node | Active Viewers: <span>1,840 Online</span>
+    </div>
 
 <script>
     // URL से Target Movie Link निकालने के लिए
     const urlParams = new URLSearchParams(window.location.search);
     const finalTarget = urlParams.get('target') || "index.html"; 
 
-    // HilltopAds Direct Link URL (यहाँ अपना Link पेस्ट करें)
+    // HilltopAds Direct Link URL
     const HILLTOP_DIRECT_LINK = "https://fluffy-machine.com/PQr6nR";
 
     const adBtn = document.getElementById('adBtn');
