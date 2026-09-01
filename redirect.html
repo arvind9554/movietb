@@ -68,21 +68,23 @@
 </head>
 <body>
 
-<div class="container">
-    <h2>Link Unlock Portal</h2>
-    <p class="instructions">
-        ⚠️ <strong>ध्यान दें:</strong> मूवी का लिंक पाने के लिए पहले <strong>Step 1 (Ad Button)</strong> पर क्लिक करें। एड खुलने के बाद 10 सेकंड Wait , जिसके बाद <strong>Step 2 (Movie Button)</strong> ऑटोमैटिक चालू (Enable) हो जाएगा।
-    </p>
+<div class="unlock-card">
+  <h2>Link Unlock Portal</h2>
+  
+  <p class="instruction-text">
+    ⚠️ <strong>ध्यान दें:</strong> Movies section dekhne ke liye pehle <strong>Step 1</strong> par click karein. 
+    Ad open hone ke baad <strong>10 seconds</strong> wait karein, jiske baad <strong>Step 2</strong> automatically enable ho jayega.
+  </p>
 
-    <!-- STEP 1: AD BUTTON -->
-    <button id="adBtn" class="btn btn-ad">
-        🔓 Step 1: Watch Ad to Unlock Link
-    </button>
+  <!-- Step 1 Button -->
+  <button id="adBtn" class="btn btn-red">
+    🔓 Step 1: Watch Ad to Unlock Movies
+  </button>
 
-    <!-- STEP 2: MOVIE BUTTON (Initially Disabled) -->
-    <button id="movieBtn" class="btn btn-disabled" disabled>
-        🔒 Step 2: Watch / Download Movie
-    </button>
+  <!-- Step 2 Button (Initially Disabled) -->
+  <button id="movieBtn" class="btn btn-disabled" disabled>
+    🔒 Step 2: Access Movies Section
+  </button>
 </div>
 
 <script>
