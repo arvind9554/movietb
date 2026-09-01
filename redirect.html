@@ -34,7 +34,7 @@
         .slider-track {
             display: flex;
             width: max-content;
-            animation: scroll 25s linear infinite;
+            animation: scroll 35s linear infinite;
         }
         .slider-track:hover {
             animation-play-state: paused;
@@ -70,7 +70,7 @@
             z-index: 2;
         }
 
-        /* Seamless Seamless Loop Animation */
+        /* Seamless Loop Animation */
         @keyframes scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -144,116 +144,112 @@
             font-weight: bold;
         }
 
-/* ==========================================
-   PREMIUM HOW TO UNLOCK GUIDE SECTION
-========================================== */
-.guide-section {
-    max-width: 1000px;
-    margin: 50px auto 30px auto;
-    padding: 0 20px;
-    text-align: center;
-    box-sizing: border-box;
-}
+        /* PREMIUM HOW TO UNLOCK GUIDE SECTION */
+        .guide-section {
+            max-width: 1000px;
+            margin: 30px auto 40px auto;
+            padding: 0 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
 
-.guide-title {
-    color: #38bdf8;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
+        .guide-title {
+            color: #38bdf8;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-.guide-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-.guide-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 16px;
-    text-align: left;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
-}
+        .guide-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: left;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
 
-.guide-card:hover {
-    transform: translateY(-5px);
-    border-color: #38bdf8;
-    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
-}
+        .guide-card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
+        }
 
-.guide-step-num {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    background: rgba(15, 23, 42, 0.85);
-    color: #38bdf8;
-    font-weight: 700;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    border: 1px solid #38bdf8;
-    backdrop-filter: blur(4px);
-    z-index: 2;
-}
+        .guide-step-num {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: rgba(15, 23, 42, 0.85);
+            color: #38bdf8;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #38bdf8;
+            backdrop-filter: blur(4px);
+            z-index: 2;
+        }
 
-.guide-img-wrapper {
-    width: 100%;
-    height: 150px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 14px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    position: relative;
-}
+        .guide-img-wrapper {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            position: relative;
+        }
 
-.guide-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
+        .guide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-.guide-card h4 {
-    color: #f8fafc;
-    font-size: 15px;
-    margin-bottom: 6px;
-    font-weight: 600;
-}
+        .guide-card h4 {
+            color: #f8fafc;
+            font-size: 15px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
 
-.guide-card p {
-    color: #94a3b8;
-    font-size: 12.5px;
-    line-height: 1.4;
-    margin: 0;
-}
+        .guide-card p {
+            color: #94a3b8;
+            font-size: 12.5px;
+            line-height: 1.4;
+            margin: 0;
+        }
 
-/* Responsive Fix for Mobile Displays */
-@media (max-width: 768px) {
-    .guide-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
+        /* Responsive Fix for Mobile Displays */
+        @media (max-width: 768px) {
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- TOP INFINITE MOVIE POSTER SLIDER -->
     <div class="slider-container">
         <div class="slider-track">
             <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://media2.firstshowing.net/firstshowing/img18/ramayanaposterfinalmainb5994.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+1'"></div>
@@ -272,25 +268,24 @@
             <div class="slide-item"><span class="badge">LATEST</span><img src="https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+14'"></div>
             <div class="slide-item"><span class="badge">TRENDING</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3VTaoRdNiv9hrJ5AcWHjAzuzJm0UgJaI771rpL6mgQIpJQ_oSq1NjPeK6&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+15'"></div>
 
-            <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/Stranger_Things_season_1.jpg/250px-Stranger_Things_season_1.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+1'"></div>
-            <div class="slide-item"><span class="badge">NEW</span><img src="https://m.media-amazon.com/images/M/MV5BNzBhYzQzNTQtM2U0Yy00YjQ3LWJkMjQtODRjNDA3Mjc3ZDljXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+2'"></div>
-            <div class="slide-item"><span class="badge">TRENDING</span><img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/The_Boys_Season_4.jpg/250px-The_Boys_Season_4.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+3'"></div>
-            <div class="slide-item"><span class="badge">1080P</span><img src="https://m.media-amazon.com/images/M/MV5BZmIzMThjNTYtNjkwZi00NmM3LTliNGItZWIxYTUwMGU1YzM0XkEyXkFqcGc@._V1_QL75_UY281_CR18,0,190,281_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+4'"></div>
-            <div class="slide-item"><span class="badge">LATEST</span><img src="https://preview.redd.it/z8cdae4tpo6h1.jpeg?width=640&crop=smart&auto=webp&s=a6659e802c3ab02fad8e2283e105428325325f47" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+5'"></div>
-            <div class="slide-item"><span class="badge">HD</span><img src="https://m.media-amazon.com/images/M/MV5BNWY4NDgyN2QtNDRkZS00OGRjLWFhN2UtODc3Mzk2ZjQ0ZjhkXkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+6'"></div>
-            <div class="slide-item"><span class="badge">POPULAR</span><img src="https://m.media-amazon.com/images/M/MV5BMGFhMDQ4MzMtMTUxOC00NDE0LTkzZWMtMzhhMGNiMDlhNDNmXkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+7'"></div>
-            <div class="slide-item"><span class="badge">MUST WATCH</span><img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+8'"></div>
-            <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp6lpuEUcU-e8x6du24fOG6U3-ZA5ECLbHY7CajZpsRDgA_dS_enqG3ucP&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+9'"></div>
-            <div class="slide-item"><span class="badge">TOP RATED</span><img src="https://images.moviesanywhere.com/5aeda2a2543533ed249408b69cf368e2/bccef1e7-42b4-4b53-ac2e-92ba4933d943.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+10'"></div>
-            <div class="slide-item"><span class="badge">NEW</span><img src="https://m.media-amazon.com/images/M/MV5BZDMyYWU4NzItZDY0MC00ODE2LTkyYTMtMzNkNDdmYmFhZDg0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+11'"></div>
-            <div class="slide-item"><span class="badge">BLOCKBUSTER</span><img src="https://m.media-amazon.com/images/M/MV5BYzEwZjczOTktYzU1OS00YjJlLTgyY2UtNWEzODBlN2RjZDEwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+12'"></div>
-            <div class="slide-item"><span class="badge">1080P</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt1VRuvcJKPrDbwXeZxV-m9o8njrZBJ-XJcgtHQMEXc3PyWc9ygJtqPeA&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+13'"></div>
-            <div class="slide-item"><span class="badge">LATEST</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST9TQ2Kac5swKlk2j6OtdquQjNFWdsYNQERSOkOSU9gtZa-8YRs0x7hMg&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+14'"></div>
-            <div class="slide-item"><span class="badge">TRENDING</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpYgeNLvODhRK03kS-cIlRYAJBHtEEC43VGUG_Q4KjDw&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+15'"></div>
+            <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://media2.firstshowing.net/firstshowing/img18/ramayanaposterfinalmainb5994.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+1'"></div>
+            <div class="slide-item"><span class="badge">NEW</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ENIbAqrjQKaUs_4YKAWvcFarAGriPTa6YEbO2-SNPZZjmzYwIfaXXA0&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+2'"></div>
+            <div class="slide-item"><span class="badge">TRENDING</span><img src="https://i.pinimg.com/736x/fb/55/dc/fb55dc632b7a7ffbabf104b1208b27fc.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+3'"></div>
+            <div class="slide-item"><span class="badge">1080P</span><img src="https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+4'"></div>
+            <div class="slide-item"><span class="badge">LATEST</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlavx0KTwQHV-E8AFPD5A8f14AOVevVowkNY-3I05Q7Q&s" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+5'"></div>
+            <div class="slide-item"><span class="badge">HD</span><img src="https://m.media-amazon.com/images/M/MV5BZTk5ODY0MmQtMzA3Ni00NGY1LThiYzItZThiNjFiNDM4MTM3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+6'"></div>
+            <div class="slide-item"><span class="badge">POPULAR</span><img src="https://m.media-amazon.com/images/M/MV5BNDM3N2UzM2UtMjEwMC00NGUzLThmMmQtNGMyM2VmMDA0ZWEwXkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+7'"></div>
+            <div class="slide-item"><span class="badge">MUST WATCH</span><img src="https://m.media-amazon.com/images/M/MV5BNjMwYWMxNjYtY2I2NC00OWE0LTg4MmQtMmI5ZGI2NzU4ODhiXkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+8'"></div>
+            <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://m.media-amazon.com/images/M/MV5BZjU3NjgwN2YtZmE2NC00MWY0LWE1NGEtNWY1MWRiZDY0MmU0XkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+9'"></div>
+            <div class="slide-item"><span class="badge">TOP RATED</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCv_u7rH73M_mbp2FmuVBDcxL5eYqT7vtoUFDW3oGN8RDva3XqUSotCgA&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+10'"></div>
+            <div class="slide-item"><span class="badge">NEW</span><img src="https://static.toiimg.com/photo/msid-100531960/100531960.jpg?61496" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+11'"></div>
+            <div class="slide-item"><span class="badge">BLOCKBUSTER</span><img src="https://m.media-amazon.com/images/M/MV5BZThmNDg1NjUtNWJhMC00YjA3LWJiMjItNmM4ZDQ5ZGZiN2Y2XkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+12'"></div>
+            <div class="slide-item"><span class="badge">1080P</span><img src="https://m.media-amazon.com/images/M/MV5BMGExNGI1NDktOWI2Mi00NDM3LWIxMmQtNTQxYTgzMzI0MTA1XkEyXkFqcGc@._V1_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+13'"></div>
+            <div class="slide-item"><span class="badge">LATEST</span><img src="https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+14'"></div>
+            <div class="slide-item"><span class="badge">TRENDING</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3VTaoRdNiv9hrJ5AcWHjAzuzJm0UgJaI771rpL6mgQIpJQ_oSq1NjPeK6&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+15'"></div>
         </div>
     </div>
 
-    <!-- MAIN UNLOCK CARD -->
     <div class="main-wrapper">
         <div class="container">
             <h2>Movies Unlock Portal</h2>
@@ -310,32 +305,42 @@
         </div>
     </div>
 
-<div class="guide-section">
-    <div class="guide-title">📖 How to Unlock Movies Link (Easy Guide)</div>
-    <div class="guide-grid">
-        
-        <div class="guide-card">
-            <img class="guide-img" src="https://placehold.co/400x250/ef4444/ffffff?text=Step+1%3A+Click+Red+Button" alt="Step 1 Guide">
-            <h4>1. Click Step 1 Button</h4>
-            <p>Click on the red <strong>Step 1</strong> button to start unlocking.</p>
+    <div class="guide-section">
+        <div class="guide-title">
+            <span>📖</span> How to Unlock Movie Link
         </div>
+        <div class="guide-grid">
+            
+            <div class="guide-card">
+                <span class="guide-step-num">Step 01</span>
+                <div class="guide-img-wrapper">
+                    <img class="guide-img" src="https://placehold.co/600x350/ef4444/ffffff?text=Click+Step+1+Button" alt="Step 1 Guide">
+                </div>
+                <h4>1. Click Step 1 Button</h4>
+                <p>Click on the red <strong>Step 1</strong> button to start the short sponsor verification.</p>
+            </div>
 
-        <div class="guide-card">
-            <img class="guide-img" src="https://placehold.co/400x250/0284c7/ffffff?text=Step+2%3A+Wait+10+Seconds" alt="Step 2 Guide">
-            <h4>2. Wait 10 Seconds</h4>
-            <p>Stay on this page for 10 seconds while system verifies.</p>
+            <div class="guide-card">
+                <span class="guide-step-num">Step 02</span>
+                <div class="guide-img-wrapper">
+                    <img class="guide-img" src="https://placehold.co/600x350/0284c7/ffffff?text=Wait+10+Seconds" alt="Step 2 Guide">
+                </div>
+                <h4>2. Wait 10 Seconds</h4>
+                <p>Keep this page open and wait <strong>10 seconds</strong> while system verifies.</p>
+            </div>
+
+            <div class="guide-card">
+                <span class="guide-step-num">Step 03</span>
+                <div class="guide-img-wrapper">
+                    <img class="guide-img" src="https://placehold.co/600x350/22c55e/ffffff?text=Click+Step+2+to+Watch" alt="Step 3 Guide">
+                </div>
+                <h4>3. Access Your Movie</h4>
+                <p>Click the green <strong>Step 2</strong> button once unlocked to watch your movie!</p>
+            </div>
+
         </div>
-
-        <div class="guide-card">
-            <img class="guide-img" src="https://placehold.co/400x250/22c55e/ffffff?text=Step+3%3A+Open+Movie+Link" alt="Step 3 Guide">
-            <h4>3. Access Your Content</h4>
-            <p>The green <strong>Step 2</strong> button will unlock. Click to view!</p>
-        </div>
-
     </div>
-</div>
 
-    <!-- FOOTER STATS -->
     <div class="footer-info">
         🔒 Fast Streaming Server Node | Active Viewers: <span>1,840 Online</span>
     </div>
