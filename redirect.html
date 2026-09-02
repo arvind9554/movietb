@@ -346,24 +346,37 @@
     </div>
 
 <script>
+    // URL से params निकालें
     const urlParams = new URLSearchParams(window.location.search);
     const finalTarget = urlParams.get('target') || "index.html"; 
+    const adProvider = urlParams.get('adProvider'); // 'adsterra' चेक करने के लिए
 
-    const HILLTOP_DIRECT_LINK = "https://omg10.com/4/11635106";
+    // 1. दोनों Networks की अपनी-अपनी Direct Links यहाँ डालें
+    const MONETAG_DIRECT_LINK = "https://omg10.com/4/11635106";
+    const ADSTERRA_DIRECT_LINK = "https://www.profitableratecpmnetwork.com/q7iiih5k9?key=c14fd565b916ea67e0eea21abec9f5b8";
+
+    // 2. ऑटो-डिटेक्ट करें कि यूज़र Hamburger Menu से आया है या Normal Click से
+    let selectedAdLink = MONETAG_DIRECT_LINK; // Default Monetag रहेगा
+
+    if (adProvider === 'adsterra') {
+        selectedAdLink = ADSTERRA_DIRECT_LINK; // Hamburger Menu से आने पर Adsterra चलेगा
+    }
 
     const adBtn = document.getElementById('adBtn');
     const movieBtn = document.getElementById('movieBtn');
 
+    // Step 1: Ad Open Handlers
     adBtn.addEventListener('click', () => {
-        window.open(HILLTOP_DIRECT_LINK, '_blank');
+        // सही Ad Link खुलेगा (Monetag या Adsterra)
+        window.open(selectedAdLink, '_blank');
 
         adBtn.disabled = true;
         let waitTime = 10;
-        adBtn.innerText = `⏳ Please wait ${waitTime}s to verify ad...`;
+        adBtn.innerText = `⏳ Please wait ${waitTime}s to verify...`;
 
         const timer = setInterval(() => {
             waitTime--;
-            adBtn.innerText = `⏳ Please wait ${waitTime}s to verify ad...`;
+            adBtn.innerText = `⏳ Please wait ${waitTime}s to verify...`;
 
             if (waitTime <= 0) {
                 clearInterval(timer);
@@ -374,11 +387,12 @@
                 movieBtn.classList.remove('btn-disabled');
                 movieBtn.classList.add('btn-movie');
                 movieBtn.disabled = false;
-                movieBtn.innerText = "🚀 Step 2: Click to Open Movie";
+                movieBtn.innerText = "🚀 Step 2: Access Category / Movie";
             }
         }, 1000);
     });
 
+    // Step 2: Target Redirection Handlers
     movieBtn.addEventListener('click', () => {
         if (!movieBtn.disabled) {
             window.location.href = finalTarget;
