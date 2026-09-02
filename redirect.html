@@ -344,30 +344,28 @@
     <div class="footer-info">
         🔒 Fast Streaming Server Node | Active Viewers: <span>1,840 Online</span>
     </div>
+// "https://omg10.com/4/11635106"; 
+//"https://www.profitableratecpmnetwork.com/q7iiih5k9?key=c14fd565b916ea67e0eea21abec9f5b8";
 
 <script>
-    // URL से params निकालें
     const urlParams = new URLSearchParams(window.location.search);
-    const finalTarget = urlParams.get('target') || "index.html"; 
-    const adProvider = urlParams.get('adProvider'); // 'adsterra' चेक करने के लिए
+    const cat = urlParams.get('cat');
+    const adProvider = urlParams.get('adProvider');
 
-    // 1. दोनों Networks की अपनी-अपनी Direct Links यहाँ डालें
+    // अगर specific category है तो category.html पर जाएगा, नहीं तो home page पर
+    const finalTarget = cat ? `category.html?cat=${cat}` : "index.html"; 
+
+    // Ad Links
     const MONETAG_DIRECT_LINK = "https://omg10.com/4/11635106";
     const ADSTERRA_DIRECT_LINK = "https://www.profitableratecpmnetwork.com/q7iiih5k9?key=c14fd565b916ea67e0eea21abec9f5b8";
 
-    // 2. ऑटो-डिटेक्ट करें कि यूज़र Hamburger Menu से आया है या Normal Click से
-    let selectedAdLink = MONETAG_DIRECT_LINK; // Default Monetag रहेगा
-
-    if (adProvider === 'adsterra') {
-        selectedAdLink = ADSTERRA_DIRECT_LINK; // Hamburger Menu से आने पर Adsterra चलेगा
-    }
+    // Hamburger Menu (adProvider=adsterra) चेक करें
+    let selectedAdLink = (adProvider === 'adsterra') ? ADSTERRA_DIRECT_LINK : MONETAG_DIRECT_LINK;
 
     const adBtn = document.getElementById('adBtn');
     const movieBtn = document.getElementById('movieBtn');
 
-    // Step 1: Ad Open Handlers
     adBtn.addEventListener('click', () => {
-        // सही Ad Link खुलेगा (Monetag या Adsterra)
         window.open(selectedAdLink, '_blank');
 
         adBtn.disabled = true;
@@ -380,21 +378,20 @@
 
             if (waitTime <= 0) {
                 clearInterval(timer);
-                
                 adBtn.innerText = "✅ Step 1 Verified!";
                 adBtn.classList.add('btn-disabled');
 
                 movieBtn.classList.remove('btn-disabled');
                 movieBtn.classList.add('btn-movie');
                 movieBtn.disabled = false;
-                movieBtn.innerText = "🚀 Step 2: Access Category / Movie";
+                movieBtn.innerText = "🚀 Step 2: Access Category";
             }
         }, 1000);
     });
 
-    // Step 2: Target Redirection Handlers
     movieBtn.addEventListener('click', () => {
         if (!movieBtn.disabled) {
+            // सही Category Page पर रीडायरेक्ट करेगा बिना किसी 404 एरर के
             window.location.href = finalTarget;
         }
     });
