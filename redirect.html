@@ -376,13 +376,13 @@
 
             if (waitTime <= 0) {
                 clearInterval(timer);
-                adBtn.innerText = "✅ Step 1 Verified!";
+                adBtn.innerText = "✅ Step 1 Completed!";
                 adBtn.classList.add('btn-disabled');
 
                 movieBtn.classList.remove('btn-disabled');
                 movieBtn.classList.add('btn-movie');
                 movieBtn.disabled = false;
-                movieBtn.innerText = "🚀 Step 2: Access Category";
+                movieBtn.innerText = "🚀 Step 2: Watch Now Movies";
             }
         }, 1000);
     });
