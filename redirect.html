@@ -21,7 +21,7 @@
             overflow-x: hidden;
         }
 
-        /* PERFECT INFINITE SLIDER */
+        /* INFINITE SLIDER */
         .slider-container {
             width: 100%;
             overflow: hidden;
@@ -70,7 +70,6 @@
             z-index: 2;
         }
 
-        /* Seamless Loop Animation */
         @keyframes scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -128,8 +127,9 @@
         .btn-movie {
             background: #22c55e;
             color: #ffffff;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
         }
-        .btn-movie:hover { background: #16a34a; }
+        .btn-movie:hover { background: #16a34a; transform: translateY(-2px); }
 
         .footer-info {
             background: #0b1120;
@@ -144,7 +144,7 @@
             font-weight: bold;
         }
 
-        /* PREMIUM HOW TO UNLOCK GUIDE SECTION */
+        /* HOW TO UNLOCK GUIDE SECTION */
         .guide-section {
             max-width: 1000px;
             margin: 30px auto 40px auto;
@@ -240,7 +240,6 @@
             margin: 0;
         }
 
-        /* Responsive Fix for Mobile Displays */
         @media (max-width: 768px) {
             .guide-grid {
                 grid-template-columns: 1fr;
@@ -268,6 +267,7 @@
             <div class="slide-item"><span class="badge">LATEST</span><img src="https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+14'"></div>
             <div class="slide-item"><span class="badge">TRENDING</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3VTaoRdNiv9hrJ5AcWHjAzuzJm0UgJaI771rpL6mgQIpJQ_oSq1NjPeK6&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+15'"></div>
 
+            <!-- Duplicate set for infinite loop -->
             <div class="slide-item"><span class="badge">4K ULTRA</span><img src="https://media2.firstshowing.net/firstshowing/img18/ramayanaposterfinalmainb5994.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+1'"></div>
             <div class="slide-item"><span class="badge">NEW</span><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ENIbAqrjQKaUs_4YKAWvcFarAGriPTa6YEbO2-SNPZZjmzYwIfaXXA0&s=10" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+2'"></div>
             <div class="slide-item"><span class="badge">TRENDING</span><img src="https://i.pinimg.com/736x/fb/55/dc/fb55dc632b7a7ffbabf104b1208b27fc.jpg" alt="Poster" onerror="this.src='https://via.placeholder.com/140x200/1e293b/ffffff?text=Movie+3'"></div>
@@ -291,9 +291,9 @@
             <h2>Movies Unlock Portal</h2>
             
             <p class="instructions">
-    ⚠️ <strong>Note / ध्यान दें:</strong> To access the movies section, first click on <strong>Step 1</strong>. After the ad opens, wait for <strong>10 seconds</strong>, after which <strong>Step 2</strong> will be automatically enabled.<br><br>
-    (मूवी सेक्शन देखने के लिए पहले <strong>Step 1</strong> पर क्लिक करें। विज्ञापन खुलने के बाद <strong>10 सेकंड</strong> प्रतीक्षा करें, जिसके बाद <strong>Step 2</strong> अपने आप चालू हो जाएगा।)
-</p>
+                ⚠️ <strong>Note / ध्यान दें:</strong> To access the movies section, first click on <strong>Step 1</strong>. After the ad opens, wait for <strong>10 seconds</strong>, after which <strong>Step 2</strong> will be automatically enabled.<br><br>
+                (मूवी सेक्शन देखने के लिए पहले <strong>Step 1</strong> पर क्लिक करें। विज्ञापन खुलने के बाद <strong>10 सेकंड</strong> प्रतीक्षा करें, जिसके बाद <strong>Step 2</strong> अपने आप चालू हो जाएगा।)
+            </p>
 
             <button id="adBtn" class="btn btn-ad">
                 🔓 Step 1: Watch Ad to Unlock Movies
@@ -310,7 +310,6 @@
             <span>📖</span> How to Unlock Movie Link
         </div>
         <div class="guide-grid">
-            
             <div class="guide-card">
                 <span class="guide-step-num">Step 01</span>
                 <div class="guide-img-wrapper">
@@ -337,7 +336,6 @@
                 <h4>3. Access Your Movie</h4>
                 <p>Click the green <strong>Step 2</strong> button once unlocked to watch your movie!</p>
             </div>
-
         </div>
     </div>
 
@@ -346,28 +344,26 @@
     </div>
 
 <script>
-    const urlParams = new URLSearchParams(window.location.search);
+    const searchString = window.location.search;
+    const urlParams = new URLSearchParams(searchString);
     const cat = urlParams.get('cat');
-    const target = urlParams.get('target'); // Movies / View All के लिए
     const adProvider = urlParams.get('adProvider');
 
-    // Dynamic Target Selection Logic
-    let finalTarget = "index.html"; // Default Fallback
+    // Enhanced Dynamic Target Extraction (Handles full URL Query Parameters safely)
+    let finalTarget = "index.html"; 
 
-    if (target) {
-        // अगर Movie Page पर जाना है (e.g., redirect.html?target=movie.html?id=123)
-        finalTarget = target;
+    if (searchString.includes('target=')) {
+        finalTarget = searchString.substring(searchString.indexOf('target=') + 7);
     } else if (cat) {
-        // अगर Hamburger Category पर जाना है
         finalTarget = `category.html?cat=${cat}`;
     }
 
-    // Ad Links
+    // Direct Ad Network Links
     const MONETAG_DIRECT_LINK = "https://omg10.com/4/11635106";
     const ADSTERRA_DIRECT_LINK = "https://omg10.com/4/11635106";
 
-    // Ad Link Selection
-    let selectedAdLink = (adProvider === 'adsterra') ? ADSTERRA_DIRECT_LINK : MONETAG_DIRECT_LINK;
+    // Ad Link Selection Strategy
+    const selectedAdLink = (adProvider === 'adsterra') ? ADSTERRA_DIRECT_LINK : MONETAG_DIRECT_LINK;
 
     const adBtn = document.getElementById('adBtn');
     const movieBtn = document.getElementById('movieBtn');
@@ -376,6 +372,8 @@
         window.open(selectedAdLink, '_blank');
 
         adBtn.disabled = true;
+        adBtn.classList.add('btn-disabled');
+        
         let waitTime = 10;
         adBtn.innerText = `⏳ Please wait ${waitTime}s to verify...`;
 
@@ -386,7 +384,6 @@
             if (waitTime <= 0) {
                 clearInterval(timer);
                 adBtn.innerText = "✅ Step 1 Completed!";
-                adBtn.classList.add('btn-disabled');
 
                 movieBtn.classList.remove('btn-disabled');
                 movieBtn.classList.add('btn-movie');
