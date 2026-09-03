@@ -519,32 +519,3 @@ function initYouTubeTracking() {
 }
 
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
-
-// ===== 20 Min Auto Ad Trigger Fix =====
-let adShown = false;
-let startTime = Date.now();
-const TWENTY_MINUTES_MS = 20 * 60 * 1000; // 20 मिनट
-
-// 1. निरंतर समय ट्रैकर (ब्राउज़र टैब इनएक्टिव होने पर भी ट्रैक करेगा)
-const adCheckInterval = setInterval(() => {
-    const elapsedTime = Date.now() - startTime;
-
-    if (elapsedTime >= TWENTY_MINUTES_MS && !adShown) {
-        adShown = true;
-        clearInterval(adCheckInterval); // टाइमर बंद करें
-
-        // YouTube Iframe को एड के नीचे छुपाने का फिक्स
-        const playerIframe = document.querySelector('iframe[src*="youtube"]');
-        if (playerIframe) {
-            playerIframe.style.visibility = 'hidden'; // एड आने पर प्लेयर छिपाएँ
-        }
-
-        // Ad Trigger
-        if (typeof window.triggerFullScreenAd === 'function') {
-            window.triggerFullScreenAd(() => {
-                // एड बंद होने पर प्लेयर वापस दिखाएँ
-                if (playerIframe) playerIframe.style.visibility = 'visible';
-            });
-        }
-    }
-}, 2000); // हर 2 सेकंड में चेक करेगा
