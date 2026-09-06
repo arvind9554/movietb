@@ -1328,11 +1328,11 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Container Frame */
+/* Container Box */
 .movietb-ad-frame {
     width: 100% !important;
     max-width: 100% !important;
-    height: 250px !important;
+    min-height: 250px !important;
     margin: 15px 0 !important;
     background: #000 !important;
     display: flex !important;
@@ -1343,21 +1343,13 @@ body.player-fullscreen-active .movietb-below-player {
     position: relative !important;
 }
 
-/* Force ExoClick Player and all wrapper divs to fill 100% width */
+/* Let ExoClick inner frame scale naturally without cropping */
 .movietb-ad-frame ins,
 .movietb-ad-frame iframe,
 .movietb-ad-frame video,
-.movietb-ad-frame > div,
-.movietb-ad-frame [class*="eas6a"] {
-    width: 100% !important;
-    min-width: 100% !important;
+.movietb-ad-frame > div {
     max-width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    box-sizing: border-box !important;
-}
-
-/* Ensure inner canvas scales nicely */
-.movietb-ad-frame video {
-    object-fit: cover !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    margin: 0 auto !important;
 }

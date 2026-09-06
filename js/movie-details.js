@@ -644,7 +644,7 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
         <div class="movietb-ad-frame">
-    <ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true" data-sub="1"></ins>
+    <ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true" data-sub="1" style="width:100%;height:100%;display:block;"></ins>
 </div>
       </section>
 
