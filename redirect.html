@@ -251,24 +251,31 @@
 <style>
   .exoclick-video-container {
       width: 100%;
-      max-width: 400px;
-      min-height: 250px;
-      margin: 20px auto;
+      max-width: 480px;
+      height: 270px; /* Exact 16:9 Aspect Ratio */
+      margin: 25px auto;
       background: #000;
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: block !important;
       border-radius: 8px;
       overflow: hidden;
   }
 
+  /* Force internal elements to match the container frame */
+  .exoclick-video-container *,
   .exoclick-video-container ins,
   .exoclick-video-container iframe,
-  .exoclick-video-container video {
+  .exoclick-video-container video,
+  .exoclick-video-container > div {
       width: 100% !important;
       height: 100% !important;
+      max-height: 270px !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
       display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
   }
 </style>
 
