@@ -1240,13 +1240,12 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 .movietb-ad-frame {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 10px;
-  border: 1px dashed #333;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
-    #101010;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 220px;
+    border-radius: 10px;
+    border: 1px dashed #333;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)), #101010;
 }
 
 .movietb-related {
