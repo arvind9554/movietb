@@ -1328,24 +1328,25 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Base Container (Default - Mobile Optimized) */
+/* Container Frame */
 .movietb-ad-frame,
 .exoclick-video-container {
-    width: 95% !important; /* Phone screen percentage width */
+    width: 100% !important;
     max-width: 480px !important;
-    height: auto !important; /* Allow height to be dynamic */
-    min-height: 270px !important; /* Perfect 16:9 minimum height */
+    height: auto !important;
+    min-height: 280px !important;
     margin: 15px auto !important;
+    padding: 10px 0 !important;
     background: #000 !important;
     position: relative !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     border-radius: 8px !important;
-    overflow: visible !important; /* Fix: Allow overlay buttons to visible if they pop out */
+    box-sizing: border-box !important;
 }
 
-/* Base Video Elements Sizing */
+/* Force ExoClick Player elements to auto-adjust height */
 .movietb-ad-frame ins,
 .movietb-ad-frame video,
 .movietb-ad-frame iframe,
@@ -1354,27 +1355,16 @@ body.player-fullscreen-active .movietb-below-player {
 .exoclick-video-container video,
 .exoclick-video-container iframe,
 .exoclick-video-container > div {
-    width: 100% !important;
-    height: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 260px !important;
     display: block !important;
-    object-fit: cover !important;
-    position: relative !important; /* Fix: Allow inner elements flow without cropping */
+    object-fit: contain !important;
+    margin: 0 auto !important;
 }
 
-/* Prevent outer elements (like close button overlay) from causing issues */
+/* Ensure inner controls stay intact */
 .movietb-ad-frame *,
 .exoclick-video-container * {
     max-width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* DESKTOP SPECIFIC FIX (Larger screens wider than 768px) */
-@media screen and (min-width: 768px) {
-    .movietb-ad-frame,
-    .exoclick-video-container {
-        width: 100% !important;
-        max-width: 640px !important;
-        height: 360px !important; /* Fix: Force 16:9 ratio on desktop */
-        min-height: 360px !important;
-    }
 }
