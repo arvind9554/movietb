@@ -648,25 +648,39 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   `;
 }
 
-// HTML inject hone ke turant baad script execute karne ke liye:
 const adFrame = document.querySelector('.movietb-ad-frame');
 if (adFrame) {
-    adFrame.innerHTML = ''; // Clear container
+    adFrame.style.minHeight = "280px";
+    adFrame.style.width = "100%";
+    
+    // Create an iframe to give ExoClick a native HTML document context
+    const iframe = document.createElement('iframe');
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    iframe.style.minHeight = "280px";
+    
+    adFrame.innerHTML = '';
+    adFrame.appendChild(iframe);
 
-    const s1 = document.createElement('script');
-    s1.async = true;
-    s1.src = 'https://a.magsrv.com/ad-provider.js';
-
-    const ins = document.createElement('ins');
-    ins.className = 'eas6a97888e37';
-    ins.setAttribute('data-zoneid', '6021438');
-
-    const s2 = document.createElement('script');
-    s2.text = '(AdProvider = window.AdProvider || []).push({"serve": {}});';
-
-    adFrame.appendChild(s1);
-    adFrame.appendChild(ins);
-    adFrame.appendChild(s2);
+    const iframeDoc = iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { margin: 0; padding: 0; background: transparent; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+            </style>
+        </head>
+        <body>
+            <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+            <ins class="eas6a97888e37" data-zoneid="6021438"></ins>
+            <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+        </body>
+        </html>
+    `);
+    iframeDoc.close();
 }
 
 function applyReactionUi(root, state) {
