@@ -116,28 +116,14 @@ async function loadMovieDetails() {
 
     initMovieTbBelowPlayer(movie, movieId);
 
-function initExoClickAd() {
-    setTimeout(() => {
-        const adFrame = document.querySelector('.movietb-ad-frame');
-        if (!adFrame) return;
-
-        // 1. Direct INS Tag Injection (No iframe)
-        adFrame.innerHTML = '<ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true"></ins>';
-
-        // 2. Script Load Check
-        if (!document.querySelector('script[src*="ad-provider.js"]')) {
-            const script = document.createElement('script');
-            script.async = true;
-            script.type = 'application/javascript';
-            script.src = 'https://a.magsrv.com/ad-provider.js';
-            document.head.appendChild(script);
-        }
-
-        // 3. Trigger ExoClick Serve Event
-        (window.AdProvider = window.AdProvider || []).push({"serve": {}});
-    }, 150);
+if (!document.querySelector('script[src*="ad-provider.js"]')) {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://a.magsrv.com/ad-provider.js';
+    document.head.appendChild(script);
 }
-    
+(window.AdProvider = window.AdProvider || []).push({"serve": {}});
+
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
       initPlayerDimensionLogging();
     }
@@ -656,9 +642,11 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       </section>
 
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
-    <span class="movietb-ad-label">Advertisement</span>
-    <div class="movietb-ad-frame"></div>
-</section>
+        <span class="movietb-ad-label">Advertisement</span>
+        <div class="movietb-ad-frame">
+    <ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true" data-sub="1"></ins>
+</div>
+      </section>
 
       <section class="movietb-related" aria-label="More from this category">
         <h2 class="movietb-related-heading">More From This Category</h2>
@@ -668,27 +656,6 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       </section>
     </div>
   `;
-}
-
-// HTML inject hone ke turant baad script execute karne ke liye:
-const adFrame = document.querySelector('.movietb-ad-frame');
-if (adFrame) {
-    adFrame.innerHTML = ''; // Clear container
-
-    const s1 = document.createElement('script');
-    s1.async = true;
-    s1.src = 'https://a.magsrv.com/ad-provider.js';
-
-    const ins = document.createElement('ins');
-    ins.className = 'eas6a97888e37';
-    ins.setAttribute('data-zoneid', '6021438');
-
-    const s2 = document.createElement('script');
-    s2.text = '(AdProvider = window.AdProvider || []).push({"serve": {}});';
-
-    adFrame.appendChild(s1);
-    adFrame.appendChild(ins);
-    adFrame.appendChild(s2);
 }
 
 function applyReactionUi(root, state) {
