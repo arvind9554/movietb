@@ -635,7 +635,14 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
 
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
-        <div class="movietb-ad-frame" style="display: flex; align-items: center; justify-content: center; overflow: hidden; width: 100%;"></div>
+        <section class="movietb-ad-placeholder" aria-label="Advertisement">
+    <span class="movietb-ad-label">Advertisement</span>
+    <div class="movietb-ad-frame" style="display: flex; align-items: center; justify-content: center; overflow: hidden; width: 100%;">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+        <ins class="eas6a97888e37" data-zoneid="6021438"></ins>
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+</section>
       </section>
 
       <section class="movietb-related" aria-label="More from this category">
@@ -647,32 +654,6 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
     </div>
   `;
 }
-
-setTimeout(() => {
-    const adFrame = document.querySelector('.movietb-ad-frame');
-    if (adFrame && !adFrame.dataset.loaded) {
-        adFrame.dataset.loaded = "true";
-        
-        // 1. ExoClick Main Script
-        const script1 = document.createElement('script');
-        script1.async = true;
-        script1.src = "https://a.magsrv.com/ad-provider.js";
-        
-        // 2. ExoClick Ad Container with Zone ID: 6021438
-        const ins = document.createElement('ins');
-        ins.className = "eas6a97888e37";
-        ins.setAttribute('data-zoneid', '6021438');
-        
-        // 3. ExoClick Serve Trigger
-        const script2 = document.createElement('script');
-        script2.text = '(AdProvider = window.AdProvider || []).push({"serve": {}});';
-        
-        // Inject into 16:9 Frame
-        adFrame.appendChild(script1);
-        adFrame.appendChild(ins);
-        adFrame.appendChild(script2);
-    }
-}, 300);
 
 function applyReactionUi(root, state) {
   root.querySelectorAll('.movietb-react-btn').forEach((btn) => {
