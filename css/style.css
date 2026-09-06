@@ -1328,28 +1328,22 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-.exoclick-video-container {
+.movietb-ad-frame {
     width: 100%;
     max-width: 480px;
-    height: 270px; /* 16:9 Aspect Ratio */
-    margin: 25px auto;
+    height: 270px;
+    margin: 20px auto;
     background: #000;
     position: relative;
-    display: block;
+    display: block !important;
     border-radius: 8px;
     overflow: hidden;
 }
 
-/* Force child video/canvas properly without breaking overlay text */
-.exoclick-video-container ins,
-.exoclick-video-container video {
+.movietb-ad-frame ins,
+.movietb-ad-frame video,
+.movietb-ad-frame iframe {
     width: 100% !important;
     height: 100% !important;
     display: block !important;
-    object-fit: cover;
-}
-
-/* Ensure Close Button & Overlay Text stay visible on top */
-.exoclick-video-container * {
-    max-width: 100%;
 }
