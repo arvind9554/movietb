@@ -116,11 +116,7 @@ async function loadMovieDetails() {
 
     initMovieTbBelowPlayer(movie, movieId);
 
-    if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
-      initPlayerDimensionLogging();
-    }
-
-    function initExoClickAd() {
+function initExoClickAd() {
     setTimeout(() => {
         const adFrame = document.querySelector('.movietb-ad-frame');
         if (!adFrame) return;
@@ -144,15 +140,19 @@ async function loadMovieDetails() {
                 </style>
             </head>
             <body>
-                <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
- <ins class="eas6a97888e37" data-zoneid="6021438"></ins> 
- <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+                <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+                <ins class="eas6a97888e37" data-zoneid="6021438"></ins>
+                <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
             </body>
             </html>
         `);
         doc.close();
     }, 100);
 }
+
+    if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
+      initPlayerDimensionLogging();
+    }
 
   } catch (error) {
     console.error("Error loading movie details:", error);
