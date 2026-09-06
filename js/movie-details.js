@@ -433,99 +433,41 @@ function reactionStorageKey(id) {
   return `movietb-reaction-${id}`;
 }
 
-function ratingSessionKey(id) {
-  return `movietb-rated-session-${id}`;
-}
-
-function hashSeed(value) {
-  let hash = 2166136261;
-  const text = String(value || '');
-  for (let i = 0; i < text.length; i += 1) {
-    hash ^= text.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function getSocialBaseline(id) {
-  const seed = hashSeed(id);
-  const likes = 18 + (seed % 482);
-  const ratingCount = 8 + (seed % 37);
-  const averageTenths = 36 + (seed % 15);
-  const ratingSum = (averageTenths / 10) * ratingCount;
-  return { likes, ratingCount, ratingSum };
-}
-
 function readReactionState(id) {
-  const baseline = getSocialBaseline(id);
-  const empty = {
-    vote: '',
-    rating: 0,
-    ratedThisSession: false,
-    baseline
-  };
-
   try {
     const raw = localStorage.getItem(reactionStorageKey(id));
-    const parsed = raw ? JSON.parse(raw) : {};
+    if (!raw) return { vote: '', rating: 0 };
+    const parsed = JSON.parse(raw);
     const vote = parsed.vote === 'like' || parsed.vote === 'dislike' ? parsed.vote : '';
     const rating = Number(parsed.rating);
     return {
       vote,
-      rating: Number.isFinite(rating) && rating >= 1 && rating <= 5 ? Math.round(rating) : 0,
-      ratedThisSession: sessionStorage.getItem(ratingSessionKey(id)) === '1',
-      baseline
+      rating: Number.isFinite(rating) && rating >= 1 && rating <= 5 ? Math.round(rating) : 0
     };
   } catch {
-    return empty;
+    return { vote: '', rating: 0 };
   }
 }
 
 function writeReactionState(id, state) {
   try {
-    localStorage.setItem(reactionStorageKey(id), JSON.stringify({
-      vote: state.vote || '',
-      rating: state.rating || 0
-    }));
-    if (state.ratedThisSession) {
-      sessionStorage.setItem(ratingSessionKey(id), '1');
-    }
+    localStorage.setItem(reactionStorageKey(id), JSON.stringify(state));
   } catch {
     /* ignore quota / private mode */
   }
 }
 
-function getDisplayedLikeCount(state) {
-  const offset = state.vote === 'like' ? 1 : (state.vote === 'dislike' ? -1 : 0);
-  return Math.max(0, state.baseline.likes + offset);
-}
-
-function getRatingStats(state) {
-  const baseCount = state.baseline.ratingCount;
-  const baseSum = state.baseline.ratingSum;
-  const hasUserRating = state.rating >= 1;
-  const count = hasUserRating ? baseCount + 1 : baseCount;
-  const sum = hasUserRating ? baseSum + state.rating : baseSum;
-  const average = count > 0 ? sum / count : 0;
-  return { count, average };
-}
-
-function formatLikeCount(count) {
-  return Number(count).toLocaleString('en-US');
-}
-
 function formatRatingLabel(state) {
-  const { average } = getRatingStats(state);
-  return `${average.toFixed(1)} / 5`;
+  if (state.rating > 0) {
+    return `${state.rating}.0/5`;
+  }
+  return '—/5';
 }
 
 function formatRatingCount(state) {
-  const { count } = getRatingStats(state);
-  return `${count.toLocaleString('en-US')} ${count === 1 ? 'Rating' : 'Ratings'}`;
+  if (state.rating > 0) return '1 Rating';
+  return '0 Ratings';
 }
-
-const THUMB_UP_ICON = `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M18.77 11h-4.23l1.52-4.94C16.38 5.03 15.54 4 14.38 4c-.58 0-1.14.24-1.52.65L7 11H4v10h12.23c1.04 0 1.94-.73 2.14-1.75l1.45-7.05A2 2 0 0 0 18.77 11zM7 20H5V12h2v8z"/></svg>`;
-const THUMB_DOWN_ICON = `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M5.23 13h4.23l-1.52 4.94C7.62 18.97 8.46 20 9.62 20c.58 0 1.14-.24 1.52-.65L17 13h3V3H7.77C6.73 3 5.83 3.73 5.63 4.75L4.18 11.8A2 2 0 0 0 5.23 13zM17 4h2v8h-2V4z"/></svg>`;
 
 function infoRow(label, value) {
   if (!value) return '';
@@ -596,19 +538,15 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
 
   return `
     <div class="movietb-below-player">
-      <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
-
       <section class="movietb-reactions" aria-label="Movie reactions">
-        <div class="movietb-vote-pill" role="group" aria-label="Like or dislike this movie">
-          <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
-            ${THUMB_UP_ICON}
-            <span class="movietb-like-count">${formatLikeCount(getDisplayedLikeCount(state))}</span>
-          </button>
-          <span class="movietb-vote-divider" aria-hidden="true"></span>
-          <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
-            ${THUMB_DOWN_ICON}
-          </button>
-        </div>
+        <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
+          <span aria-hidden="true">👍</span>
+          <span>Like</span>
+        </button>
+        <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
+          <span aria-hidden="true">👎</span>
+          <span>Dislike</span>
+        </button>
         <div class="movietb-rating" aria-label="Movie rating">
           <div class="movietb-stars" role="group" aria-label="Rate this movie">
             ${[1, 2, 3, 4, 5].map((star) => `
@@ -623,6 +561,7 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       </section>
 
       <section class="movietb-movie-info" aria-label="Movie information">
+        <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
         ${hasInfo ? `
           <dl class="movietb-info-preview">${info.previewRows}</dl>
           <dl class="movietb-info-expanded">${info.expandedRows}</dl>
@@ -649,13 +588,8 @@ function applyReactionUi(root, state) {
   root.querySelectorAll('.movietb-react-btn').forEach((btn) => {
     const active = btn.dataset.vote === state.vote;
     btn.classList.toggle('is-active', active);
-    btn.classList.toggle('is-liked', btn.dataset.vote === 'like' && active);
-    btn.classList.toggle('is-disliked', btn.dataset.vote === 'dislike' && active);
     btn.setAttribute('aria-pressed', String(active));
   });
-
-  const likeCount = root.querySelector('.movietb-like-count');
-  if (likeCount) likeCount.textContent = formatLikeCount(getDisplayedLikeCount(state));
 
   root.querySelectorAll('.movietb-star').forEach((btn) => {
     const star = Number(btn.dataset.star);
@@ -688,20 +622,12 @@ function initMovieTbBelowPlayer(movie, id) {
 
   root.querySelectorAll('.movietb-star').forEach((btn) => {
     btn.addEventListener('click', () => {
-      if (state.ratedThisSession || state.rating > 0) return;
       const star = Number(btn.dataset.star);
-      if (!star) return;
-      state.rating = star;
-      state.ratedThisSession = true;
+      state.rating = state.rating === star ? 0 : star;
       writeReactionState(id, state);
       applyReactionUi(root, state);
-      root.querySelector('.movietb-stars')?.classList.add('is-locked');
     });
   });
-
-  if (state.ratedThisSession || state.rating > 0) {
-    root.querySelector('.movietb-stars')?.classList.add('is-locked');
-  }
 
   const toggle = root.querySelector('.movietb-info-toggle');
   const infoCard = root.querySelector('.movietb-movie-info');
