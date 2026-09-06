@@ -634,16 +634,9 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       </section>
 
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
-        <span class="movietb-ad-label">Advertisement</span>
-        <section class="movietb-ad-placeholder" aria-label="Advertisement">
     <span class="movietb-ad-label">Advertisement</span>
-    <div class="movietb-ad-frame" style="display: flex; align-items: center; justify-content: center; overflow: hidden; width: 100%;">
-        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-        <ins class="eas6a97888e37" data-zoneid="6021438"></ins>
-        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-    </div>
+    <div class="movietb-ad-frame"></div>
 </section>
-      </section>
 
       <section class="movietb-related" aria-label="More from this category">
         <h2 class="movietb-related-heading">More From This Category</h2>
@@ -653,6 +646,27 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       </section>
     </div>
   `;
+}
+
+// HTML inject hone ke turant baad script execute karne ke liye:
+const adFrame = document.querySelector('.movietb-ad-frame');
+if (adFrame) {
+    adFrame.innerHTML = ''; // Clear container
+
+    const s1 = document.createElement('script');
+    s1.async = true;
+    s1.src = 'https://a.magsrv.com/ad-provider.js';
+
+    const ins = document.createElement('ins');
+    ins.className = 'eas6a97888e37';
+    ins.setAttribute('data-zoneid', '6021438');
+
+    const s2 = document.createElement('script');
+    s2.text = '(AdProvider = window.AdProvider || []).push({"serve": {}});';
+
+    adFrame.appendChild(s1);
+    adFrame.appendChild(ins);
+    adFrame.appendChild(s2);
 }
 
 function applyReactionUi(root, state) {
