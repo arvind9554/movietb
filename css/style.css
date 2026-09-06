@@ -1328,23 +1328,21 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Main Outer Wrapper */
+/* Base Container (Mobile First) */
 .movietb-ad-frame,
 .exoclick-video-container {
     width: 100% !important;
-    max-width: 100% !important;
-    min-height: 250px !important;
-    margin: 15px 0 !important;
+    max-width: 480px !important; /* Perfect for mobile/tablet */
+    height: 270px !important;
+    margin: 15px auto !important;
     background: #000 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    position: relative !important;
+    display: block !important;
     border-radius: 8px !important;
     overflow: hidden !important;
-    position: relative !important;
 }
 
-/* Force ExoClick Player to scale & be visible on all screens */
+/* Base Video Elements */
 .movietb-ad-frame ins,
 .movietb-ad-frame video,
 .movietb-ad-frame iframe,
@@ -1353,24 +1351,28 @@ body.player-fullscreen-active .movietb-below-player {
 .exoclick-video-container video,
 .exoclick-video-container iframe,
 .exoclick-video-container > div {
+    width: 100% !important;
+    height: 100% !important;
     display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
+    object-fit: cover !important;
 }
 
-/* Mobile Specific Fix: Ensures it fits without disappearing */
-@media screen and (max-width: 600px) {
+/* DESKTOP SPECIFIC FIX (Screens wider than 768px) */
+@media screen and (min-width: 768px) {
     .movietb-ad-frame,
     .exoclick-video-container {
-        min-height: 200px !important;
-        padding: 5px 0 !important;
+        max-width: 640px !important; /* Desktop view expansion */
+        height: 360px !important;    /* Maintain 16:9 ratio */
     }
-    
+
     .movietb-ad-frame ins,
-    .movietb-ad-frame > div {
-        transform: scale(0.95) !important;
-        transform-origin: center center !important;
+    .movietb-ad-frame video,
+    .movietb-ad-frame iframe,
+    .movietb-ad-frame > div,
+    .exoclick-video-container ins,
+    .exoclick-video-container video,
+    .exoclick-video-container iframe,
+    .exoclick-video-container > div {
+        object-fit: contain !important; /* Prevents black space stretch on wide screens */
     }
 }
