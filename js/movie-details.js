@@ -1,5 +1,6 @@
 import { db } from './firebase-config.js';
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { doc, getDoc, collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getYouTubeId } from './main.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
@@ -104,30 +105,7 @@ async function loadMovieDetails() {
     wrapper.innerHTML = `
       ${playerHtml}
 
-      <div class="movie-info-card">
-        <h1>${movie.title}</h1>
-
-        <div class="movie-tags">
-          <span class="tag">${movie.format || 'HD'}</span>
-          <span>${movie.year || 'N/A'}</span>
-          <span class="meta-dot"></span>
-          <span>${movie.language || 'N/A'}</span>
-          <span class="meta-dot"></span>
-          <span>${categoryNames[movie.category] || movie.category || 'N/A'}</span>
-        </div>
-
-        <div class="info-grid">
-          <div class="info-label">Director</div>
-          <div class="info-value">${movie.director || 'N/A'}</div>
-
-          <div class="info-label">Star Cast</div>
-          <div class="info-value">${movie.starCast || 'N/A'}</div>
-        </div>
-
-        <div class="summary-box">
-          ${movie.summary || 'No summary provided.'}
-        </div>
-      </div>
+      ${buildMovieTbBelowPlayerHtml(movie, movieId)}
     `;
 
     if (PLAYER_DIAGNOSTIC) {
@@ -135,6 +113,8 @@ async function loadMovieDetails() {
     } else {
       initVideoPlayer();
     }
+
+    initMovieTbBelowPlayer(movie, movieId);
 
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
       initPlayerDimensionLogging();
@@ -429,6 +409,290 @@ function initDiagnosticPlayer() {
   const iframe = document.getElementById('yt-diagnostic-iframe');
   if (iframe) {
     iframe.addEventListener('load', () => logPlayerDimensions('diagnostic iframe loaded'));
+  }
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function firstPresent(...values) {
+  for (const value of values) {
+    if (value == null) continue;
+    const text = String(value).trim();
+    if (text) return text;
+  }
+  return '';
+}
+
+function reactionStorageKey(id) {
+  return `movietb-reaction-${id}`;
+}
+
+function readReactionState(id) {
+  try {
+    const raw = localStorage.getItem(reactionStorageKey(id));
+    if (!raw) return { vote: '', rating: 0 };
+    const parsed = JSON.parse(raw);
+    const vote = parsed.vote === 'like' || parsed.vote === 'dislike' ? parsed.vote : '';
+    const rating = Number(parsed.rating);
+    return {
+      vote,
+      rating: Number.isFinite(rating) && rating >= 1 && rating <= 5 ? Math.round(rating) : 0
+    };
+  } catch {
+    return { vote: '', rating: 0 };
+  }
+}
+
+function writeReactionState(id, state) {
+  try {
+    localStorage.setItem(reactionStorageKey(id), JSON.stringify(state));
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+function formatRatingLabel(state) {
+  if (state.rating > 0) {
+    return `${state.rating}.0/5`;
+  }
+  return '—/5';
+}
+
+function formatRatingCount(state) {
+  if (state.rating > 0) return '1 Rating';
+  return '0 Ratings';
+}
+
+function infoRow(label, value) {
+  if (!value) return '';
+  return `
+    <div class="movietb-info-row">
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value)}</dd>
+    </div>
+  `;
+}
+
+function collectMovieInfoRows(movie) {
+  const categoryLabel = categoryNames[movie.category] || firstPresent(movie.category);
+  const summary = firstPresent(movie.summary, movie.description, movie.synopsis);
+  const director = firstPresent(movie.director);
+  const starCast = firstPresent(movie.starCast, movie.cast, movie.stars);
+  const release = firstPresent(movie.releaseDate, movie.year, movie.releaseYear, movie.date);
+  const language = firstPresent(movie.language);
+  const format = firstPresent(movie.format);
+  const genre = firstPresent(movie.genre);
+  const duration = firstPresent(movie.duration, movie.runtime);
+
+  return {
+    summary,
+    director,
+    starCast,
+    previewRows: [
+      infoRow('Summary', summary),
+      infoRow('Director', director),
+      infoRow('Cast', starCast)
+    ].join(''),
+    expandedRows: [
+      infoRow('Summary', summary),
+      infoRow('Director', director),
+      infoRow('Star Cast', starCast),
+      infoRow('Category', categoryLabel),
+      infoRow('Release', release),
+      infoRow('Language', language),
+      infoRow('Format', format),
+      infoRow('Genre', genre),
+      infoRow('Duration', duration)
+    ].join('')
+  };
+}
+
+function resolveRelatedPoster(movie) {
+  const poster = firstPresent(movie.posterUrl, movie.thumbnail, movie.poster);
+  if (poster) return poster;
+  const ytId = getYouTubeId(movie.embedUrl || movie.trailerUrl || '');
+  if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+  return 'assets/images/placeholder.jpg';
+}
+
+function shuffleOnce(items) {
+  const list = [...items];
+  for (let i = list.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  return list;
+}
+
+function buildMovieTbBelowPlayerHtml(movie, id) {
+  const state = readReactionState(id);
+  const info = collectMovieInfoRows(movie);
+  const title = firstPresent(movie.title, 'Movie details');
+  const hasInfo = Boolean(info.previewRows.trim() || info.expandedRows.trim());
+
+  return `
+    <div class="movietb-below-player">
+      <section class="movietb-reactions" aria-label="Movie reactions">
+        <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
+          <span aria-hidden="true">👍</span>
+          <span>Like</span>
+        </button>
+        <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
+          <span aria-hidden="true">👎</span>
+          <span>Dislike</span>
+        </button>
+        <div class="movietb-rating" aria-label="Movie rating">
+          <div class="movietb-stars" role="group" aria-label="Rate this movie">
+            ${[1, 2, 3, 4, 5].map((star) => `
+              <button type="button" class="movietb-star" data-star="${star}" aria-label="Rate ${star} star${star > 1 ? 's' : ''}" aria-pressed="${state.rating >= star}">★</button>
+            `).join('')}
+          </div>
+          <div class="movietb-rating-copy">
+            <strong class="movietb-rating-score">${formatRatingLabel(state)}</strong>
+            <span class="movietb-rating-count">${formatRatingCount(state)}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="movietb-movie-info" aria-label="Movie information">
+        <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
+        ${hasInfo ? `
+          <dl class="movietb-info-preview">${info.previewRows}</dl>
+          <dl class="movietb-info-expanded">${info.expandedRows}</dl>
+          <button type="button" class="movietb-info-toggle" aria-expanded="false">View</button>
+        ` : ''}
+      </section>
+
+      <section class="movietb-ad-placeholder" aria-label="Advertisement">
+        <span class="movietb-ad-label">Advertisement</span>
+        <div class="movietb-ad-frame"></div>
+      </section>
+
+      <section class="movietb-related" aria-label="More from this category">
+        <h2 class="movietb-related-heading">More From This Category</h2>
+        <div class="movietb-related-grid" id="movietb-related-grid">
+          <p class="movietb-related-status">Loading related titles...</p>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function applyReactionUi(root, state) {
+  root.querySelectorAll('.movietb-react-btn').forEach((btn) => {
+    const active = btn.dataset.vote === state.vote;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
+
+  root.querySelectorAll('.movietb-star').forEach((btn) => {
+    const star = Number(btn.dataset.star);
+    const active = state.rating >= star;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
+
+  const score = root.querySelector('.movietb-rating-score');
+  const count = root.querySelector('.movietb-rating-count');
+  if (score) score.textContent = formatRatingLabel(state);
+  if (count) count.textContent = formatRatingCount(state);
+}
+
+function initMovieTbBelowPlayer(movie, id) {
+  const root = document.querySelector('.movietb-below-player');
+  if (!root) return;
+
+  const state = readReactionState(id);
+  applyReactionUi(root, state);
+
+  root.querySelectorAll('.movietb-react-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const nextVote = btn.dataset.vote;
+      state.vote = state.vote === nextVote ? '' : nextVote;
+      writeReactionState(id, state);
+      applyReactionUi(root, state);
+    });
+  });
+
+  root.querySelectorAll('.movietb-star').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const star = Number(btn.dataset.star);
+      state.rating = state.rating === star ? 0 : star;
+      writeReactionState(id, state);
+      applyReactionUi(root, state);
+    });
+  });
+
+  const toggle = root.querySelector('.movietb-info-toggle');
+  const infoCard = root.querySelector('.movietb-movie-info');
+  if (toggle && infoCard) {
+    toggle.addEventListener('click', () => {
+      const expanded = infoCard.classList.toggle('is-expanded');
+      toggle.setAttribute('aria-expanded', String(expanded));
+      toggle.textContent = expanded ? 'Hide' : 'View';
+    });
+  }
+
+  loadRelatedMovies(movie, id);
+}
+
+async function loadRelatedMovies(movie, currentId) {
+  const grid = document.getElementById('movietb-related-grid');
+  if (!grid) return;
+
+  const category = firstPresent(movie.category);
+  if (!category) {
+    grid.innerHTML = `<p class="movietb-related-status">No related titles available.</p>`;
+    return;
+  }
+
+  try {
+    const q = query(
+      collection(db, 'movies'),
+      where('category', '==', category),
+      limit(40)
+    );
+    const snapshot = await getDocs(q);
+    const related = shuffleOnce(
+      snapshot.docs.filter((item) => item.id !== currentId)
+    ).slice(0, 10);
+
+    if (!related.length) {
+      grid.innerHTML = `<p class="movietb-related-status">No other titles in this category yet.</p>`;
+      return;
+    }
+
+    grid.innerHTML = related.map((item) => {
+      const data = item.data();
+      const poster = resolveRelatedPoster(data);
+      const title = firstPresent(data.title, 'Untitled');
+      const meta = firstPresent(
+        categoryNames[data.category] || data.category,
+        data.year,
+        data.language
+      );
+      const href = `redirect.html?target=movie.html?id=${encodeURIComponent(item.id)}`;
+
+      return `
+        <a class="movietb-related-card" href="${href}" aria-label="Open ${escapeHtml(title)}">
+          <div class="movietb-related-poster">
+            <img src="${escapeHtml(poster)}" alt="${escapeHtml(title)}" loading="lazy"
+              onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
+          </div>
+          <h3>${escapeHtml(title)}</h3>
+          ${meta ? `<p>${escapeHtml(meta)}</p>` : ''}
+        </a>
+      `;
+    }).join('');
+  } catch (error) {
+    console.error('Error loading related movies:', error);
+    grid.innerHTML = `<p class="movietb-related-status">Unable to load related titles.</p>`;
   }
 }
 

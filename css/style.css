@@ -1017,3 +1017,314 @@ a { color: var(--text-primary); text-decoration: none; }
   100% { background-position: 200% 0; }
 }
 
+/* ===== MovieTB details extras (below existing player only) ===== */
+.movietb-below-player {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 0 36px 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+body.player-fullscreen-active .movietb-below-player {
+  display: none !important;
+}
+
+.movietb-reactions,
+.movietb-movie-info,
+.movietb-ad-placeholder,
+.movietb-related {
+  background: linear-gradient(180deg, #181818 0%, #141414 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.movietb-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 14px 16px;
+}
+
+.movietb-react-btn,
+.movietb-info-toggle,
+.movietb-star {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.movietb-react-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #2e2e2e;
+  background: #1b1b1b;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.movietb-react-btn:hover {
+  border-color: #3d3d3d;
+  background: #222;
+}
+
+.movietb-react-btn:active {
+  transform: scale(0.97);
+}
+
+.movietb-react-btn.is-active {
+  border-color: rgba(229, 9, 20, 0.55);
+  background: rgba(229, 9, 20, 0.14);
+  color: #fff;
+}
+
+.movietb-react-btn:focus-visible,
+.movietb-star:focus-visible,
+.movietb-info-toggle:focus-visible,
+.movietb-related-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.movietb-rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.movietb-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.movietb-star {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: #4a4a4a;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.movietb-star:hover,
+.movietb-star.is-active {
+  color: #f5c518;
+}
+
+.movietb-star:active {
+  transform: scale(0.92);
+}
+
+.movietb-rating-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.movietb-rating-score {
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: 0.2px;
+}
+
+.movietb-rating-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.movietb-movie-info {
+  padding: 20px 22px 16px;
+}
+
+.movietb-movie-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 14px;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+
+.movietb-info-preview,
+.movietb-info-expanded {
+  margin: 0;
+}
+
+.movietb-info-expanded {
+  display: none;
+}
+
+.movietb-movie-info.is-expanded .movietb-info-preview {
+  display: none;
+}
+
+.movietb-movie-info.is-expanded .movietb-info-expanded {
+  display: block;
+}
+
+.movietb-info-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+
+.movietb-info-row dt {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-top: 3px;
+}
+
+.movietb-info-row dd {
+  margin: 0;
+  color: #e4e4e4;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.movietb-info-preview .movietb-info-row:first-child dd {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.movietb-info-toggle {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.movietb-info-toggle:hover {
+  background: #1f1f1f;
+  border-color: var(--accent);
+}
+
+.movietb-ad-placeholder {
+  padding: 12px 12px 14px;
+}
+
+.movietb-ad-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.movietb-ad-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  border: 1px dashed #333;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+    #101010;
+}
+
+.movietb-related {
+  padding: 18px 16px 16px;
+}
+
+.movietb-related-heading {
+  margin: 0 0 14px 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.movietb-related-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.movietb-related-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 18px 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.movietb-related-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  background: #161616;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.movietb-related-card:hover {
+  transform: translateY(-4px);
+  border-color: #3a3a3a;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+}
+
+.movietb-related-poster {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #0a0a0a;
+  overflow: hidden;
+}
+
+.movietb-related-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.movietb-related-card h3 {
+  margin: 10px 10px 4px;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.movietb-related-card p {
+  margin: 0 10px 12px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
