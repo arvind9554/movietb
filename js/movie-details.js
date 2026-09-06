@@ -116,38 +116,30 @@ async function loadMovieDetails() {
 
     initMovieTbBelowPlayer(movie, movieId);
 
+// loadMovieDetails() ke andar render hone ke theek baad bas ise call karein:
+// initExoClickAd();
+
+// File ke bottom par ye standalone function rakhein:
 function initExoClickAd() {
     setTimeout(() => {
         const adFrame = document.querySelector('.movietb-ad-frame');
         if (!adFrame) return;
 
-        adFrame.style.cssText = "min-height:280px; width:100%; display:block; overflow:hidden;";
+        // 1. Direct INS Tag Injection
+        adFrame.innerHTML = '<ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true"></ins>';
 
-        const iframe = document.createElement('iframe');
-        iframe.style.cssText = "width:100%; height:280px; border:none; display:block;";
+        // 2. Load Ad Provider Script safely
+        if (!document.querySelector('script[src*="ad-provider.js"]')) {
+            const script = document.createElement('script');
+            script.async = true;
+            script.type = 'application/javascript';
+            script.src = 'https://a.magsrv.com/ad-provider.js';
+            document.head.appendChild(script);
+        }
 
-        adFrame.innerHTML = '';
-        adFrame.appendChild(iframe);
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <style>
-                    body { margin:0; padding:0; background:#000; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; }
-                </style>
-            </head>
-            <body>
-                <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-                <ins class="eas6a97888e37" data-zoneid="6021438"></ins>
-                <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-            </body>
-            </html>
-        `);
-        doc.close();
-    }, 100);
+        // 3. Serve Ad
+        (window.AdProvider = window.AdProvider || []).push({"serve": {}});
+    }, 150);
 }
 
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
