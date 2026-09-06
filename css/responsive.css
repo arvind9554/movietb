@@ -351,7 +351,6 @@ body {
 
     .movietb-rating {
         margin-left: 0;
-        width: 100%;
     }
 }
 
@@ -361,20 +360,24 @@ body {
         margin-bottom: 24px;
     }
 
-    .movietb-reactions,
     .movietb-movie-info,
     .movietb-ad-placeholder,
     .movietb-related {
         border-radius: 12px;
     }
 
-    .movietb-react-btn {
-        flex: 1 1 calc(50% - 8px);
-        justify-content: center;
-    }
-
     .movietb-movie-title {
         font-size: 1.2rem;
+    }
+
+    .movietb-react-btn {
+        min-height: 40px;
+        padding: 0 12px;
+    }
+
+    .movietb-rating {
+        width: 100%;
+        justify-content: space-between;
     }
 
     .movietb-info-row {
@@ -397,7 +400,7 @@ body {
 
     .movietb-react-btn {
         font-size: 0.82rem;
-        padding: 8px 10px;
+        padding: 0 10px;
     }
 
 

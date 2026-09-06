@@ -1043,12 +1043,25 @@ body.player-fullscreen-active .movietb-below-player {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
 
+.movietb-movie-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin: 2px 0 0 0;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+
 .movietb-reactions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 16px;
-  padding: 14px 16px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .movietb-react-btn,
@@ -1058,34 +1071,60 @@ body.player-fullscreen-active .movietb-below-player {
   cursor: pointer;
 }
 
+.movietb-vote-pill {
+  display: inline-flex;
+  align-items: stretch;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.movietb-vote-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 6px 0;
+  background: rgba(255, 255, 255, 0.18);
+}
+
 .movietb-react-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 8px 14px;
-  border-radius: 10px;
-  border: 1px solid #2e2e2e;
-  background: #1b1b1b;
-  color: var(--text-primary);
-  font-size: 0.9rem;
-  font-weight: 700;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
 .movietb-react-btn:hover {
-  border-color: #3d3d3d;
-  background: #222;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .movietb-react-btn:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
-.movietb-react-btn.is-active {
-  border-color: rgba(229, 9, 20, 0.55);
-  background: rgba(229, 9, 20, 0.14);
-  color: #fff;
+.movietb-react-btn svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.movietb-react-btn.is-liked {
+  color: #3ea6ff;
+}
+
+.movietb-react-btn.is-disliked {
+  color: #ff4e4e;
+}
+
+.movietb-like-count {
+  font-variant-numeric: tabular-nums;
 }
 
 .movietb-react-btn:focus-visible,
@@ -1102,61 +1141,68 @@ body.player-fullscreen-active .movietb-below-player {
   gap: 12px;
   margin-left: auto;
   min-width: 0;
+  padding: 4px 10px 4px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
 }
 
 .movietb-stars {
   display: flex;
-  gap: 2px;
+  gap: 0;
 }
 
 .movietb-star {
-  width: 32px;
+  width: 28px;
   height: 32px;
   border: 0;
   background: transparent;
-  color: #4a4a4a;
+  color: #5a5a5a;
   font-size: 1.15rem;
   line-height: 1;
   transition: color 0.15s ease, transform 0.15s ease;
 }
 
-.movietb-star:hover,
-.movietb-star.is-active {
+.movietb-star.is-active,
+.movietb-stars:not(.is-locked):hover .movietb-star {
   color: #f5c518;
+}
+
+.movietb-stars:not(.is-locked) .movietb-star:hover ~ .movietb-star {
+  color: #5a5a5a;
 }
 
 .movietb-star:active {
   transform: scale(0.92);
 }
 
+.movietb-stars.is-locked {
+  cursor: default;
+}
+
+.movietb-stars.is-locked .movietb-star {
+  cursor: default;
+}
+
 .movietb-rating-copy {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  padding-right: 6px;
 }
 
 .movietb-rating-score {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #fff;
   letter-spacing: 0.2px;
 }
 
 .movietb-rating-count {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
 }
 
 .movietb-movie-info {
   padding: 20px 22px 16px;
-}
-
-.movietb-movie-title {
-  font-size: 1.45rem;
-  font-weight: 800;
-  line-height: 1.3;
-  margin-bottom: 14px;
-  color: #fff;
-  overflow-wrap: anywhere;
 }
 
 .movietb-info-preview,
