@@ -1328,32 +1328,28 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Parent Wrapper - Flex centering */
-.movietb-ad-frame {
+.exoclick-video-container {
+    width: 100%;
+    max-width: 480px;
+    height: 270px; /* 16:9 Aspect Ratio */
+    margin: 25px auto;
+    background: #000;
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Force child video/canvas properly without breaking overlay text */
+.exoclick-video-container ins,
+.exoclick-video-container video {
     width: 100% !important;
-    margin: 15px 0 !important;
-    background: #000 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    min-height: 250px !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover;
 }
 
-/* Allow ExoClick's native generated wrapper to flow naturally */
-.movietb-ad-frame ins {
-    display: inline-block !important;
-    margin: 0 auto !important;
-    max-width: 100% !important;
-}
-
-/* Fix for ExoClick inner element alignment */
-.movietb-ad-frame > div {
-    margin: 0 auto !important;
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    transform-origin: center top !important;
+/* Ensure Close Button & Overlay Text stay visible on top */
+.exoclick-video-container * {
+    max-width: 100%;
 }
