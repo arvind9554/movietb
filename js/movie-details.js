@@ -433,40 +433,98 @@ function reactionStorageKey(id) {
   return `movietb-reaction-${id}`;
 }
 
+function ratingSessionKey(id) {
+  return `movietb-rated-session-${id}`;
+}
+
+function hashSeed(value) {
+  let hash = 2166136261;
+  const text = String(value || '');
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function getSocialBaseline(id) {
+  const seed = hashSeed(id);
+  const likeBuckets = [4600, 10000, 29000, 40000, 92000, 1100000];
+  const likes = likeBuckets[seed % likeBuckets.length] + (seed % 37);
+  const ratingCount = 284 + (seed % 2200);
+  const averageTenths = 36 + (seed % 14);
+  return {
+    likes,
+    ratingCount,
+    ratingSum: (averageTenths / 10) * ratingCount
+  };
+}
+
 function readReactionState(id) {
+  const baseline = getSocialBaseline(id);
   try {
     const raw = localStorage.getItem(reactionStorageKey(id));
-    if (!raw) return { vote: '', rating: 0 };
-    const parsed = JSON.parse(raw);
+    const parsed = raw ? JSON.parse(raw) : {};
     const vote = parsed.vote === 'like' || parsed.vote === 'dislike' ? parsed.vote : '';
     const rating = Number(parsed.rating);
     return {
       vote,
-      rating: Number.isFinite(rating) && rating >= 1 && rating <= 5 ? Math.round(rating) : 0
+      rating: Number.isFinite(rating) && rating >= 1 && rating <= 5 ? Math.round(rating) : 0,
+      ratedThisSession: sessionStorage.getItem(ratingSessionKey(id)) === '1',
+      baseline
     };
   } catch {
-    return { vote: '', rating: 0 };
+    return { vote: '', rating: 0, ratedThisSession: false, baseline };
   }
 }
 
 function writeReactionState(id, state) {
   try {
-    localStorage.setItem(reactionStorageKey(id), JSON.stringify(state));
+    localStorage.setItem(reactionStorageKey(id), JSON.stringify({
+      vote: state.vote || '',
+      rating: state.rating || 0
+    }));
+    if (state.ratedThisSession) {
+      sessionStorage.setItem(ratingSessionKey(id), '1');
+    }
   } catch {
     /* ignore quota / private mode */
   }
 }
 
+function getDisplayedLikeCount(state) {
+  const offset = state.vote === 'like' ? 1 : (state.vote === 'dislike' ? -1 : 0);
+  return Math.max(0, state.baseline.likes + offset);
+}
+
+function getRatingStats(state) {
+  const baseCount = state.baseline.ratingCount;
+  const baseSum = state.baseline.ratingSum;
+  const hasUserRating = state.rating >= 1;
+  const count = hasUserRating ? baseCount + 1 : baseCount;
+  const sum = hasUserRating ? baseSum + state.rating : baseSum;
+  const average = count > 0 ? sum / count : 0;
+  return { count, average };
+}
+
+function formatCompactCount(count) {
+  const n = Math.max(0, Number(count) || 0);
+  const trim = (value) => {
+    const rounded = Math.round(value * 10) / 10;
+    return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+  };
+  if (n >= 1000000) return `${trim(n / 1000000)}M`;
+  if (n >= 1000) return `${trim(n / 1000)}K`;
+  return n.toLocaleString('en-US');
+}
+
 function formatRatingLabel(state) {
-  if (state.rating > 0) {
-    return `${state.rating}.0/5`;
-  }
-  return '—/5';
+  return `${getRatingStats(state).average.toFixed(1)}/5`;
 }
 
 function formatRatingCount(state) {
-  if (state.rating > 0) return '1 Rating';
-  return '0 Ratings';
+  const { count } = getRatingStats(state);
+  return `${count.toLocaleString('en-US')} ${count === 1 ? 'Rating' : 'Ratings'}`;
 }
 
 function infoRow(label, value) {
@@ -539,14 +597,16 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   return `
     <div class="movietb-below-player">
       <section class="movietb-reactions" aria-label="Movie reactions">
-        <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
-          <span aria-hidden="true">👍</span>
-          <span>Like</span>
-        </button>
-        <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
-          <span aria-hidden="true">👎</span>
-          <span>Dislike</span>
-        </button>
+        <div class="movietb-vote-pill" role="group" aria-label="Like or dislike this movie">
+          <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
+            <span aria-hidden="true">👍</span>
+            <span class="movietb-like-count">${formatCompactCount(getDisplayedLikeCount(state))}</span>
+          </button>
+          <span class="movietb-vote-divider" aria-hidden="true"></span>
+          <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
+            <span aria-hidden="true">👎</span>
+          </button>
+        </div>
         <div class="movietb-rating" aria-label="Movie rating">
           <div class="movietb-stars" role="group" aria-label="Rate this movie">
             ${[1, 2, 3, 4, 5].map((star) => `
@@ -561,11 +621,15 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       </section>
 
       <section class="movietb-movie-info" aria-label="Movie information">
-        <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
+        <div class="movietb-info-top">
+          <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
+          ${hasInfo ? `<button type="button" class="movietb-info-toggle" aria-expanded="false">View</button>` : ''}
+        </div>
         ${hasInfo ? `
           <dl class="movietb-info-preview">${info.previewRows}</dl>
-          <dl class="movietb-info-expanded">${info.expandedRows}</dl>
-          <button type="button" class="movietb-info-toggle" aria-expanded="false">View</button>
+          <div class="movietb-info-expand-wrap">
+            <dl class="movietb-info-expanded">${info.expandedRows}</dl>
+          </div>
         ` : ''}
       </section>
 
@@ -588,8 +652,17 @@ function applyReactionUi(root, state) {
   root.querySelectorAll('.movietb-react-btn').forEach((btn) => {
     const active = btn.dataset.vote === state.vote;
     btn.classList.toggle('is-active', active);
+    btn.classList.toggle('is-liked', btn.dataset.vote === 'like' && active);
+    btn.classList.toggle('is-disliked', btn.dataset.vote === 'dislike' && active);
     btn.setAttribute('aria-pressed', String(active));
   });
+
+  const likeCount = root.querySelector('.movietb-like-count');
+  if (likeCount) {
+    const exact = getDisplayedLikeCount(state);
+    likeCount.textContent = formatCompactCount(exact);
+    likeCount.title = exact.toLocaleString('en-US');
+  }
 
   root.querySelectorAll('.movietb-star').forEach((btn) => {
     const star = Number(btn.dataset.star);
@@ -622,12 +695,20 @@ function initMovieTbBelowPlayer(movie, id) {
 
   root.querySelectorAll('.movietb-star').forEach((btn) => {
     btn.addEventListener('click', () => {
+      if (state.ratedThisSession || state.rating > 0) return;
       const star = Number(btn.dataset.star);
-      state.rating = state.rating === star ? 0 : star;
+      if (!star) return;
+      state.rating = star;
+      state.ratedThisSession = true;
       writeReactionState(id, state);
       applyReactionUi(root, state);
+      root.querySelector('.movietb-stars')?.classList.add('is-locked');
     });
   });
+
+  if (state.ratedThisSession || state.rating > 0) {
+    root.querySelector('.movietb-stars')?.classList.add('is-locked');
+  }
 
   const toggle = root.querySelector('.movietb-info-toggle');
   const infoCard = root.querySelector('.movietb-movie-info');
@@ -680,7 +761,7 @@ async function loadRelatedMovies(movie, currentId) {
       const href = `redirect.html?target=movie.html?id=${encodeURIComponent(item.id)}`;
 
       return `
-        <a class="movietb-related-card" href="${href}" aria-label="Open ${escapeHtml(title)}">
+        <a class="movietb-related-card movietb-card" href="${href}" aria-label="Open ${escapeHtml(title)}">
           <div class="movietb-related-poster">
             <img src="${escapeHtml(poster)}" alt="${escapeHtml(title)}" loading="lazy"
               onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
