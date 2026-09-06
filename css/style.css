@@ -1328,24 +1328,21 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Container Box Update */
+/* Base Container (Mobile First) */
 .movietb-ad-frame,
 .exoclick-video-container {
     width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    min-height: 270px !important;
+    max-width: 480px !important; /* Perfect for mobile/tablet */
+    height: 270px !important;
     margin: 15px auto !important;
     background: #000 !important;
     position: relative !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    display: block !important;
     border-radius: 8px !important;
     overflow: hidden !important;
 }
 
-/* Force video and player elements to scale nicely without cropping */
+/* Base Video Elements */
 .movietb-ad-frame ins,
 .movietb-ad-frame video,
 .movietb-ad-frame iframe,
@@ -1355,17 +1352,27 @@ body.player-fullscreen-active .movietb-below-player {
 .exoclick-video-container iframe,
 .exoclick-video-container > div {
     width: 100% !important;
-    max-width: 100% !important;
     height: 100% !important;
-    max-height: 320px !important;
     display: block !important;
-    object-fit: contain !important; /* Image/Video layout phatne se rokega */
-    margin: 0 auto !important;
+    object-fit: cover !important;
 }
 
-/* Maintain proper sizing for overlay controls and text */
-.movietb-ad-frame *,
-.exoclick-video-container * {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
+/* DESKTOP SPECIFIC FIX (Screens wider than 768px) */
+@media screen and (min-width: 768px) {
+    .movietb-ad-frame,
+    .exoclick-video-container {
+        max-width: 640px !important; /* Desktop view expansion */
+        height: 360px !important;    /* Maintain 16:9 ratio */
+    }
+
+    .movietb-ad-frame ins,
+    .movietb-ad-frame video,
+    .movietb-ad-frame iframe,
+    .movietb-ad-frame > div,
+    .exoclick-video-container ins,
+    .exoclick-video-container video,
+    .exoclick-video-container iframe,
+    .exoclick-video-container > div {
+        object-fit: contain !important; /* Prevents black space stretch on wide screens */
+    }
 }
