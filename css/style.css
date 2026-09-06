@@ -1328,31 +1328,32 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Container Box Fix */
+/* Parent Wrapper - Flex centering */
 .movietb-ad-frame {
     width: 100% !important;
-    max-width: 640px !important;
-    height: 360px !important; /* Fixed Native Aspect Ratio */
-    margin: 20px auto !important;
+    margin: 15px 0 !important;
     background: #000 !important;
-    position: relative !important;
-    display: block !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     border-radius: 8px !important;
     overflow: hidden !important;
+    min-height: 250px !important;
 }
 
-/* Force ExoClick Player to match container exact dimensions */
-.movietb-ad-frame ins,
-.movietb-ad-frame iframe,
-.movietb-ad-frame video,
+/* Allow ExoClick's native generated wrapper to flow naturally */
+.movietb-ad-frame ins {
+    display: inline-block !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+}
+
+/* Fix for ExoClick inner element alignment */
 .movietb-ad-frame > div {
-    position: absolute !important;
+    margin: 0 auto !important;
+    position: relative !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    right: 0 !important;
+    transform-origin: center top !important;
 }
