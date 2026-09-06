@@ -116,19 +116,15 @@ async function loadMovieDetails() {
 
     initMovieTbBelowPlayer(movie, movieId);
 
-// loadMovieDetails() ke andar render hone ke theek baad bas ise call karein:
-// initExoClickAd();
-
-// File ke bottom par ye standalone function rakhein:
 function initExoClickAd() {
     setTimeout(() => {
         const adFrame = document.querySelector('.movietb-ad-frame');
         if (!adFrame) return;
 
-        // 1. Direct INS Tag Injection
+        // 1. Direct INS Tag Injection (No iframe)
         adFrame.innerHTML = '<ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true"></ins>';
 
-        // 2. Load Ad Provider Script safely
+        // 2. Script Load Check
         if (!document.querySelector('script[src*="ad-provider.js"]')) {
             const script = document.createElement('script');
             script.async = true;
@@ -137,11 +133,11 @@ function initExoClickAd() {
             document.head.appendChild(script);
         }
 
-        // 3. Serve Ad
+        // 3. Trigger ExoClick Serve Event
         (window.AdProvider = window.AdProvider || []).push({"serve": {}});
     }, 150);
 }
-
+    
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
       initPlayerDimensionLogging();
     }
