@@ -1328,28 +1328,44 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
+/* Container Box Update */
+.movietb-ad-frame,
 .exoclick-video-container {
-    width: 100%;
-    max-width: 50px;
-    height: 20px; /* 16:9 Aspect Ratio */
-    margin: 25px auto;
-    background: #000;
-    position: relative;
-    display: block;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* Force child video/canvas properly without breaking overlay text */
-.exoclick-video-container ins,
-.exoclick-video-container video {
     width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    object-fit: cover;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 270px !important;
+    margin: 15px auto !important;
+    background: #000 !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
 }
 
-/* Ensure Close Button & Overlay Text stay visible on top */
+/* Force video and player elements to scale nicely without cropping */
+.movietb-ad-frame ins,
+.movietb-ad-frame video,
+.movietb-ad-frame iframe,
+.movietb-ad-frame > div,
+.exoclick-video-container ins,
+.exoclick-video-container video,
+.exoclick-video-container iframe,
+.exoclick-video-container > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 320px !important;
+    display: block !important;
+    object-fit: contain !important; /* Image/Video layout phatne se rokega */
+    margin: 0 auto !important;
+}
+
+/* Maintain proper sizing for overlay controls and text */
+.movietb-ad-frame *,
 .exoclick-video-container * {
-    max-width: 100%;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
