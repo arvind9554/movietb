@@ -1327,3 +1327,24 @@ body.player-fullscreen-active .movietb-below-player {
   text-overflow: ellipsis;
 }
 
+
+.movietb-ad-frame {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 280px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: #000 !important;
+    overflow: hidden !important;
+}
+
+/* ExoClick Player ko Box ke andar lock karne ke liye */
+.movietb-ad-frame div, 
+.movietb-ad-frame iframe {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+}
