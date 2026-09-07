@@ -44,7 +44,8 @@ async function performSearch() {
     const isSouthTarget = cleanQuery.includes('south');
     const isTrailerTarget = cleanQuery.includes('trailer') || cleanQuery.includes('teaser');
     const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
-    
+    const isExactTitleMatch = keywords.some(word => title.includes(word));
+
     // Updated Series & Episode Intent Detection
     const isSeriesTarget = cleanQuery.includes('series') || 
                            cleanQuery.includes('webseries') || 
@@ -78,7 +79,7 @@ async function performSearch() {
       // 🛑 STRICT EXCLUSIONS
       // Allow Series/Episodes if user explicitly targeted series/episodes/seasons
       if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01') || title.includes('episode') || title.includes('ep '))) return;
-      if (!isTrailerTarget && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
+      if (!isTrailerTarget && !isExactTitleMatch && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
       if (!isStoryTvTarget && !isSeriesTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
 
       // Hollywood Isolation Check
