@@ -249,6 +249,32 @@
         }
     </style>
 
+<style>
+.exoclick-video-container {
+    width: 100%;
+    max-width: 480px;
+    height: 270px; /* 16:9 Aspect Ratio */
+    margin: 25px auto;
+    background: #000;
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Force child video/canvas properly without breaking overlay text */
+.exoclick-video-container ins,
+.exoclick-video-container video {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover;
+}
+
+/* Ensure Close Button & Overlay Text stay visible on top */
+.exoclick-video-container * {
+    max-width: 100%;
+}
 
 </style>
 
@@ -407,6 +433,13 @@
         }
     });
 </script>
+
+<!-- Dedicated Ad Container for Redirect Page -->
+<div class="exoclick-video-container">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+    <ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+</div>
 
 </body>
 </html>
