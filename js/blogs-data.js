@@ -337,5 +337,42 @@ export const blogs = [
 <hr>
 <p><strong>SEO Keywords:</strong> Housefull 5 2026, Akshay Kumar Housefull 5, Riteish Deshmukh Abhishek Bachchan, Bollywood Comedy Movies, MovieTB Housefull News.</p>
 `
-  }
+  },
+  {
+    id: 11,
+    title: "Hanuman Ansh (2026) - Divine Action Fantasy Movie Details, Cast & Streaming Review",
+    image: "assets/images/hanuman-ansh.jpg",
+    category: "Bollywood",
+    date: "7 Sep 2026",
+    author: "Arvind Kumar Pandey",
+    excerpt: "Hanuman Ansh combines ancient mythological power with high-octane modern action. Explore story insights, VFX highlights, and full streaming details.",
+    content: `
+        <h1>Hanuman Ansh (2026) - Divine Power Meets Modern Action Cinema</h1>
+
+        <p>Director and storytellers bring forward an epic mythological action saga with <strong>Hanuman Ansh</strong>. The film seamlessly blends supernatural divine strength with contemporary dramatic storytelling, creating a compelling cinematic experience for action lovers and mythology fans alike.</p>
+
+        <div style="text-align: center; margin: 25px 0;">
+            <img src="assets/images/hanuman-ansh-poster.jpg" alt="Hanuman Ansh Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;">
+        </div>
+
+        <h2>Core Story Premise & Spiritual Connection</h2>
+        <p>The plot revolves around a young protagonist living an ordinary life who suddenly discovers an innate, divine connection to ancient modern-day powers inspired by Lord Hanuman. When dark forces threaten modern society, he must embrace his sacred responsibility and harness his superhuman strength to protect innocent lives.</p>
+
+        <h2>Star Cast & Notable Performances</h2>
+        <ul>
+            <li><strong>Lead Protagonist:</strong> Delivers a powerhouse performance capturing both vulnerable emotional moments and intense physical action scenes.</li>
+            <li><strong>Antagonist:</strong> Portrays a ruthless villain using dark forces to destabilize peace, providing a formidable challenge for the hero.</li>
+            <li><strong>Supporting Ensemble:</strong> Strong character actors adding emotional depth, comic relief, and philosophical guidance throughout the journey.</li>
+        </ul>
+
+        <h2>Production Quality, Visuals & Sound Design</h2>
+        <p>Shot across picturesque locations and state-of-the-art visual effects studios, <em>Hanuman Ansh</em> features stunning CGI sequences, crisp battle choreography, and vibrant mythological visuals. The background score combines traditional chants with modern orchestral arrangements to enhance every action beat.</p>
+
+        <h2>Streaming & Technical Specifications</h2>
+        <p>Optimized for full high-definition viewing, the movie delivers crisp 1080p video clarity with multi-channel audio tracks. Audiences can enjoy smooth, fast playback across mobile and desktop interfaces on the <em>MovieTB</em> platform.</p>
+
+        <hr>
+        <p><strong>SEO Keywords:</strong> Hanuman Ansh 2026, Hanuman Ansh full movie stream, Hanuman Ansh cast, Hanuman Ansh HD review, divine action movies, MovieTB original blogs</p>
+    `
+}
 ];
