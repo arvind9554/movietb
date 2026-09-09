@@ -286,5 +286,17 @@ l.parentNode.insertBefore(s, l);
 })({})
 </script>
 
+<script>
+  // HilltopAds ke global click hijacking ko block karne ka jugaad
+  window.addEventListener('click', function(e) {
+    // Agar click kisi valid link, button ya navigation element par hua hai
+    var target = e.target.closest('a, button, .view-all, [onClick]');
+    if (target) {
+      // Ad script ke invisible click event ko aage badhne se roko
+      e.stopPropagation();
+    }
+  }, true); // Event capturing mode ON
+</script>
+
 </body>
 </html>
