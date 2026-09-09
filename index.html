@@ -281,21 +281,5 @@ l.parentNode.insertBefore(s, l);
 })({})
 </script>
 
-<script>
-  // Smart Event Interceptor for MovieTB
-  window.addEventListener('click', function(e) {
-    // Agar click HilltopAds ke dynamic overlay script par ho raha hai
-    if (e.target && (
-        e.target.tagName === 'IFRAME' || 
-        e.target.id.includes('lipmon') || 
-        e.target.style.zIndex > 99999
-    )) {
-      e.stopPropagation();
-      e.preventDefault();
-      return false;
-    }
-  }, true);
-</script>
-
 </body>
 </html>
