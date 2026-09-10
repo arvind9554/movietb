@@ -57,4 +57,13 @@
     <priority>0.3</priority>
   </url>
 
+  <!-- redirect Page -->
+  <url>
+    <loc>https://www.movietb.com/redirect</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
 </urlset>
