@@ -571,54 +571,6 @@ a { color: var(--text-primary); text-decoration: none; }
   .admin-card { padding: 22px; }
 }
 
-/* ===== Hero Banners admin list ===== */
-.hero-slides-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.hero-slide-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px;
-  background: #1b1b1b;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-.hero-slide-thumb {
-  width: 90px;
-  height: 54px;
-  object-fit: cover;
-  border-radius: 6px;
-  background: #101010;
-  flex-shrink: 0;
-}
-.hero-slide-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-.hero-slide-info strong {
-  font-size: 0.9rem;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.hero-slide-info span {
-  font-size: 0.76rem;
-  color: var(--text-muted);
-}
-.btn-delete-slide {
-  flex-shrink: 0;
-  padding: 7px 14px;
-  font-size: 0.8rem;
-}
-.btn-delete-slide:hover { background: var(--accent); border-color: var(--accent); }
-
 /* ===== Hero Upgrade ===== */
 .hero {
   position: relative;
@@ -1438,13 +1390,6 @@ body.player-fullscreen-active .movietb-below-player {
   position: relative;
   z-index: 3;
   max-width: 620px;
-  background: rgba(10, 10, 10, 0.32);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 26px 30px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .hero-poster-bg {
@@ -1577,7 +1522,6 @@ body.player-fullscreen-active .movietb-below-player {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
   scrollbar-width: none;
   padding-bottom: 4px;
 }
@@ -1621,7 +1565,6 @@ body.player-fullscreen-active .movietb-below-player {
 .movie-grid.home-row {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
   scrollbar-width: none;
 }
 .movie-grid.home-row::-webkit-scrollbar { display: none; }
@@ -1637,7 +1580,6 @@ body.player-fullscreen-active .movietb-below-player {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
   scrollbar-width: none;
   padding-bottom: 4px;
 }
