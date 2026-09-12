@@ -152,7 +152,10 @@ function initTrailerArrows() {
   nextBtn.addEventListener('click', () => scrollByCard(1));
   slider.addEventListener('scroll', updateArrowState, { passive: true });
   window.addEventListener('resize', updateArrowState);
-  updateArrowState();
+  // Wait a frame so the browser has laid out the freshly-inserted cards
+  // before we measure scrollWidth/clientWidth (fixes boundary state being
+  // wrong - e.g. "next" looking enabled - right after cards first load).
+  requestAnimationFrame(updateArrowState);
 }
 
 /* =========================================================
