@@ -1,6 +1,6 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createMovieCard, resolvePoster } from './main.js';
+import { createMovieCard, resolveHeroImage } from './main.js';
 
 function getDocTimestampMs(docSnap) {
   const createdAt = docSnap.data().createdAt;
@@ -56,11 +56,18 @@ async function loadHeroCarousel() {
 
     function renderSlide(index) {
       const { id, movie } = slides[index];
-      const { primary } = resolvePoster(movie);
 
-      // Poster-only background - no autoplay video
-      posterBg.style.backgroundImage = `url('${primary}')`;
       hero.classList.add('hero-enhanced');
+
+      // Resolve the sharpest available background image (see resolveHeroImage
+      // in main.js) - async because we probe YouTube's maxres thumbnail first.
+      resolveHeroImage(movie).then((bgUrl) => {
+        // Guard against a slower probe finishing after the user already
+        // flipped to a different slide.
+        if (slides[activeIndex] && slides[activeIndex].id === id) {
+          posterBg.style.backgroundImage = `url('${bgUrl}')`;
+        }
+      });
 
       badgeEl.textContent = index === 0 ? '↗ #1 TRENDING' : `↗ TRENDING #${index + 1}`;
       titleEl.textContent = movie.title || 'MovieTB';

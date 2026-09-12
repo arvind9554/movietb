@@ -68,7 +68,7 @@ export function getYouTubeId(embedUrl) {
 }
 
 // Build best available poster + a safe fallback chain
-// (exported so js/app.js can reuse the exact same logic for the homepage hero background)
+// (exported so js/app.js can reuse the exact same logic for movie cards)
 export function resolvePoster(movie) {
   const ytId = getYouTubeId(movie.embedUrl || movie.trailerUrl);
   
@@ -81,6 +81,50 @@ export function resolvePoster(movie) {
     : 'https://via.placeholder.com/300x450?text=No+Poster';
 
   return { primary, fallback };
+}
+
+// Highest-quality background image for the homepage HERO only.
+// Priority:
+//   1) movie.heroImageUrl  - set this field on a movie doc (Firestore
+//      Console, or the admin form once wired up) to show EXACTLY the
+//      image you want as the hero background. Full manual control.
+//   2) movie.posterUrl     - whatever is already used on the card.
+//   3) YouTube maxresdefault.jpg (1280x720, sharp) if it actually exists
+//      for that video - YouTube silently returns a tiny 120x90 grey
+//      placeholder when it doesn't, so we probe it first.
+//   4) YouTube hqdefault.jpg (480x360) as a safe fallback.
+//   5) generic placeholder.
+export function resolveHeroImage(movie) {
+  return new Promise((resolve) => {
+    const heroUrl = ((movie.heroImageUrl || movie.bannerUrl || '') + '').trim();
+    if (heroUrl) {
+      resolve(heroUrl);
+      return;
+    }
+
+    const poster = ((movie.posterUrl || '') + '').trim();
+    if (poster) {
+      resolve(poster);
+      return;
+    }
+
+    const ytId = getYouTubeId(movie.embedUrl || movie.trailerUrl);
+    if (!ytId) {
+      resolve('https://via.placeholder.com/1280x720?text=MovieTB');
+      return;
+    }
+
+    const maxres = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+    const hq = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+
+    const probe = new Image();
+    probe.onload = () => {
+      // YouTube serves a tiny 120x90 grey placeholder when maxres doesn't exist
+      resolve(probe.naturalWidth > 200 ? maxres : hq);
+    };
+    probe.onerror = () => resolve(hq);
+    probe.src = maxres;
+  });
 }
 
 // Utility to create Movie HTML Card (Fixed - Redirect Navigation)
