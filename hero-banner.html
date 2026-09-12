@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero Banners - MovieTB Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-body">
+
+  <header class="navbar admin-navbar">
+    <div class="navbar-left">
+      <div class="logo"><a href="dashboard.html">Movie<span class="accent">TB</span> <span class="admin-tag">Admin</span></a></div>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="add-movie.html">Add Movie</a>
+      <a href="hero-banner.html">Hero Banners</a>
+    </nav>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </header>
+
+  <main class="admin-main">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>Hero Banners</h2>
+        <p class="admin-subtext">
+          These are the exact images shown in the homepage hero carousel (top of the site).
+          Nothing here is auto-picked from trailers - only what you add below.
+          Maximum <strong>5 slides</strong> at a time, shown in the order added.
+        </p>
+      </div>
+
+      <!-- Existing slides -->
+      <div id="hero-slides-list" class="hero-slides-list">
+        <p class="admin-subtext">Loading current slides…</p>
+      </div>
+
+      <p id="hero-slide-limit-msg" class="field-hint" style="display:none; margin: 14px 0; color: var(--accent);">
+        Maximum of 5 hero slides reached. Delete one above before adding a new one.
+      </p>
+
+      <hr style="border-color: var(--border); margin: 26px 0;">
+
+      <!-- Add new slide -->
+      <form id="hero-slide-form" class="admin-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="slide-image-url">Poster / Background Image URL</label>
+            <input type="url" id="slide-image-url" placeholder="https://..." required>
+            <span class="field-hint">Use a high-resolution landscape image (1280×720 or larger) for a sharp, non-blurry hero.</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="slide-title">Title</label>
+            <input type="text" id="slide-title" placeholder="e.g. Ramayana" required>
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="slide-year">Year <span class="optional-tag">Optional</span></label>
+            <input type="text" id="slide-year" placeholder="2026">
+          </div>
+          <div class="form-group">
+            <label for="slide-format">Quality Badge <span class="optional-tag">Optional</span></label>
+            <input type="text" id="slide-format" placeholder="4K Ultra HD">
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="slide-language">Language / Genre <span class="optional-tag">Optional</span></label>
+            <input type="text" id="slide-language" placeholder="Action">
+          </div>
+          <div class="form-group">
+            <label for="slide-link">Play/Details Link <span class="optional-tag">Optional</span></label>
+            <input type="text" id="slide-link" placeholder="redirect.html?target=movie.html?id=XYZ">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="slide-tagline">Tagline <span class="optional-tag">Optional</span></label>
+            <textarea id="slide-tagline" rows="2" placeholder="Experience the legend in stunning cinematic detail."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Add Hero Slide</button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="../js/hero-admin.js"></script>
+</body>
+</html>

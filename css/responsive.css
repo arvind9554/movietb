@@ -445,10 +445,6 @@ body {
         height: 460px;
         justify-content: flex-end;
     }
-    .hero .hero-content {
-        padding: 18px 18px;
-        border-radius: 12px;
-    }
     .hero.hero-enhanced h1 {
         font-size: 1.8rem;
         line-height: 1.2;

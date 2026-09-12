@@ -1,27 +1,14 @@
 import { db } from './firebase-config.js';
-import { collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createMovieCard, resolveHeroImage } from './main.js';
-
-function getDocTimestampMs(docSnap) {
-  const createdAt = docSnap.data().createdAt;
-  if (createdAt && typeof createdAt.toMillis === 'function') {
-    return createdAt.toMillis();
-  }
-  if (createdAt && createdAt.seconds) {
-    return createdAt.seconds * 1000;
-  }
-  return 0;
-}
+import { collection, getDocs, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { createMovieCard } from './main.js';
 
 /* =========================================================
    HERO CAROUSEL
-   Builds a multi-slide hero (title, meta pills, tagline, Play
-   Trailer / Details buttons, dots) from real "latest-trailers"
-   Firestore documents - up to 7 slides, each showing the movie
-   POSTER (no background video), auto-flipping every 5 seconds.
-   No movie data is hardcoded - if Firestore has fewer movies
-   you simply get fewer slides. If it's empty, the original
-   plain "Welcome to MovieTB" markup stays exactly as-is.
+   Reads from the dedicated "heroSlides" Firestore collection
+   (managed at admin/hero-banner.html) - NOT from movie/trailer
+   data. Exactly what's uploaded there is what shows here, up
+   to 5 slides, in the order added. If that collection is empty,
+   the original plain "Welcome to MovieTB" markup stays as-is.
    ========================================================= */
 async function loadHeroCarousel() {
   const hero = document.getElementById('hero');
@@ -38,51 +25,39 @@ async function loadHeroCarousel() {
   if (!hero || !posterBg) return;
 
   try {
-    const q = query(
-      collection(db, 'movies'),
-      where('category', '==', 'latest-trailers'),
-      limit(7)
-    );
+    const q = query(collection(db, 'heroSlides'), orderBy('order', 'asc'), limit(5));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) return; // fallback markup stays as-is
 
-    const slides = querySnapshot.docs
-      .slice()
-      .sort((a, b) => getDocTimestampMs(b) - getDocTimestampMs(a))
-      .map((docSnap) => ({ id: docSnap.id, movie: docSnap.data() }));
+    const slides = querySnapshot.docs.map((docSnap) => docSnap.data());
 
     let activeIndex = 0;
     let rotateTimer = null;
 
     function renderSlide(index) {
-      const { id, movie } = slides[index];
+      const slide = slides[index];
 
       hero.classList.add('hero-enhanced');
-
-      // Resolve the sharpest available background image (see resolveHeroImage
-      // in main.js) - async because we probe YouTube's maxres thumbnail first.
-      resolveHeroImage(movie).then((bgUrl) => {
-        // Guard against a slower probe finishing after the user already
-        // flipped to a different slide.
-        if (slides[activeIndex] && slides[activeIndex].id === id) {
-          posterBg.style.backgroundImage = `url('${bgUrl}')`;
-        }
-      });
+      posterBg.style.backgroundImage = `url('${slide.imageUrl}')`;
 
       badgeEl.textContent = index === 0 ? '↗ #1 TRENDING' : `↗ TRENDING #${index + 1}`;
-      titleEl.textContent = movie.title || 'MovieTB';
+      titleEl.textContent = slide.title || 'MovieTB';
 
-      const metaParts = [movie.year, movie.format, movie.language].filter(Boolean);
+      const metaParts = [slide.year, slide.format, slide.language].filter(Boolean);
       metaEl.innerHTML = metaParts
         .map((part) => `<span class="hero-meta-pill">${part}</span>`)
         .join('');
 
-      taglineEl.textContent = 'Experience the latest release in stunning quality.';
+      taglineEl.textContent = slide.tagline || 'Experience the latest release in stunning quality.';
 
-      const targetUrl = `redirect.html?target=movie.html?id=${id}`;
-      playBtn.href = targetUrl;
-      detailsBtn.href = targetUrl;
-      ctaEl.style.display = 'flex';
+      const targetUrl = (slide.linkUrl || '').trim();
+      if (targetUrl) {
+        playBtn.href = targetUrl;
+        detailsBtn.href = targetUrl;
+        ctaEl.style.display = 'flex';
+      } else {
+        ctaEl.style.display = 'none';
+      }
 
       if (dotsEl) {
         [...dotsEl.children].forEach((dot, i) => {
