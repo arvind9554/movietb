@@ -431,8 +431,8 @@ body {
 
 @media (min-width: 641px) and (max-width: 1024px) {
     .hero.hero-enhanced {
-        padding: 70px 6% 44px;
-        min-height: 440px;
+        padding: 70px 6% 36px;
+        height: 480px;
     }
     .hero.hero-enhanced h1 {
         font-size: 2.3rem;
@@ -441,16 +441,19 @@ body {
 
 @media (max-width: 640px) {
     .hero.hero-enhanced {
-        padding: 40px 5% 32px;
-        min-height: 420px;
+        padding: 36px 5% 26px;
+        height: 460px;
         justify-content: flex-end;
     }
     .hero.hero-enhanced h1 {
-        font-size: 1.9rem;
+        font-size: 1.8rem;
+        line-height: 1.2;
+        -webkit-line-clamp: 2;
     }
     .hero.hero-enhanced .hero-tagline {
-        font-size: 0.88rem;
+        font-size: 0.85rem;
         max-width: 100%;
+        margin-bottom: 16px;
     }
     .hero.hero-enhanced .hero-meta-pill,
     .hero-meta-pill {
@@ -464,8 +467,16 @@ body {
 }
 
 @media (max-width: 380px) {
+    .hero.hero-enhanced {
+        height: 420px;
+        padding: 28px 5% 20px;
+    }
     .hero.hero-enhanced h1 {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
+    }
+    .hero.hero-enhanced .hero-tagline {
+        font-size: 0.8rem;
+        margin-bottom: 12px;
     }
     .hero-btn {
         padding: 10px 14px;

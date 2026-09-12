@@ -1408,16 +1408,21 @@ body.player-fullscreen-active .movietb-below-player {
   text-align: left;
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 90px 8% 56px;
-  min-height: 460px;
+  padding: 90px 8% 44px;
+  height: 560px;
+  overflow: hidden;
 }
 
 .hero.hero-enhanced .hero-badge { margin-bottom: 14px; }
 
 .hero.hero-enhanced h1 {
   font-size: 2.9rem;
-  line-height: 1.08;
+  line-height: 1.15;
   margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .hero.hero-enhanced .hero-meta {
