@@ -68,7 +68,8 @@ export function getYouTubeId(embedUrl) {
 }
 
 // Build best available poster + a safe fallback chain
-function resolvePoster(movie) {
+// (exported so js/app.js can reuse the exact same logic for the homepage hero background)
+export function resolvePoster(movie) {
   const ytId = getYouTubeId(movie.embedUrl || movie.trailerUrl);
   
   const primary = (movie.posterUrl && movie.posterUrl.trim())

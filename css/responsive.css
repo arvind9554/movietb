@@ -423,3 +423,166 @@ body {
         font-size: 1.15rem !important;
     }
 }
+
+/* =========================================================
+   NEW — HERO CAROUSEL RESPONSIVE (desktop rule lives in
+   style.css; only breakpoint overrides live here)
+   ========================================================= */
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .hero.hero-enhanced {
+        padding: 70px 6% 44px;
+        min-height: 440px;
+    }
+    .hero.hero-enhanced h1 {
+        font-size: 2.3rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero.hero-enhanced {
+        padding: 40px 5% 32px;
+        min-height: 420px;
+        justify-content: flex-end;
+    }
+    .hero.hero-enhanced h1 {
+        font-size: 1.9rem;
+    }
+    .hero.hero-enhanced .hero-tagline {
+        font-size: 0.88rem;
+        max-width: 100%;
+    }
+    .hero.hero-enhanced .hero-meta-pill,
+    .hero-meta-pill {
+        font-size: 0.68rem;
+        padding: 3px 8px;
+    }
+    .hero-btn {
+        padding: 11px 18px;
+        font-size: 0.86rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .hero.hero-enhanced h1 {
+        font-size: 1.6rem;
+    }
+    .hero-btn {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+    }
+}
+
+/* =========================================================
+   NEW — TRAILER CAROUSEL RESPONSIVE
+   Desktop (>1024px): exactly 2 cards visible (rule in style.css)
+   Tablet: ~1.5-2 cards, arrows hidden (swipe/drag primary)
+   Mobile: 1 full card + partial next card peeking
+   ========================================================= */
+
+@media (min-width: 901px) and (max-width: 1024px) {
+    .trailers-slider .movie-card {
+        flex: 0 0 calc(58% - 10px);
+    }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+    .trailers-slider .movie-card {
+        flex: 0 0 62%;
+    }
+    .slider-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .trailers-slider {
+        gap: 14px;
+    }
+    .trailers-slider .movie-card {
+        flex: 0 0 80%;
+    }
+    .slider-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .trailers-slider .movie-card {
+        flex: 0 0 85%;
+    }
+}
+
+/* =========================================================
+   NEW — HOME-ROW HORIZONTAL CATEGORY CARDS
+   Desktop (>900px): untouched, uses the normal .movie-grid
+   wrapping grid exactly as before.
+   Tablet/Mobile: becomes a swipeable horizontal row so cards
+   stay big and readable instead of squeezing 4-5 into a row.
+   ========================================================= */
+
+@media (min-width: 641px) and (max-width: 900px) {
+    .movie-grid.home-row {
+        display: flex !important;
+        grid-template-columns: none !important;
+        overflow-x: auto !important;
+        gap: 16px !important;
+    }
+    .movie-grid.home-row .movie-card {
+        flex: 0 0 46%;
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 640px) {
+    .movie-grid.home-row {
+        display: flex !important;
+        grid-template-columns: none !important;
+        overflow-x: auto !important;
+        gap: 12px !important;
+    }
+    .movie-grid.home-row .movie-card {
+        flex: 0 0 78%;
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 380px) {
+    .movie-grid.home-row .movie-card {
+        flex: 0 0 84%;
+    }
+}
+
+/* =========================================================
+   NEW — POPULAR CATEGORIES RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 640px) {
+    .popular-categories-row {
+        gap: 14px;
+    }
+    .category-pill {
+        width: 78px;
+    }
+    .category-pill-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 1.3rem;
+    }
+    .category-pill-label {
+        font-size: 0.68rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .category-pill {
+        width: 70px;
+    }
+    .category-pill-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.15rem;
+    }
+}

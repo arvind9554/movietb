@@ -1376,3 +1376,251 @@ body.player-fullscreen-active .movietb-below-player {
         object-fit: contain !important; /* Prevents black space stretch on wide screens */
     }
 }
+
+/* =========================================================
+   NEW — HOMEPAGE HERO CAROUSEL
+   All selectors below are scoped to .hero.hero-enhanced or to
+   brand-new class names (hero-content, hero-meta-pill,
+   hero-btn, hero-dot, slider-arrow, movie-grid.home-row).
+   Nothing existing is redefined, so admin pages / other pages
+   that also load style.css are not affected.
+   ========================================================= */
+
+.hero .hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 620px;
+}
+
+.hero-poster-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center 22%;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.hero.hero-enhanced .hero-poster-bg { opacity: 1; }
+.hero.hero-enhanced.hero-has-video .hero-poster-bg { opacity: 0.45; }
+
+.hero.hero-enhanced {
+  text-align: left;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 90px 8% 56px;
+  min-height: 460px;
+}
+
+.hero.hero-enhanced .hero-badge { margin-bottom: 14px; }
+
+.hero.hero-enhanced h1 {
+  font-size: 2.9rem;
+  line-height: 1.08;
+  margin-bottom: 10px;
+}
+
+.hero.hero-enhanced .hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 14px;
+}
+
+.hero-meta-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e8e8e8;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.hero.hero-enhanced .hero-tagline {
+  font-size: 1rem;
+  color: #d8d8d8;
+  max-width: 460px;
+  margin: 0 0 24px;
+  text-align: left;
+}
+
+.hero .hero-cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 3;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+.hero-btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+}
+.hero-btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+.hero-btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  backdrop-filter: blur(6px);
+}
+.hero-btn-secondary:hover { background: rgba(255, 255, 255, 0.14); transform: translateY(-2px); }
+
+.hero-dots {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+}
+.hero-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+/* =========================================================
+   NEW — TRAILER CAROUSEL (2 cards desktop / 1 + partial mobile)
+   ========================================================= */
+.trailers-slider-container {
+  position: relative;
+}
+
+.trailers-slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.trailers-slider::-webkit-scrollbar { display: none; }
+
+.trailers-slider .movie-card {
+  flex: 0 0 calc(50% - 10px);
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(15, 15, 15, 0.85);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+.slider-arrow:hover { background: var(--accent); }
+.slider-arrow.prev { left: -14px; }
+.slider-arrow.next { right: -14px; }
+.slider-arrow.is-disabled { opacity: 0.25; pointer-events: none; }
+
+/* =========================================================
+   NEW — MOBILE/TABLET HORIZONTAL ROWS FOR OTHER CATEGORIES
+   Base rule only; actual display:flex switch happens inside
+   media queries in responsive.css so desktop grid is untouched.
+   ========================================================= */
+.movie-grid.home-row {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.movie-grid.home-row::-webkit-scrollbar { display: none; }
+
+/* =========================================================
+   NEW — POPULAR CATEGORIES (icon pill row)
+   Uses MovieTB's real existing categories (same ones as the
+   sidebar) - just presented as icon pills, same as reference.
+   ========================================================= */
+.popular-categories-row {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.popular-categories-row::-webkit-scrollbar { display: none; }
+
+.category-pill {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: 92px;
+  text-align: center;
+}
+
+.category-pill-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.category-pill:hover .category-pill-icon {
+  transform: translateY(-3px);
+  background: rgba(229, 9, 20, 0.22);
+  border-color: var(--accent);
+}
+
+.category-pill-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+.category-pill:hover .category-pill-label { color: #fff; }
+
+/* subtle color variety per pill - purely decorative, not fabricated data */
+.category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
+.category-pill:nth-child(3) .category-pill-icon { background: rgba(255, 171, 64, 0.12); border-color: rgba(255, 171, 64, 0.3); }
+.category-pill:nth-child(4) .category-pill-icon { background: rgba(41, 182, 246, 0.12); border-color: rgba(41, 182, 246, 0.3); }
+.category-pill:nth-child(5) .category-pill-icon { background: rgba(102, 187, 106, 0.12); border-color: rgba(102, 187, 106, 0.3); }
+.category-pill:nth-child(6) .category-pill-icon { background: rgba(236, 64, 122, 0.12); border-color: rgba(236, 64, 122, 0.3); }
+.category-pill:nth-child(7) .category-pill-icon { background: rgba(255, 202, 40, 0.12); border-color: rgba(255, 202, 40, 0.3); }

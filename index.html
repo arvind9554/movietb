@@ -104,13 +104,29 @@
   </aside>
 
   <!-- Hero / Banner Section -->
-
+  <!--
+    Default markup below is the SAFE FALLBACK (shown instantly, before JS/Firestore load,
+    and if Firestore has no data). js/app.js enhances this same markup in place with
+    hero.hero-enhanced + hero.hero-has-video classes once a "latest-trailers" movie loads.
+    Nothing here is hardcoded/fake movie data - it's all filled dynamically from Firestore.
+  -->
   <section class="hero" id="hero">
     <div class="hero-video-bg" id="hero-video-bg" aria-hidden="true"></div>
+    <div class="hero-poster-bg" id="hero-poster-bg" aria-hidden="true"></div>
     <div class="hero-overlay" aria-hidden="true"></div>
-    <span class="hero-badge">🎬 Destination for HD Movies ⚡</span>
-    <h1>Welcome to MovieTB</h1>
-    <p></p>
+
+    <div class="hero-content">
+      <span class="hero-badge" id="hero-badge">🎬 Destination for HD Movies ⚡</span>
+      <h1 id="hero-title">Welcome to MovieTB</h1>
+      <div class="hero-meta" id="hero-meta"></div>
+      <p class="hero-tagline" id="hero-tagline">Your destination for official trailers, movies and web series.</p>
+      <div class="hero-cta" id="hero-cta" style="display:none;">
+        <a href="#" id="hero-play-btn" class="hero-btn hero-btn-primary">▶ Play Trailer</a>
+        <a href="#" id="hero-details-btn" class="hero-btn hero-btn-secondary">ℹ Details</a>
+      </div>
+    </div>
+
+    <div class="hero-dots" id="hero-dots" aria-hidden="true"></div>
   </section>
 
 <!-- <script>
@@ -127,20 +143,57 @@
   <!-- Main Content Grids -->
   <main class="container">
     
-    <!-- Latest Trailers Category -->
+    <!-- Trending Now (top-of-page position) - same real "latest-trailers" data, renamed to match reference layout -->
     <section class="category-section trailers-section">
       <div class="section-header">
-        <h2>Latest Trailers</h2>
+        <h2>Trending Now</h2>
 <a href="category.html?cat=latest-trailers">View All</a>
       </div>
       <div class="trailers-slider-container">
+        <button class="slider-arrow prev" id="trailers-prev" aria-label="Previous trailers">&#10094;</button>
         <div class="movie-grid trailers-slider" id="latest-trailers-grid">
           <p class="loading">Loading movies...</p>
         </div>
+        <button class="slider-arrow next" id="trailers-next" aria-label="Next trailers">&#10095;</button>
       </div>
     </section>
 
-    
+    <!-- Popular Categories - real existing MovieTB categories, no fake ones -->
+    <section class="category-section popular-categories-section">
+      <div class="section-header">
+        <h2>Popular Categories</h2>
+      </div>
+      <div class="popular-categories-row">
+        <a class="category-pill" href="redirect.html?cat=latest-trailers&adProvider=adsterra">
+          <span class="category-pill-icon">🎬</span>
+          <span class="category-pill-label">Trailers</span>
+        </a>
+        <a class="category-pill" href="redirect.html?cat=hollywood-english&adProvider=adsterra">
+          <span class="category-pill-icon">🎥</span>
+          <span class="category-pill-label">Hollywood (English)</span>
+        </a>
+        <a class="category-pill" href="redirect.html?cat=south-dubbed-movies&adProvider=adsterra">
+          <span class="category-pill-icon">🎞️</span>
+          <span class="category-pill-label">Bollywood</span>
+        </a>
+        <a class="category-pill" href="redirect.html?cat=classic-cinema&adProvider=adsterra">
+          <span class="category-pill-icon">🎦</span>
+          <span class="category-pill-label">Hollywood (Hindi)</span>
+        </a>
+        <a class="category-pill" href="redirect.html?cat=movie-reviews&adProvider=adsterra">
+          <span class="category-pill-icon">📺</span>
+          <span class="category-pill-label">Web Series</span>
+        </a>
+        <a class="category-pill" href="redirect.html?cat=story-tv&adProvider=adsterra">
+          <span class="category-pill-icon">📖</span>
+          <span class="category-pill-label">Story TV</span>
+        </a>
+        <a class="category-pill" href="redirect.html?cat=bhojpuri-movies&adProvider=adsterra">
+          <span class="category-pill-icon">🎉</span>
+          <span class="category-pill-label">Bhojpuri</span>
+        </a>
+      </div>
+    </section>
 
 <!-- Hollywood (English) Category -->
 <section class="category-section" id="hollywood-english">
@@ -148,7 +201,7 @@
     <h2>Hollywood (English)</h2>
     <a href="category.html?cat=hollywood-english">View All</a>
   </div>
-  <div class="movie-grid" id="hollywood-english-grid" data-category="hollywood-english">
+  <div class="movie-grid home-row" id="hollywood-english-grid" data-category="hollywood-english">
     <p class="loading">Loading Hollywood Movies...</p>
   </div>
 </section>
@@ -159,7 +212,7 @@
         <h2>Bollywood Movies</h2>
         <a href="category.html?cat=south-dubbed-movies">View All</a>
       </div>
-      <div class="movie-grid" id="south-dubbed-movies-grid">
+      <div class="movie-grid home-row" id="south-dubbed-movies-grid">
         <p class="loading">Loading movies...</p>
       </div>
     </section>
@@ -170,7 +223,7 @@
         <h2>Hollywood (Hindi)</h2>
        <a href="category.html?cat=classic-cinema">View All</a>
       </div>
-      <div class="movie-grid" id="classic-cinema-grid">
+      <div class="movie-grid home-row" id="classic-cinema-grid">
         <p class="loading">Loading movies...</p>
       </div>
     </section>
@@ -181,7 +234,7 @@
     <h2>Web Series</h2>
      <a href="category.html?cat=movie-reviews">View All</a>
   </div>
-  <div class="movie-grid" id="web-series-grid" data-category="web-series">
+  <div class="movie-grid home-row" id="web-series-grid" data-category="web-series">
     <p class="loading">Loading Web Series...</p>
   </div>
 </section>
@@ -192,7 +245,7 @@
         <h2>Story TV</h2>
         <a href="category.html?cat=story-tv">View All</a>
       </div>
-      <div class="movie-grid" id="story-tv-grid" data-category="story-tv">
+      <div class="movie-grid home-row" id="story-tv-grid" data-category="story-tv">
         <p class="loading">Loading Story TV...</p>
       </div>
     </section>
@@ -203,7 +256,7 @@
     <h2>Bhojpuri Movies</h2>
     <a href="category.html?cat=bhojpuri-movies">View All</a>
   </div>
-  <div class="movie-grid" id="bhojpuri-movies-grid" data-category="bhojpuri-movies">
+  <div class="movie-grid home-row" id="bhojpuri-movies-grid" data-category="bhojpuri-movies">
     <p class="loading">Loading Bhojpuri Movies...</p>
   </div>
 </section>
