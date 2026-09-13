@@ -94,6 +94,7 @@
     </div>
     <nav class="sidebar-links">
     <a href="redirect.html?cat=latest-trailers&adProvider=adsterra">Trailers</a>
+    <a href="redirect.html?cat=new-releases&adProvider=adsterra">New Releases</a>
     <a href="redirect.html?cat=hollywood-english&adProvider=adsterra">Hollywood (English)</a>
     <a href="redirect.html?cat=south-dubbed-movies&adProvider=adsterra">Bollywood</a>
     <a href="redirect.html?cat=classic-cinema&adProvider=adsterra">Hollywood (Hindi)</a>
@@ -168,6 +169,10 @@
           <span class="category-pill-icon">🎬</span>
           <span class="category-pill-label">Trailers</span>
         </a>
+        <a class="category-pill" href="redirect.html?cat=new-releases&adProvider=adsterra">
+          <span class="category-pill-icon">🆕</span>
+          <span class="category-pill-label">New Releases</span>
+        </a>
         <a class="category-pill" href="redirect.html?cat=hollywood-english&adProvider=adsterra">
           <span class="category-pill-icon">🎥</span>
           <span class="category-pill-label">Hollywood (English)</span>
@@ -192,6 +197,17 @@
           <span class="category-pill-icon">🎉</span>
           <span class="category-pill-label">Bhojpuri</span>
         </a>
+      </div>
+    </section>
+
+    <!-- New Releases - dedicated section for freshly-added movies (e.g. from your Telegram channel) -->
+    <section class="category-section" id="new-releases">
+      <div class="section-header">
+        <h2>New Releases</h2>
+        <a href="category.html?cat=new-releases">View All</a>
+      </div>
+      <div class="movie-grid home-row" id="new-releases-grid" data-category="new-releases">
+        <p class="loading">Loading New Releases...</p>
       </div>
     </section>
 

@@ -9,6 +9,7 @@ const PLAYER_DIAGNOSTIC = urlParams.get('playerDiagnostic') === '1';
 
 const categoryNames = {
   'latest-trailers': 'Latest Trailers',
+  'new-releases': 'New Releases',
   'hollywood-english': 'Hollywood (English)',
   'south-dubbed-movies': 'Bollywood Movies',
   'classic-cinema': 'Hollywood (Hindi)',
@@ -49,7 +50,9 @@ async function loadMovieDetails() {
       embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
     }
 
-    if (embedUrl.includes('youtube.com/embed/')) {
+    const isYouTube = embedUrl.includes('youtube.com/embed/');
+
+    if (isYouTube) {
       const baseUrl = embedUrl.split('?')[0];
       if (PLAYER_DIAGNOSTIC) {
         embedUrl = `${baseUrl}?autoplay=1&controls=1&rel=0&playsinline=1`;
@@ -58,8 +61,35 @@ async function loadMovieDetails() {
       }
     }
 
-    const playerHtml = PLAYER_DIAGNOSTIC
-      ? `
+    // ===== Direct video file support (e.g. an mp4 you host after pulling it
+    // off Telegram) - set a "videoUrl" field on the movie doc, or just point
+    // embedUrl straight at a .mp4/.webm/.ogg file. Not used for YouTube. =====
+    const directVideoUrl = firstPresent(movie.videoUrl);
+    const embedLooksLikeFile = !isYouTube && /\.(mp4|webm|ogg|m3u8)(\?|#|$)/i.test(embedUrl);
+    const useNativeVideo = Boolean(directVideoUrl) || embedLooksLikeFile;
+    const videoSrc = directVideoUrl || embedUrl;
+
+    let playerHtml;
+
+    if (useNativeVideo) {
+      // Custom Plyr-powered HTML5 player for direct video streams (e.g. your
+      // Telegram-backed Render streaming endpoint stored in "videoUrl").
+      // No custom fullscreen overlay here - Plyr provides its own polished
+      // controls (play, progress, volume, settings, fullscreen) out of the box.
+      playerHtml = `
+        <div class="player-container">
+          <div class="video-responsive">
+            <video
+              src="${escapeHtml(videoSrc)}"
+              poster="${escapeHtml(resolveRelatedPoster(movie))}"
+              playsinline
+              preload="metadata"
+            ></video>
+          </div>
+        </div>
+      `;
+    } else if (PLAYER_DIAGNOSTIC) {
+      playerHtml = `
       <div class="player-container player-diagnostic">
         <div class="video-responsive">
           <iframe
@@ -76,8 +106,9 @@ async function loadMovieDetails() {
       <p class="loading" style="margin-top:12px;font-size:0.85rem;color:#888;">
         Diagnostic mode: bare YouTube iframe only. Use YouTube&apos;s native fullscreen. Check console for dimension logs.
       </p>
-    `
-      : `
+    `;
+    } else {
+      playerHtml = `
       <div class="player-container">
         <div class="video-responsive">
           <iframe
@@ -101,6 +132,7 @@ async function loadMovieDetails() {
         </div>
       </div>
     `;
+    }
 
     wrapper.innerHTML = `
       ${playerHtml}
@@ -108,7 +140,10 @@ async function loadMovieDetails() {
       ${buildMovieTbBelowPlayerHtml(movie, movieId)}
     `;
 
-    if (PLAYER_DIAGNOSTIC) {
+    if (useNativeVideo) {
+      initVideoPlayer();
+      initNativeVideoTracking();
+    } else if (PLAYER_DIAGNOSTIC) {
       initDiagnosticPlayer();
     } else {
       initVideoPlayer();
@@ -332,6 +367,55 @@ function initVideoPlayer() {
   }
 
   updateButtonState();
+}
+
+/* =========================================================
+   NATIVE <video> ANALYTICS
+   Mirrors the YouTube video_start / video_progress / video_complete
+   events below, but driven by real <video> element events instead
+   of the YouTube iframe API - used only for direct video files.
+   ========================================================= */
+function initNativeVideoTracking() {
+  const video = document.querySelector('.video-responsive video');
+  if (!video) return;
+
+  const trackedPoints = { 25: false, 50: false, 75: false };
+  let hasTrackedStart = false;
+
+  video.addEventListener('play', () => {
+    if (!hasTrackedStart && typeof gtag === 'function') {
+      gtag('event', 'video_start', {
+        video_title: document.title,
+        video_provider: 'direct'
+      });
+      hasTrackedStart = true;
+    }
+  });
+
+  video.addEventListener('timeupdate', () => {
+    if (!video.duration) return;
+    const percent = Math.floor((video.currentTime / video.duration) * 100);
+    [25, 50, 75].forEach((pt) => {
+      if (percent >= pt && !trackedPoints[pt]) {
+        trackedPoints[pt] = true;
+        if (typeof gtag === 'function') {
+          gtag('event', 'video_progress', {
+            video_percent: pt,
+            video_title: document.title
+          });
+        }
+      }
+    });
+  });
+
+  video.addEventListener('ended', () => {
+    if (typeof gtag === 'function') {
+      gtag('event', 'video_complete', {
+        video_title: document.title,
+        video_provider: 'direct'
+      });
+    }
+  });
 }
 
 function logPlayerDimensions(label) {

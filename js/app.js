@@ -15,13 +15,9 @@ function getDocTimestampMs(docSnap) {
 
 /* =========================================================
    HERO CAROUSEL
-   Builds a multi-slide hero (title, meta pills, tagline, Play
-   Trailer / Details buttons, dots) from real "latest-trailers"
-   Firestore documents - up to 7 slides, each showing the movie
-   POSTER (no background video), auto-flipping every 5 seconds.
-   No movie data is hardcoded - if Firestore has fewer movies
-   you simply get fewer slides. If it's empty, the original
-   plain "Welcome to MovieTB" markup stays exactly as-is.
+   (Reverted to the "latest-trailers" movie-poster version per
+   request - the heroSlides/admin experiment is on hold, not
+   deleted. This is untouched from before that experiment.)
    ========================================================= */
 async function loadHeroCarousel() {
   const hero = document.getElementById('hero');
@@ -59,11 +55,7 @@ async function loadHeroCarousel() {
 
       hero.classList.add('hero-enhanced');
 
-      // Resolve the sharpest available background image (see resolveHeroImage
-      // in main.js) - async because we probe YouTube's maxres thumbnail first.
       resolveHeroImage(movie).then((bgUrl) => {
-        // Guard against a slower probe finishing after the user already
-        // flipped to a different slide.
         if (slides[activeIndex] && slides[activeIndex].id === id) {
           posterBg.style.backgroundImage = `url('${bgUrl}')`;
         }
@@ -152,7 +144,10 @@ function initTrailerArrows() {
   nextBtn.addEventListener('click', () => scrollByCard(1));
   slider.addEventListener('scroll', updateArrowState, { passive: true });
   window.addEventListener('resize', updateArrowState);
-  updateArrowState();
+  // Wait a frame so the browser has laid out the freshly-inserted cards
+  // before we measure scrollWidth/clientWidth (fixes boundary state being
+  // wrong - e.g. "next" looking enabled - right after cards first load).
+  requestAnimationFrame(updateArrowState);
 }
 
 /* =========================================================
@@ -162,6 +157,7 @@ function initTrailerArrows() {
    ========================================================= */
 const categories = [
   'latest-trailers',
+  { id: 'new-releases', gridId: 'new-releases-grid' },
   'hollywood-english',
   'south-dubbed-movies',
   'classic-cinema',

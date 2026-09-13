@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Release - MovieTB Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-body">
+
+  <header class="navbar admin-navbar">
+    <div class="navbar-left">
+      <div class="logo"><a href="dashboard.html">Movie<span class="accent">TB</span> <span class="admin-tag">Admin</span></a></div>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="add-movie.html">Add Movie</a>
+      <a href="add-new-release.html">New Releases</a>
+      <a href="hero-banner.html">Hero Banners</a>
+    </nav>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </header>
+
+  <main class="admin-main">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>New Releases (Telegram Movies)</h2>
+        <p class="admin-subtext">
+          These movies show in the homepage's <strong>"New Releases"</strong> row and play through your
+          own Plyr video player using a <strong>direct stream URL</strong> (your Telegram → Render streaming
+          endpoint) - not a YouTube embed. Category is fixed automatically, so anything added here always
+          lands in that section.
+        </p>
+      </div>
+
+      <!-- Existing new releases -->
+      <div id="new-release-list" class="hero-slides-list">
+        <p class="admin-subtext">Loading current New Releases…</p>
+      </div>
+
+      <hr style="border-color: var(--border); margin: 26px 0;">
+
+      <!-- Add new movie -->
+      <form id="new-release-form" class="admin-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nr-title">Title</label>
+            <input type="text" id="nr-title" placeholder="e.g. Toxic" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nr-video-url">Direct Video / Stream URL</label>
+            <input type="url" id="nr-video-url" placeholder="https://movietb-bot.onrender.com/stream/27" required>
+            <span class="field-hint">
+              Paste the RAW url only - not the "[text](url)" markdown format. This is what actually plays in the player.
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nr-poster-url">Poster URL</label>
+            <input type="url" id="nr-poster-url" placeholder="https://.../poster.jpg" required>
+            <span class="field-hint">Required - there's no YouTube thumbnail to fall back on for these movies.</span>
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="nr-year">Year <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-year" placeholder="2026">
+          </div>
+          <div class="form-group">
+            <label for="nr-format">Quality Badge <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-format" placeholder="1080p HD">
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="nr-language">Language <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-language" placeholder="Hindi">
+          </div>
+          <div class="form-group">
+            <label for="nr-telegram-msg-id">Telegram Message ID <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-telegram-msg-id" placeholder="27">
+            <span class="field-hint">Just for your own reference/lookup - not shown to visitors.</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nr-summary">Summary <span class="optional-tag">Optional</span></label>
+            <textarea id="nr-summary" rows="3" placeholder="Short synopsis shown on the movie page"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Add to New Releases</button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="../js/add-new-release.js"></script>
+</body>
+</html>

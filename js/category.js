@@ -7,6 +7,7 @@ const catParam = urlParams.get('cat');
 
 const headingMap = {
   'latest-trailers': 'Latest Trailers',
+  'new-releases': 'New Releases',
   'hollywood-english': 'Hollywood (English)',
   'south-dubbed-movies': 'Bollywood Movies',
   'classic-cinema': 'Hollywood (Hindi)',
