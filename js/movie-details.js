@@ -18,6 +18,40 @@ const categoryNames = {
   'bhojpuri-movies': 'Bhojpuri Movies',
 };
 
+/* =========================================================
+   DIRECT / TELEGRAM VIDEO URL RESOLUTION
+   Different admin forms / manual Firestore edits over time may
+   have used different field names for the same idea. This checks
+   all of them so the player works no matter which one your data
+   actually has, instead of silently falling through to YouTube.
+
+   Priority:
+   1) movie.videoUrl / movie.streamUrl / movie.directVideoUrl -
+      a complete, ready-to-play URL.
+   2) movie.channelId + movie.messageId (or msgId/telegramMsgId)
+      combined with a backend base URL, IF that base URL is also
+      present on the doc (movie.streamBackendUrl / backendUrl).
+      We never guess/hardcode a backend domain - a wrong guess
+      would silently produce a broken (but non-empty) src, which
+      is worse than falling back to the normal iframe path.
+   ========================================================= */
+function resolveDirectVideoUrl(movie) {
+  const explicit = firstPresent(movie.videoUrl, movie.streamUrl, movie.directVideoUrl);
+  if (explicit) return explicit;
+
+  const base = firstPresent(movie.streamBackendUrl, movie.backendUrl);
+  const channelId = firstPresent(movie.channelId);
+  const messageId = firstPresent(movie.messageId, movie.msgId, movie.telegramMsgId);
+
+  if (base && channelId && messageId) {
+    return `${base.replace(/\/$/, '')}/stream/${encodeURIComponent(channelId)}/${encodeURIComponent(messageId)}`;
+  }
+  if (base && messageId) {
+    return `${base.replace(/\/$/, '')}/stream/${encodeURIComponent(messageId)}`;
+  }
+  return '';
+}
+
 async function loadMovieDetails() {
   const wrapper = document.getElementById('movie-content-wrapper');
 
@@ -38,6 +72,10 @@ async function loadMovieDetails() {
     }
 
     const movie = docSnap.data();
+
+    if (PLAYER_DEBUG) {
+      console.log('[PlayerDebug] Movie data:', movie);
+    }
 
     const pageTitle = document.getElementById('movie-page-title');
     if (pageTitle) pageTitle.innerText = `${movie.title} - MovieTB`;
@@ -61,15 +99,23 @@ async function loadMovieDetails() {
       }
     }
 
-    // Direct video file support (.mp4, .webm, etc.) vs YouTube Iframe
-    const directVideoUrl = firstPresent(movie.videoUrl);
+    // Direct video / Telegram stream support (checks several possible field
+    // names - see resolveDirectVideoUrl above) vs YouTube iframe
+    const directVideoUrl = resolveDirectVideoUrl(movie);
     const embedLooksLikeFile = !isYouTube && /\.(mp4|webm|ogg|m3u8)(\?|#|$)/i.test(embedUrl);
     const useNativeVideo = Boolean(directVideoUrl) || embedLooksLikeFile;
     const videoSrc = directVideoUrl || embedUrl;
 
+    if (PLAYER_DEBUG) {
+      console.log('[PlayerDebug] isYouTube:', isYouTube, '| useNativeVideo:', useNativeVideo, '| videoSrc:', videoSrc);
+    }
+
     let playerHtml;
 
     if (useNativeVideo) {
+      // Plyr (custom branded player, loaded on demand below) takes over this
+      // <video> element - no native `controls` attribute needed, and no
+      // custom fullscreen button here since Plyr ships its own.
       playerHtml = `
         <div class="player-container">
           <div class="video-responsive">
@@ -134,13 +180,15 @@ async function loadMovieDetails() {
     `;
 
     if (useNativeVideo) {
-      initVideoPlayer();
+      initCustomVideoPlayer();
       initNativeVideoTracking();
     } else if (PLAYER_DIAGNOSTIC) {
       initDiagnosticPlayer();
     } else {
       initVideoPlayer();
-      initYouTubeTracking();
+      // Note: YouTube analytics tracking is wired up once, globally, via the
+      // DOMContentLoaded listener at the bottom of this file - it is NOT
+      // called again here, to avoid double-firing video_start/progress events.
     }
 
     initMovieTbBelowPlayer(movie, movieId);
@@ -365,6 +413,88 @@ function initVideoPlayer() {
 }
 
 /* =========================================================
+   PLYR — custom branded video player for direct video streams
+   (your Telegram → Render → videoUrl/streamUrl pipeline).
+   Loaded from Plyr's CDN on demand, only when a movie actually
+   needs it - YouTube movies never touch this code path. Plyr
+   ships its own fullscreen control, so it doesn't use
+   initVideoPlayer().
+   ========================================================= */
+function ensurePlyrAssets() {
+  if (window.__plyrAssetsPromise) return window.__plyrAssetsPromise;
+
+  window.__plyrAssetsPromise = new Promise((resolve, reject) => {
+    if (!document.querySelector('link[data-plyr-css]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.plyr.io/3.7.8/plyr.css';
+      link.setAttribute('data-plyr-css', '1');
+      document.head.appendChild(link);
+    }
+
+    if (window.Plyr) {
+      resolve(window.Plyr);
+      return;
+    }
+
+    if (!document.querySelector('script[data-plyr-js]')) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.plyr.io/3.7.8/plyr.js';
+      script.setAttribute('data-plyr-js', '1');
+      script.onload = () => resolve(window.Plyr);
+      script.onerror = () => reject(new Error('Failed to load Plyr from CDN'));
+      document.head.appendChild(script);
+    } else {
+      const waitForPlyr = () => {
+        if (window.Plyr) resolve(window.Plyr);
+        else setTimeout(waitForPlyr, 50);
+      };
+      waitForPlyr();
+    }
+  });
+
+  return window.__plyrAssetsPromise;
+}
+
+function initCustomVideoPlayer() {
+  const video = document.querySelector('.video-responsive video');
+  if (!video) return;
+
+  if (PLAYER_DEBUG) {
+    console.log('[PlayerDebug] Initializing Plyr with src:', video.currentSrc || video.src);
+  }
+
+  ensurePlyrAssets()
+    .then((Plyr) => {
+      if (!Plyr) throw new Error('Plyr not available on window');
+      // eslint-disable-next-line no-new
+      new Plyr(video, {
+        controls: [
+          'play-large',
+          'play',
+          'progress',
+          'current-time',
+          'duration',
+          'mute',
+          'volume',
+          'settings',
+          'pip',
+          'fullscreen',
+        ],
+        settings: ['speed'],
+        clickToPlay: true,
+        resetOnEnd: false,
+      });
+    })
+    .catch((err) => {
+      // If the CDN is blocked/unreachable (adblock, offline, etc.) fall back
+      // to plain native browser controls so the movie is still watchable.
+      console.error('Plyr failed to load, falling back to native controls:', err);
+      video.setAttribute('controls', '');
+    });
+}
+
+/* =========================================================
    NATIVE <video> ANALYTICS
    ========================================================= */
 function initNativeVideoTracking() {
@@ -407,6 +537,15 @@ function initNativeVideoTracking() {
         video_provider: 'direct'
       });
     }
+  });
+
+  video.addEventListener('error', () => {
+    const err = video.error;
+    console.error('[MovieTB] Video failed to load.', {
+      src: video.currentSrc || video.src,
+      code: err ? err.code : null,
+      message: err ? err.message : null
+    });
   });
 }
 
