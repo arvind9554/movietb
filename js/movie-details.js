@@ -61,9 +61,7 @@ async function loadMovieDetails() {
       }
     }
 
-    // ===== Direct video file support (e.g. an mp4 you host after pulling it
-    // off Telegram) - set a "videoUrl" field on the movie doc, or just point
-    // embedUrl straight at a .mp4/.webm/.ogg file. Not used for YouTube. =====
+    // Direct video file support (.mp4, .webm, etc.) vs YouTube Iframe
     const directVideoUrl = firstPresent(movie.videoUrl);
     const embedLooksLikeFile = !isYouTube && /\.(mp4|webm|ogg|m3u8)(\?|#|$)/i.test(embedUrl);
     const useNativeVideo = Boolean(directVideoUrl) || embedLooksLikeFile;
@@ -72,10 +70,6 @@ async function loadMovieDetails() {
     let playerHtml;
 
     if (useNativeVideo) {
-      // Custom Plyr-powered HTML5 player for direct video streams (e.g. your
-      // Telegram-backed Render streaming endpoint stored in "videoUrl").
-      // No custom fullscreen overlay here - Plyr provides its own polished
-      // controls (play, progress, volume, settings, fullscreen) out of the box.
       playerHtml = `
         <div class="player-container">
           <div class="video-responsive">
@@ -90,53 +84,52 @@ async function loadMovieDetails() {
       `;
     } else if (PLAYER_DIAGNOSTIC) {
       playerHtml = `
-      <div class="player-container player-diagnostic">
-        <div class="video-responsive">
-          <iframe
-            id="yt-diagnostic-iframe"
-            src="${embedUrl}"
-            title="${movie.title}"
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowfullscreen="true"
-            webkitallowfullscreen="true"
-            mozallowfullscreen="true"
-          ></iframe>
+        <div class="player-container player-diagnostic">
+          <div class="video-responsive">
+            <iframe
+              id="yt-diagnostic-iframe"
+              src="${embedUrl}"
+              title="${movie.title}"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowfullscreen="true"
+              webkitallowfullscreen="true"
+              mozallowfullscreen="true"
+            ></iframe>
+          </div>
         </div>
-      </div>
-      <p class="loading" style="margin-top:12px;font-size:0.85rem;color:#888;">
-        Diagnostic mode: bare YouTube iframe only. Use YouTube&apos;s native fullscreen. Check console for dimension logs.
-      </p>
-    `;
+        <p class="loading" style="margin-top:12px;font-size:0.85rem;color:#888;">
+          Diagnostic mode: bare YouTube iframe only. Use YouTube&apos;s native fullscreen. Check console for dimension logs.
+        </p>
+      `;
     } else {
       playerHtml = `
-      <div class="player-container">
-        <div class="video-responsive">
-          <iframe
-            src="${embedUrl}"
-            title="${movie.title}"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-            allowfullscreen="true"
-            webkitallowfullscreen="true"
-            mozallowfullscreen="true"
-          ></iframe>
+        <div class="player-container">
+          <div class="video-responsive">
+            <iframe
+              src="${embedUrl}"
+              title="${movie.title}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+              allowfullscreen="true"
+              webkitallowfullscreen="true"
+              mozallowfullscreen="true"
+            ></iframe>
+          </div>
+          <div class="player-controls" aria-hidden="false">
+            <button type="button" class="fullscreen-btn" aria-label="Enter fullscreen" title="Fullscreen">
+              <svg class="fs-icon fs-icon-enter" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+              <svg class="fs-icon fs-icon-exit" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path fill="currentColor" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="player-controls" aria-hidden="false">
-          <button type="button" class="fullscreen-btn" aria-label="Enter fullscreen" title="Fullscreen">
-            <svg class="fs-icon fs-icon-enter" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-              <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-            </svg>
-            <svg class="fs-icon fs-icon-exit" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-              <path fill="currentColor" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    `;
+      `;
     }
 
     wrapper.innerHTML = `
       ${playerHtml}
-
       ${buildMovieTbBelowPlayerHtml(movie, movieId)}
     `;
 
@@ -147,17 +140,19 @@ async function loadMovieDetails() {
       initDiagnosticPlayer();
     } else {
       initVideoPlayer();
+      initYouTubeTracking();
     }
 
     initMovieTbBelowPlayer(movie, movieId);
 
-if (!document.querySelector('script[src*="ad-provider.js"]')) {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://a.magsrv.com/ad-provider.js';
-    document.head.appendChild(script);
-}
-(window.AdProvider = window.AdProvider || []).push({"serve": {}});
+    // Inject external Ad Provider script if missing
+    if (!document.querySelector('script[src*="ad-provider.js"]')) {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://a.magsrv.com/ad-provider.js';
+      document.head.appendChild(script);
+    }
+    (window.AdProvider = window.AdProvider || []).push({ "serve": {} });
 
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
       initPlayerDimensionLogging();
@@ -371,9 +366,6 @@ function initVideoPlayer() {
 
 /* =========================================================
    NATIVE <video> ANALYTICS
-   Mirrors the YouTube video_start / video_progress / video_complete
-   events below, but driven by real <video> element events instead
-   of the YouTube iframe API - used only for direct video files.
    ========================================================= */
 function initNativeVideoTracking() {
   const video = document.querySelector('.video-responsive video');
@@ -728,8 +720,8 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
         <div class="movietb-ad-frame">
-    <ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true" data-sub="1"></ins>
-</div>
+          <ins class="eas6a97888e37" data-zoneid="6021438" data-muted="true" data-autoplay="true" data-sub="1"></ins>
+        </div>
       </section>
 
       <section class="movietb-related" aria-label="More from this category">
@@ -871,90 +863,81 @@ async function loadRelatedMovies(movie, currentId) {
   }
 }
 
-loadMovieDetails();
-
 // Reliable YouTube Iframe Progress Tracking
 function initYouTubeTracking() {
-    // 1. Ensure YouTube API Script is attached
-    if (!window.YT) {
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
+  if (!window.YT) {
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
 
-    // 2. Poll for Iframe and attach player directly
-    var trackerInterval = setInterval(function () {
-        var iframe = document.querySelector('iframe[src*="youtube.com"]');
-        if (iframe && window.YT && window.YT.Player) {
-            clearInterval(trackerInterval);
+  var trackerInterval = setInterval(function () {
+    var iframe = document.querySelector('iframe[src*="youtube.com"]');
+    if (iframe && window.YT && window.YT.Player) {
+      clearInterval(trackerInterval);
 
-            // Ensure JS API parameter
-            var src = iframe.getAttribute('src');
-            if (src && src.indexOf('enablejsapi=1') === -1) {
-                iframe.setAttribute('src', src + (src.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1');
+      var src = iframe.getAttribute('src');
+      if (src && src.indexOf('enablejsapi=1') === -1) {
+        iframe.setAttribute('src', src + (src.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1');
+      }
+
+      var trackedPoints = { 25: false, 50: false, 75: false };
+      var progressCheckTimer = null;
+
+      new YT.Player(iframe, {
+        events: {
+          'onStateChange': function (event) {
+            var player = event.target;
+
+            if (event.data === YT.PlayerState.PLAYING) {
+              if (typeof gtag === 'function' && !player.hasTrackedStart) {
+                gtag('event', 'video_start', {
+                  'video_title': document.title,
+                  'video_provider': 'youtube'
+                });
+                player.hasTrackedStart = true;
+              }
+
+              if (!progressCheckTimer) {
+                progressCheckTimer = setInterval(function () {
+                  var duration = player.getDuration();
+                  var currentTime = player.getCurrentTime();
+                  if (duration > 0) {
+                    var percent = Math.floor((currentTime / duration) * 100);
+                    [25, 50, 75].forEach(function (pt) {
+                      if (percent >= pt && !trackedPoints[pt]) {
+                        trackedPoints[pt] = true;
+                        if (typeof gtag === 'function') {
+                          gtag('event', 'video_progress', {
+                            'video_percent': pt,
+                            'video_title': document.title
+                          });
+                        }
+                      }
+                    });
+                  }
+                }, 1000);
+              }
+            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+              if (progressCheckTimer) {
+                clearInterval(progressCheckTimer);
+                progressCheckTimer = null;
+              }
+              if (event.data === YT.PlayerState.ENDED && typeof gtag === 'function') {
+                gtag('event', 'video_complete', {
+                  'video_title': document.title,
+                  'video_provider': 'youtube'
+                });
+              }
             }
-
-            var trackedPoints = { 25: false, 50: false, 75: false };
-            var progressCheckTimer = null;
-
-            new YT.Player(iframe, {
-                events: {
-                    'onStateChange': function (event) {
-                        var player = event.target;
-
-                        // Video Started
-                        if (event.data === YT.PlayerState.PLAYING) {
-                            if (typeof gtag === 'function' && !player.hasTrackedStart) {
-                                gtag('event', 'video_start', {
-                                    'video_title': document.title,
-                                    'video_provider': 'youtube'
-                                });
-                                player.hasTrackedStart = true;
-                            }
-
-                            // Track progress every second
-                            if (!progressCheckTimer) {
-                                progressCheckTimer = setInterval(function () {
-                                    var duration = player.getDuration();
-                                    var currentTime = player.getCurrentTime();
-                                    if (duration > 0) {
-                                        var percent = Math.floor((currentTime / duration) * 100);
-                                        [25, 50, 75].forEach(function (pt) {
-                                            if (percent >= pt && !trackedPoints[pt]) {
-                                                trackedPoints[pt] = true;
-                                                if (typeof gtag === 'function') {
-                                                    gtag('event', 'video_progress', {
-                                                        'video_percent': pt,
-                                                        'video_title': document.title
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }, 1000);
-                            }
-                        } else {
-                            if (progressCheckTimer) {
-                                clearInterval(progressCheckTimer);
-                                progressCheckTimer = null;
-                            }
-                        }
-
-                        // Video Complete
-                        if (event.data === YT.PlayerState.ENDED) {
-                            if (typeof gtag === 'function') {
-                                gtag('event', 'video_complete', {
-                                    'video_title': document.title,
-                                    'video_provider': 'youtube'
-                                });
-                            }
-                        }
-                    }
-                }
-            });
+          }
         }
-    }, 500);
+      });
+    }
+  }, 500);
 }
 
+// Global Event Listeners & Execution Entrypoint
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
+loadMovieDetails();

@@ -1,92 +1,146 @@
 import { db } from './firebase-config.js';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const form = document.getElementById('new-release-form');
-const listContainer = document.getElementById('new-release-list');
+const CATEGORY = 'new-releases';
+const moviesCol = collection(db, 'movies');
 
-// 1. Fetch & Display Existing New Releases
-async function loadNewReleases() {
-  try {
-    listContainer.innerHTML = '<p class="admin-subtext">Loading current New Releases…</p>';
-    const q = query(collection(db, "movies"), where("category", "==", "new-releases"));
-    const querySnapshot = await getDocs(q);
+/* =========================================================
+   AUTH GUARD - same Firebase Auth pattern as the rest of the
+   admin panel (login.html / dashboard.html).
+   ========================================================= */
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+  }
+});
 
-    if (querySnapshot.empty) {
-      listContainer.innerHTML = '<p class="admin-subtext">No New Releases added yet.</p>';
-      return;
-    }
-
-    let html = '';
-    querySnapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      html += `
-        <div class="hero-slide-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;">
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <img src="${data.posterUrl}" alt="${data.title}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
-            <div>
-              <h4 style="margin: 0;">${data.title} (${data.year || '2026'})</h4>
-              <small style="color: #aaa;">Stream URL: ${data.videoUrl}</small>
-            </div>
-          </div>
-          <button class="btn-delete" data-id="${docSnap.id}" style="background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Delete</button>
-        </div>
-      `;
+const logoutBtn = document.getElementById('btn-logout');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
     });
-    listContainer.innerHTML = html;
+  });
+}
 
-    // Attach Delete Listeners
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const id = e.target.getAttribute('data-id');
-        if(confirm("Are you sure you want to delete this movie?")) {
-          await deleteDoc(doc(db, "movies", id));
-          loadNewReleases();
+/* =========================================================
+   LOAD + RENDER EXISTING NEW RELEASES
+   ========================================================= */
+async function loadEntries() {
+  const listEl = document.getElementById('new-release-list');
+
+  let snapshot;
+  try {
+    // Prefer newest-first if createdAt exists on all docs
+    snapshot = await getDocs(query(moviesCol, where('category', '==', CATEGORY), orderBy('createdAt', 'desc')));
+  } catch (err) {
+    // orderBy can fail if some older docs lack createdAt / no index yet - fall back to unordered
+    snapshot = await getDocs(query(moviesCol, where('category', '==', CATEGORY)));
+  }
+
+  const entries = [];
+  snapshot.forEach((docSnap) => entries.push({ id: docSnap.id, ...docSnap.data() }));
+
+  if (!listEl) return entries;
+
+  if (entries.length === 0) {
+    listEl.innerHTML = `<p class="admin-subtext">No New Releases added yet. Add your first one below.</p>`;
+  } else {
+    listEl.innerHTML = entries
+      .map((movie) => `
+        <div class="hero-slide-row" data-id="${movie.id}">
+          <img src="${movie.posterUrl || ''}" alt="${movie.title || 'Poster'}" class="hero-slide-thumb"
+               onerror="this.style.opacity='0.3'">
+          <div class="hero-slide-info">
+            <strong>${movie.title || '(untitled)'}</strong>
+            <span>${[movie.year, movie.format, movie.language].filter(Boolean).join(' • ') || 'No meta set'}</span>
+          </div>
+          <a class="btn-logout" href="movie.html?id=${movie.id}" target="_blank" style="text-decoration:none;">View</a>
+          <button type="button" class="btn-logout btn-delete-entry" data-id="${movie.id}">Delete</button>
+        </div>
+      `)
+      .join('');
+
+    listEl.querySelectorAll('.btn-delete-entry').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this movie from New Releases?')) return;
+        btn.disabled = true;
+        try {
+          await deleteDoc(doc(db, 'movies', btn.dataset.id));
+          await loadEntries();
+        } catch (err) {
+          console.error('Failed to delete movie:', err);
+          alert('Could not delete this entry. Check console for details.');
+          btn.disabled = false;
         }
       });
     });
-
-  } catch (error) {
-    console.error("Error loading movies:", error);
-    listContainer.innerHTML = `<p style="color: #ff4d4d;">Error loading releases: ${error.message}</p>`;
   }
+
+  return entries;
 }
 
-// 2. Add New Movie to Firebase
+/* =========================================================
+   ADD NEW MOVIE
+   ========================================================= */
+const form = document.getElementById('new-release-form');
 if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const submitBtn = form.querySelector('.btn-submit');
-    submitBtn.innerText = "Adding Movie...";
-    submitBtn.disabled = true;
+    const title = document.getElementById('nr-title').value.trim();
+    const videoUrl = document.getElementById('nr-video-url').value.trim();
+    const posterUrl = document.getElementById('nr-poster-url').value.trim();
 
-    const movieData = {
-      title: document.getElementById('nr-title').value.trim(),
-      videoUrl: document.getElementById('nr-video-url').value.trim(),
-      posterUrl: document.getElementById('nr-poster-url').value.trim(),
-      year: document.getElementById('nr-year').value.trim() || "2026",
-      quality: document.getElementById('nr-format').value.trim() || "1080p HD",
-      language: document.getElementById('nr-language').value.trim() || "Hindi",
-      telegramMsgId: document.getElementById('nr-telegram-msg-id').value.trim() || "",
-      summary: document.getElementById('nr-summary').value.trim() || "",
-      category: "new-releases", // Auto fixed category
-      createdAt: new Date()
-    };
+    if (!title || !videoUrl || !posterUrl) {
+      alert('Title, Video URL and Poster URL are required.');
+      return;
+    }
+
+    if (videoUrl.includes('[') || videoUrl.includes('](')) {
+      alert('That looks like markdown formatting, e.g. "[text](url)". Paste just the raw URL instead.');
+      return;
+    }
+
+    const submitBtn = form.querySelector('.btn-submit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Adding…';
 
     try {
-      await addDoc(collection(db, "movies"), movieData);
-      alert("🎉 Movie successfully added to New Releases!");
+      await addDoc(moviesCol, {
+        title,
+        category: CATEGORY,
+        videoUrl,
+        posterUrl,
+        year: document.getElementById('nr-year').value.trim(),
+        format: document.getElementById('nr-format').value.trim(),
+        language: document.getElementById('nr-language').value.trim(),
+        telegramMsgId: document.getElementById('nr-telegram-msg-id').value.trim(),
+        summary: document.getElementById('nr-summary').value.trim(),
+        createdAt: serverTimestamp(),
+      });
       form.reset();
-      loadNewReleases(); // Refresh list
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("❌ Failed to add movie: " + error.message);
+      await loadEntries();
+    } catch (err) {
+      console.error('Failed to add new release:', err);
+      alert('Could not add this movie. Check console for details.');
     } finally {
-      submitBtn.innerText = "Add to New Releases";
       submitBtn.disabled = false;
+      submitBtn.textContent = 'Add to New Releases';
     }
   });
 }
 
-// Load current releases on page load
-loadNewReleases();
+loadEntries();

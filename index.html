@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="vPwzBLHUMp86d4LqnhfpBAL5g_XI6M5dYIIfmkzPu6g" />
   
-<meta name="6a97888e-site-verification" content="a657d0141e2ffb5fed992392d055a4bf">
-
-<meta name="referrer" content="no-referrer-when-downgrade" />
+  <meta name="6a97888e-site-verification" content="a657d0141e2ffb5fed992392d055a4bf">
+  <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <title>MovieTB - Watch Latest Trailers, South Movies & Web Series</title>
   <link rel="canonical" href="https://www.movietb.com/" />
@@ -17,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
   <link rel="apple-touch-icon" href="https://www.movietb.com/assets/images/logo.png" />
 
-  <!-- Open Graph / Social Sharing Tags (PNG/JPG Recommended for og:image) -->
+  <!-- Open Graph / Social Sharing Tags -->
   <meta property="og:site_name" content="MovieTB" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.movietb.com/" />
@@ -57,8 +56,39 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 
-<meta name="referrer" content="no-referrer-when-downgrade" />
-
+  <style>
+    /* Stream Player Container Styling */
+    .hero-player-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      background: #000;
+      display: none; /* Initially hidden until played */
+    }
+    .hero-player-wrapper video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .hero-player-wrapper .close-player-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
 
@@ -93,24 +123,18 @@
       <button class="sidebar-close" id="sidebar-close" aria-label="Close">&times;</button>
     </div>
     <nav class="sidebar-links">
-    <a href="redirect.html?cat=latest-trailers&adProvider=adsterra">Trailers</a>
-    <a href="redirect.html?cat=new-releases&adProvider=adsterra">New Releases</a>
-    <a href="redirect.html?cat=hollywood-english&adProvider=adsterra">Hollywood (English)</a>
-    <a href="redirect.html?cat=south-dubbed-movies&adProvider=adsterra">Bollywood</a>
-    <a href="redirect.html?cat=classic-cinema&adProvider=adsterra">Hollywood (Hindi)</a>
-    <a href="redirect.html?cat=movie-reviews&adProvider=adsterra">Web Series</a>
-    <a href="redirect.html?cat=story-tv&adProvider=adsterra">Story TV</a>
-    <a href="redirect.html?cat=bhojpuri-movies&adProvider=adsterra">Bhojpuri Movies</a>
-</nav>
+      <a href="redirect.html?cat=latest-trailers&adProvider=adsterra">Trailers</a>
+      <a href="redirect.html?cat=new-releases&adProvider=adsterra">New Releases</a>
+      <a href="redirect.html?cat=hollywood-english&adProvider=adsterra">Hollywood (English)</a>
+      <a href="redirect.html?cat=south-dubbed-movies&adProvider=adsterra">Bollywood</a>
+      <a href="redirect.html?cat=classic-cinema&adProvider=adsterra">Hollywood (Hindi)</a>
+      <a href="redirect.html?cat=movie-reviews&adProvider=adsterra">Web Series</a>
+      <a href="redirect.html?cat=story-tv&adProvider=adsterra">Story TV</a>
+      <a href="redirect.html?cat=bhojpuri-movies&adProvider=adsterra">Bhojpuri Movies</a>
+    </nav>
   </aside>
 
   <!-- Hero / Banner Section -->
-  <!--
-    Default markup below is the SAFE FALLBACK (shown instantly, before JS/Firestore load,
-    and if Firestore has no data). js/app.js enhances this same markup in place with
-    hero.hero-enhanced + hero.hero-has-video classes once a "latest-trailers" movie loads.
-    Nothing here is hardcoded/fake movie data - it's all filled dynamically from Firestore.
-  -->
   <section class="hero" id="hero">
     <div class="hero-video-bg" id="hero-video-bg" aria-hidden="true"></div>
     <div class="hero-poster-bg" id="hero-poster-bg" aria-hidden="true"></div>
@@ -121,34 +145,35 @@
       <h1 id="hero-title">Welcome to MovieTB</h1>
       <div class="hero-meta" id="hero-meta"></div>
       <p class="hero-tagline" id="hero-tagline">Your destination for official trailers, movies and web series.</p>
+      
       <div class="hero-cta" id="hero-cta" style="display:none;">
-        <a href="#" id="hero-play-btn" class="hero-btn hero-btn-primary">▶ Play Trailer</a>
+        <a href="javascript:void(0)" id="hero-play-btn" class="hero-btn hero-btn-primary">▶ Play Movie</a>
         <a href="#" id="hero-details-btn" class="hero-btn hero-btn-secondary">ℹ Details</a>
+      </div>
+
+      <!-- Video Player Stream Container -->
+      <div class="hero-player-wrapper" id="playerContainer">
+        <button class="close-player-btn" id="closePlayerBtn">&times;</button>
+        <video id="mainPlayer" controls autoplay>
+          <source src="" type="video/mp4">
+          Browser video element support nahi kar raha hai.
+        </video>
       </div>
     </div>
 
     <div class="hero-dots" id="hero-dots" aria-hidden="true"></div>
   </section>
 
-<!-- <script>
-  atOptions = {
-    'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script> -->
-<script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
 
   <!-- Main Content Grids -->
   <main class="container">
     
-    <!-- Trending Now (top-of-page position) - same real "latest-trailers" data, renamed to match reference layout -->
+    <!-- Trending Now -->
     <section class="category-section trailers-section">
       <div class="section-header">
         <h2>Trending Now</h2>
-<a href="category.html?cat=latest-trailers">View All</a>
+        <a href="category.html?cat=latest-trailers">View All</a>
       </div>
       <div class="trailers-slider-container">
         <button class="slider-arrow prev" id="trailers-prev" aria-label="Previous trailers">&#10094;</button>
@@ -159,7 +184,7 @@
       </div>
     </section>
 
-    <!-- Popular Categories - real existing MovieTB categories, no fake ones -->
+    <!-- Popular Categories -->
     <section class="category-section popular-categories-section">
       <div class="section-header">
         <h2>Popular Categories</h2>
@@ -200,7 +225,7 @@
       </div>
     </section>
 
-    <!-- New Releases - dedicated section for freshly-added movies (e.g. from your Telegram channel) -->
+    <!-- New Releases -->
     <section class="category-section" id="new-releases">
       <div class="section-header">
         <h2>New Releases</h2>
@@ -211,18 +236,18 @@
       </div>
     </section>
 
-<!-- Hollywood (English) Category -->
-<section class="category-section" id="hollywood-english">
-  <div class="section-header">
-    <h2>Hollywood (English)</h2>
-    <a href="category.html?cat=hollywood-english">View All</a>
-  </div>
-  <div class="movie-grid home-row" id="hollywood-english-grid" data-category="hollywood-english">
-    <p class="loading">Loading Hollywood Movies...</p>
-  </div>
-</section>
+    <!-- Hollywood (English) -->
+    <section class="category-section" id="hollywood-english">
+      <div class="section-header">
+        <h2>Hollywood (English)</h2>
+        <a href="category.html?cat=hollywood-english">View All</a>
+      </div>
+      <div class="movie-grid home-row" id="hollywood-english-grid" data-category="hollywood-english">
+        <p class="loading">Loading Hollywood Movies...</p>
+      </div>
+    </section>
 
-    <!-- South Dubbed Movies Category -->
+    <!-- Bollywood Movies -->
     <section class="category-section">
       <div class="section-header">
         <h2>Bollywood Movies</h2>
@@ -233,29 +258,29 @@
       </div>
     </section>
 
-    <!-- Hollywood (Hindi) Category -->
+    <!-- Hollywood (Hindi) -->
     <section class="category-section">
       <div class="section-header">
         <h2>Hollywood (Hindi)</h2>
-       <a href="category.html?cat=classic-cinema">View All</a>
+        <a href="category.html?cat=classic-cinema">View All</a>
       </div>
       <div class="movie-grid home-row" id="classic-cinema-grid">
         <p class="loading">Loading movies...</p>
       </div>
     </section>
 
-    <!-- Web Series Category -->
+    <!-- Web Series -->
     <section class="category-section" id="web-series">
-  <div class="section-header">
-    <h2>Web Series</h2>
-     <a href="category.html?cat=movie-reviews">View All</a>
-  </div>
-  <div class="movie-grid home-row" id="web-series-grid" data-category="web-series">
-    <p class="loading">Loading Web Series...</p>
-  </div>
-</section>
+      <div class="section-header">
+        <h2>Web Series</h2>
+        <a href="category.html?cat=movie-reviews">View All</a>
+      </div>
+      <div class="movie-grid home-row" id="web-series-grid" data-category="web-series">
+        <p class="loading">Loading Web Series...</p>
+      </div>
+    </section>
 
-    <!-- Story TV Category -->
+    <!-- Story TV -->
     <section class="category-section" id="story-tv">
       <div class="section-header">
         <h2>Story TV</h2>
@@ -266,29 +291,21 @@
       </div>
     </section>
 
-<!-- Bhojpuri Movies Category -->
-<section class="category-section" id="bhojpuri-movies">
-  <div class="section-header">
-    <h2>Bhojpuri Movies</h2>
-    <a href="category.html?cat=bhojpuri-movies">View All</a>
-  </div>
-  <div class="movie-grid home-row" id="bhojpuri-movies-grid" data-category="bhojpuri-movies">
-    <p class="loading">Loading Bhojpuri Movies...</p>
-  </div>
-</section>
+    <!-- Bhojpuri Movies -->
+    <section class="category-section" id="bhojpuri-movies">
+      <div class="section-header">
+        <h2>Bhojpuri Movies</h2>
+        <a href="category.html?cat=bhojpuri-movies">View All</a>
+      </div>
+      <div class="movie-grid home-row" id="bhojpuri-movies-grid" data-category="bhojpuri-movies">
+        <p class="loading">Loading Bhojpuri Movies...</p>
+      </div>
+    </section>
 
   </main>
 
-<!-- <script>
-  atOptions = {
-    'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script> -->
-<script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-glow" aria-hidden="true"></div>
@@ -321,50 +338,67 @@
       <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
     </div>
   </footer>
-  
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/app.js"></script>
 
-<!-- <script>
-  atOptions = {
-    'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script> -->
-<script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
 
-<script>
-(function(zlyv){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = zlyv || {};
-s.src = "\/\/unfoldedtrade.com\/b.XZVwsOdYGQl\/0SYqW\/cH\/seim\/9\/uNZ\/URlCkNPxT\/clzlNJTnQSwaNiznM\/tKNEzgM\/1_NVDJAe3UNhwr";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
+  <script>
+  (function(zlyv){
+  var d = document,
+      s = d.createElement('script'),
+      l = d.scripts[d.scripts.length - 1];
+  s.settings = zlyv || {};
+  s.src = "\/\/unfoldedtrade.com\/b.XZVwsOdYGQl\/0SYqW\/cH\/seim\/9\/uNZ\/URlCkNPxT\/clzlNJTnQSwaNiznM\/tKNEzgM\/1_NVDJAe3UNhwr";
+  s.async = true;
+  s.referrerPolicy = 'no-referrer-when-downgrade';
+  l.parentNode.insertBefore(s, l);
+  })({})
+  </script>
 
-<script>
-  // Smart Event Interceptor for MovieTB
-  window.addEventListener('click', function(e) {
-    // Agar click HilltopAds ke dynamic overlay script par ho raha hai
-    if (e.target && (
-        e.target.tagName === 'IFRAME' || 
-        e.target.id.includes('lipmon') || 
-        e.target.style.zIndex > 99999
-    )) {
-      e.stopPropagation();
-      e.preventDefault();
-      return false;
-    }
-  }, true);
-</script>
+  <script>
+    // Smart Event Interceptor for MovieTB
+    window.addEventListener('click', function(e) {
+      if (e.target && (
+          e.target.tagName === 'IFRAME' || 
+          e.target.id.includes('lipmon') || 
+          e.target.style.zIndex > 99999
+      )) {
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      }
+    }, true);
+
+    // Dynamic Telegram Video Stream Handler
+    document.addEventListener('DOMContentLoaded', () => {
+      const playBtn = document.getElementById('hero-play-btn');
+      const playerWrapper = document.getElementById('playerContainer');
+      const videoPlayer = document.getElementById('mainPlayer');
+      const closePlayerBtn = document.getElementById('closePlayerBtn');
+
+      if (playBtn) {
+        playBtn.addEventListener('click', () => {
+          // Dynamic FastAPI Stream URL Injection
+          const chatId = "-1002111222523";
+          const messageId = 39;
+          videoPlayer.src = `https://movietb-backend.onrender.com/stream/${chatId}/${messageId}`;
+          
+          playerWrapper.style.display = 'block';
+          videoPlayer.play();
+        });
+      }
+
+      if (closePlayerBtn) {
+        closePlayerBtn.addEventListener('click', () => {
+          videoPlayer.pause();
+          videoPlayer.src = "";
+          playerWrapper.style.display = 'none';
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>
