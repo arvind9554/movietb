@@ -55,40 +55,6 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
-
-  <style>
-    /* Stream Player Container Styling */
-    .hero-player-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      margin: 20px auto 0 auto;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      background: #000;
-      display: none; /* Initially hidden until played */
-    }
-    .hero-player-wrapper video {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .hero-player-wrapper .close-player-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      z-index: 10;
-    }
-  </style>
 </head>
 <body>
 
@@ -134,7 +100,16 @@
     </nav>
   </aside>
 
-  <!-- Hero / Banner Section -->
+  <!--
+    Hero / Banner Section
+    Filled dynamically by js/app.js (loadHeroCarousel) from your real
+    "latest-trailers" movies - title, meta pills, tagline, and the
+    Play/Details button hrefs are all set there. Nothing here plays a
+    video directly; Play/Details just navigate to that movie's own
+    movie.html page, which is where js/movie-details.js picks the right
+    player (YouTube iframe, or the Plyr-powered native player for
+    videoUrl/streamUrl movies).
+  -->
   <section class="hero" id="hero">
     <div class="hero-video-bg" id="hero-video-bg" aria-hidden="true"></div>
     <div class="hero-poster-bg" id="hero-poster-bg" aria-hidden="true"></div>
@@ -145,19 +120,10 @@
       <h1 id="hero-title">Welcome to MovieTB</h1>
       <div class="hero-meta" id="hero-meta"></div>
       <p class="hero-tagline" id="hero-tagline">Your destination for official trailers, movies and web series.</p>
-      
-      <div class="hero-cta" id="hero-cta" style="display:none;">
-        <a href="javascript:void(0)" id="hero-play-btn" class="hero-btn hero-btn-primary">▶ Play Movie</a>
-        <a href="#" id="hero-details-btn" class="hero-btn hero-btn-secondary">ℹ Details</a>
-      </div>
 
-      <!-- Video Player Stream Container -->
-      <div class="hero-player-wrapper" id="playerContainer">
-        <button class="close-player-btn" id="closePlayerBtn">&times;</button>
-        <video id="mainPlayer" controls autoplay>
-          <source src="" type="video/mp4">
-          Browser video element support nahi kar raha hai.
-        </video>
+      <div class="hero-cta" id="hero-cta" style="display:none;">
+        <a href="#" id="hero-play-btn" class="hero-btn hero-btn-primary">▶ Play Trailer</a>
+        <a href="#" id="hero-details-btn" class="hero-btn hero-btn-secondary">ℹ Details</a>
       </div>
     </div>
 
@@ -344,7 +310,13 @@
 
   <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
 
-  <!-- <script>
+  <!--
+    unfoldedtrade.com outstream ad script - left disabled on purpose.
+    It auto-hijacks any <video> element on the page as its own ad player,
+    which conflicts with the native movie player on movie.html. Only
+    re-enable if you confirm it won't run on pages with real <video> tags.
+
+  <script>
   (function(zlyv){
   var d = document,
       s = d.createElement('script'),
@@ -355,7 +327,8 @@
   s.referrerPolicy = 'no-referrer-when-downgrade';
   l.parentNode.insertBefore(s, l);
   })({})
-  </script> -->
+  </script>
+  -->
 
   <script>
     // Smart Event Interceptor for MovieTB
@@ -370,34 +343,6 @@
         return false;
       }
     }, true);
-
-    // Dynamic Telegram Video Stream Handler
-    document.addEventListener('DOMContentLoaded', () => {
-      const playBtn = document.getElementById('hero-play-btn');
-      const playerWrapper = document.getElementById('playerContainer');
-      const videoPlayer = document.getElementById('mainPlayer');
-      const closePlayerBtn = document.getElementById('closePlayerBtn');
-
-      if (playBtn) {
-        playBtn.addEventListener('click', () => {
-          // Dynamic FastAPI Stream URL Injection
-          const chatId = "-1002111222523";
-          const messageId = 39;
-          videoPlayer.src = `https://movietb-backend.onrender.com/stream/${chatId}/${messageId}`;
-          
-          playerWrapper.style.display = 'block';
-          videoPlayer.play();
-        });
-      }
-
-      if (closePlayerBtn) {
-        closePlayerBtn.addEventListener('click', () => {
-          videoPlayer.pause();
-          videoPlayer.src = "";
-          playerWrapper.style.display = 'none';
-        });
-      }
-    });
   </script>
 
 </body>
