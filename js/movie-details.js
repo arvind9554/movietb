@@ -193,14 +193,24 @@ async function loadMovieDetails() {
 
     initMovieTbBelowPlayer(movie, movieId);
 
-    // Inject external Ad Provider script if missing
-    if (!document.querySelector('script[src*="ad-provider.js"]')) {
+    // Inject external Ad Provider script - but ONLY for the YouTube/iframe
+    // path. This script auto-scans the page for <video> elements and turns
+    // them into its own "outstream" ad player - which was harmless before
+    // (YouTube path never had a real <video> tag), but for our new native
+    // Telegram/direct-video player it hijacks the movie's own <video>,
+    // covering real playback with a blank ad overlay. Skipping it here
+    // keeps the movie playable; the below-player banner ad slot (the
+    // .eas6a97888e37 <ins> tag) is unaffected either way since it's a
+    // separate ad unit, not tied to this script specifically.
+    if (!useNativeVideo && !document.querySelector('script[src*="ad-provider.js"]')) {
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://a.magsrv.com/ad-provider.js';
       document.head.appendChild(script);
     }
-    (window.AdProvider = window.AdProvider || []).push({ "serve": {} });
+    if (!useNativeVideo) {
+      (window.AdProvider = window.AdProvider || []).push({ "serve": {} });
+    }
 
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
       initPlayerDimensionLogging();
