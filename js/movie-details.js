@@ -466,44 +466,53 @@ function ensurePlyrAssets() {
   return window.__plyrAssetsPromise;
 }
 
-function initCustomVideoPlayer() {
-  const video = document.querySelector('.video-responsive video');
-  if (!video) return;
+function initCustomVideoPlayer(streamUrl, posterUrl) {
+    const video = document.querySelector('#player') || document.querySelector('video');
 
-  if (PLAYER_DEBUG) {
-    console.log('[PlayerDebug] Initializing Plyr with src:', video.currentSrc || video.src);
-  }
+    if (!video) return;
 
-  ensurePlyrAssets()
-    .then((Plyr) => {
-      if (!Plyr) throw new Error('Plyr not available on window');
-      const player = new Plyr(video, {
-        controls: [
-          'play-large',
-          'play',
-          'progress',
-          'current-time',
-          'duration',
-          'mute',
-          'volume',
-          'settings',
-          'pip',
-          'fullscreen',
-        ],
-        settings: ['speed'],
-        clickToPlay: true,
-        resetOnEnd: false,
-      });
-      // Exposed for console debugging only, e.g.
-      window.__movietbPlayer.source = { type: 'video', sources: [{ src: '...', type: 'video/mp4' }] };
-      window.__movietbPlayer = player;
-    })
-    .catch((err) => {
-      // If the CDN is blocked/unreachable (adblock, offline, etc.) fall back
-      // to plain native browser controls so the movie is still watchable.
-      console.error('Plyr failed to load, falling back to native controls:', err);
-      video.setAttribute('controls', '');
-    });
+    // 1. Direct video element parameters (Format/MIME error avoid karne ke liye)
+    video.setAttribute('crossorigin', 'anonymous');
+    if (streamUrl) {
+        video.src = streamUrl;
+        video.type = 'video/mp4';
+    }
+
+    // 2. Safely initialize Plyr player
+    try {
+        if (typeof Plyr !== 'undefined') {
+            const player = new Plyr(video, {
+                controls: [
+                    'play-large', 'play', 'progress', 'current-time', 
+                    'mute', 'volume', 'captions', 'settings', 'pip', 'fullscreen'
+                ],
+                settings: ['speed'],
+                clickToPlay: true,
+                resetOnEnd: false,
+            });
+
+            if (streamUrl) {
+                player.source = {
+                    type: 'video',
+                    title: 'Movie',
+                    poster: posterUrl || '',
+                    sources: [
+                        {
+                            src: streamUrl,
+                            type: 'video/mp4',
+                        },
+                    ],
+                };
+            }
+
+            window.__movietbPlayer = player;
+        } else {
+            video.setAttribute('controls', '');
+        }
+    } catch (err) {
+        console.error('Plyr initialization error, falling back to native controls:', err);
+        video.setAttribute('controls', '');
+    }
 }
 
 /* =========================================================
