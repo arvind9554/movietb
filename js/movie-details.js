@@ -466,53 +466,74 @@ function ensurePlyrAssets() {
   return window.__plyrAssetsPromise;
 }
 
-function initCustomVideoPlayer(streamUrl, posterUrl) {
-    const video = document.querySelector('#player') || document.querySelector('video');
+function initCustomVideoPlayer() {
+  const video = document.querySelector('.video-responsive video');
+  if (!video) return;
 
-    if (!video) return;
+  if (PLAYER_DEBUG) {
+    console.log('[PlayerDebug] Initializing Plyr with src:', video.currentSrc || video.src);
+  }
 
-    // 1. Direct video element parameters (Format/MIME error avoid karne ke liye)
-    video.setAttribute('crossorigin', 'anonymous');
-    if (streamUrl) {
-        video.src = streamUrl;
-        video.type = 'video/mp4';
-    }
+  // Backend range-request resilience: your streaming backend is currently
+  // dropping mid-stream Range requests (ERR_HTTP2_PROTOCOL_ERROR on 206
+  // responses), which makes the browser reload the whole video from 0 on
+  // seek/stall. This does NOT fix the backend - that needs a server-side
+  // fix (proper Accept-Ranges/Content-Range handling) - but it stops the
+  // player from throwing the viewer back to the start: it remembers the
+  // last known playback position and resumes there instead.
+  let lastKnownTime = 0;
+  let recovering = false;
 
-    // 2. Safely initialize Plyr player
-    try {
-        if (typeof Plyr !== 'undefined') {
-            const player = new Plyr(video, {
-                controls: [
-                    'play-large', 'play', 'progress', 'current-time', 
-                    'mute', 'volume', 'captions', 'settings', 'pip', 'fullscreen'
-                ],
-                settings: ['speed'],
-                clickToPlay: true,
-                resetOnEnd: false,
-            });
+  video.addEventListener('timeupdate', () => {
+    if (!video.seeking) lastKnownTime = video.currentTime;
+  });
 
-            if (streamUrl) {
-                player.source = {
-                    type: 'video',
-                    title: 'Movie',
-                    poster: posterUrl || '',
-                    sources: [
-                        {
-                            src: streamUrl,
-                            type: 'video/mp4',
-                        },
-                    ],
-                };
-            }
+  video.addEventListener('error', () => {
+    if (recovering || lastKnownTime <= 0) return;
+    recovering = true;
+    const resumeTime = lastKnownTime;
+    console.warn('[MovieTB] Stream error - attempting to resume from', resumeTime.toFixed(1), 's');
 
-            window.__movietbPlayer = player;
-        } else {
-            video.setAttribute('controls', '');
-        }
-    } catch (err) {
-        console.error('Plyr initialization error, falling back to native controls:', err);
-        video.setAttribute('controls', '');
-    }
+    const onLoaded = () => {
+      video.removeEventListener('loadedmetadata', onLoaded);
+      video.currentTime = resumeTime;
+      video.play().catch(() => {});
+      recovering = false;
+    };
+    video.addEventListener('loadedmetadata', onLoaded);
+    video.load();
+  });
+
+  ensurePlyrAssets()
+    .then((Plyr) => {
+      if (!Plyr) throw new Error('Plyr not available on window');
+      const player = new Plyr(video, {
+        controls: [
+          'play-large',
+          'play',
+          'progress',
+          'current-time',
+          'duration',
+          'mute',
+          'volume',
+          'settings',
+          'pip',
+          'fullscreen',
+        ],
+        settings: ['speed'],
+        clickToPlay: true,
+        resetOnEnd: false,
+      });
+      // Exposed for console debugging only, e.g.
+      // window.__movietbPlayer.source = { type: 'video', sources: [{ src: '...', type: 'video/mp4' }] };
+      window.__movietbPlayer = player;
+    })
+    .catch((err) => {
+      // If the CDN is blocked/unreachable (adblock, offline, etc.) fall back
+      // to plain native browser controls so the movie is still watchable.
+      console.error('Plyr failed to load, falling back to native controls:', err);
+      video.setAttribute('controls', '');
+    });
 }
 
 /* =========================================================
