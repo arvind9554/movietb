@@ -495,7 +495,7 @@ function initCustomVideoPlayer() {
         resetOnEnd: false,
       });
       // Exposed for console debugging only, e.g.
-      // window.__movietbPlayer.source = { type: 'video', sources: [{ src: '...', type: 'video/mp4' }] };
+      window.__movietbPlayer.source = { type: 'video', sources: [{ src: '...', type: 'video/mp4' }] };
       window.__movietbPlayer = player;
     })
     .catch((err) => {
