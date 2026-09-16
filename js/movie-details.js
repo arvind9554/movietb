@@ -26,8 +26,8 @@ const categoryNames = {
    actually has, instead of silently falling through to YouTube.
 
    Priority:
-   1) movie.videoUrl / movie.streamUrl / movie.directVideoUrl -
-      a complete, ready-to-play URL.
+   1) movie.videoUrl / movie.streamUrl / movie.directVideoUrl /
+      movie.directUrl - a complete, ready-to-play URL.
    2) movie.channelId + movie.messageId (or msgId/telegramMsgId)
       combined with a backend base URL, IF that base URL is also
       present on the doc (movie.streamBackendUrl / backendUrl).
@@ -36,7 +36,7 @@ const categoryNames = {
       is worse than falling back to the normal iframe path.
    ========================================================= */
 function resolveDirectVideoUrl(movie) {
-  const explicit = firstPresent(movie.videoUrl, movie.streamUrl, movie.directVideoUrl);
+  const explicit = firstPresent(movie.videoUrl, movie.streamUrl, movie.directVideoUrl, movie.directUrl);
   if (explicit) return explicit;
 
   const base = firstPresent(movie.streamBackendUrl, movie.backendUrl);
@@ -467,8 +467,7 @@ function initCustomVideoPlayer() {
   ensurePlyrAssets()
     .then((Plyr) => {
       if (!Plyr) throw new Error('Plyr not available on window');
-      // eslint-disable-next-line no-new
-      new Plyr(video, {
+      const player = new Plyr(video, {
         controls: [
           'play-large',
           'play',
@@ -485,6 +484,9 @@ function initCustomVideoPlayer() {
         clickToPlay: true,
         resetOnEnd: false,
       });
+      // Exposed for console debugging only, e.g.
+      // window.__movietbPlayer.source = { type: 'video', sources: [{ src: '...', type: 'video/mp4' }] };
+      window.__movietbPlayer = player;
     })
     .catch((err) => {
       // If the CDN is blocked/unreachable (adblock, offline, etc.) fall back
