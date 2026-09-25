@@ -71,7 +71,7 @@ async function loadHeroCarousel() {
 
       taglineEl.textContent = 'Experience the latest release in stunning quality.';
 
-      const targetUrl = `redirect.html?target=movie.html?id=${id}`;
+      const targetUrl = `movie.html?id=${id}`;
       playBtn.href = targetUrl;
       detailsBtn.href = targetUrl;
       ctaEl.style.display = 'flex';

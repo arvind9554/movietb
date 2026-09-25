@@ -1004,7 +1004,7 @@ async function loadRelatedMovies(movie, currentId) {
         data.year,
         data.language
       );
-      const href = `redirect.html?target=movie.html?id=${encodeURIComponent(item.id)}`;
+      const href = `movie.html?id=${encodeURIComponent(item.id)}`;
 
       return `
         <a class="movietb-related-card movietb-card" href="${href}" aria-label="Open ${escapeHtml(title)}">

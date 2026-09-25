@@ -132,7 +132,7 @@ export function createMovieCard(movie, id) {
     const { primary, fallback } = resolvePoster(movie);
 
     return `
-    <div class="movie-card" onclick="window.location.href='redirect.html?target=movie.html?id=${id}'">
+    <div class="movie-card" onclick="window.location.href='movie.html?id=${id}'">
         <div class="poster-wrapper">
             <img 
               src="${primary}"
