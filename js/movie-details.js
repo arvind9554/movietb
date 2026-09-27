@@ -73,6 +73,8 @@ async function loadMovieDetails() {
 
     const movie = docSnap.data();
 
+document.title = `${movie.title || 'Movie'} - MovieTB`;
+
 // Line 74 ke theek baad paste karein:
 if (typeof gtag === 'function') {
     gtag('event', 'page_view', {
