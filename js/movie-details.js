@@ -73,6 +73,15 @@ async function loadMovieDetails() {
 
     const movie = docSnap.data();
 
+// Line 74 ke theek baad paste karein:
+if (typeof gtag === 'function') {
+    gtag('event', 'page_view', {
+        'page_title': movie.title || movie.name || document.title,
+        'page_location': window.location.href,
+        'movie_id': movieId
+    });
+}
+
     if (PLAYER_DEBUG) {
       console.log('[PlayerDebug] Movie data:', movie);
     }
