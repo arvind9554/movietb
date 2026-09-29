@@ -342,6 +342,30 @@
   const blog = blogs.find(b => b.id === id);
   const article = document.getElementById('blog-article');
 
+  // --- Helper Function: Category Names ko Clean/Normalize karne ke liye ---
+  function normalizeCategory(categoryStr) {
+    if (!categoryStr) return '';
+    const cat = String(categoryStr).toLowerCase().trim();
+
+    if (cat.includes('hollywood')) return 'hollywood';
+    if (cat.includes('bollywood') || cat.includes('south') || cat.includes('hindi')) return 'bollywood';
+    if (cat.includes('trailer')) return 'trailer';
+    if (cat.includes('series') || cat.includes('tv')) return 'series';
+
+    return cat;
+  }
+
+  // --- Helper Function: YouTube URL se Poster Extract karne ke liye ---
+  function getYouTubePoster(url) {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = String(url).match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
+    }
+    return null;
+  }
+
   if (blog) {
     document.getElementById('page-title').textContent = blog.title + ' - MovieTB';
     
@@ -357,8 +381,16 @@
       <a href="blog.html" class="back-link">← Back to Blog</a>
     `;
 
-    // 2. Related Articles Render
-    const relatedBlogs = blogs.filter(b => b.id !== blog.id).slice(0, 3);
+    // 2. Related Articles Render (Filtered by Same Category)
+    const currentCatNormalized = normalizeCategory(blog.category);
+    let relatedBlogs = blogs.filter(b => b.id !== blog.id && normalizeCategory(b.category) === currentCatNormalized).slice(0, 3);
+
+    // Agar same category ke 3 blogs nahi milte, toh baki blogs add karke 3 count pura karein
+    if (relatedBlogs.length < 3) {
+      const extraBlogs = blogs.filter(b => b.id !== blog.id && !relatedBlogs.some(rb => rb.id === b.id)).slice(0, 3 - relatedBlogs.length);
+      relatedBlogs = [...relatedBlogs, ...extraBlogs];
+    }
+
     const relatedContainer = document.getElementById('related-blogs');
     if (relatedContainer) {
       relatedContainer.innerHTML = relatedBlogs.map(b => `
@@ -378,31 +410,7 @@
     article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
   }
 
-  // --- Helper Function: Category Names को Clean/Normalize करने के लिए ---
-  function normalizeCategory(categoryStr) {
-    if (!categoryStr) return '';
-    const cat = String(categoryStr).toLowerCase().trim();
-
-    if (cat.includes('hollywood')) return 'hollywood';
-    if (cat.includes('bollywood') || cat.includes('south') || cat.includes('hindi')) return 'bollywood';
-    if (cat.includes('trailer')) return 'trailer';
-    if (cat.includes('series') || cat.includes('tv')) return 'series';
-
-    return cat;
-  }
-
-  // --- Helper Function: YouTube URL से Poster Extract करने के लिए ---
-  function getYouTubePoster(url) {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = String(url).match(regExp);
-    if (match && match[2].length === 11) {
-      return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
-    }
-    return null;
-  }
-
-  // --- Main Function: Firestore से Movies Load करना ---
+  // --- Main Function: Firestore se Movies Load karna ---
   async function loadRecommendedMovies(categoryName) {
     const moviesContainer = document.getElementById('recommended-movies');
     const titleElem = document.getElementById('recommended-movies-title');
@@ -463,7 +471,7 @@
         const movieTitle = movie.title || movie.name || 'Untitled';
 
         html += `
-          <a href="movie-details.html?id=${movie.id}" class="movie-mini-card">
+          <a href="movie.html?id=${movie.id}" class="movie-mini-card">
             <img src="${posterImg}" alt="${movieTitle}" onerror="this.src='assets/images/placeholder.jpg'">
             <p>${movieTitle}</p>
           </a>
