@@ -1239,14 +1239,8 @@ body.player-fullscreen-active .movietb-below-player {
   text-transform: uppercase;
 }
 
-.movietb-ad-frame {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    max-height: 220px;
-    border-radius: 10px;
-    border: 1px dashed #333;
-    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)), #101010;
-}
+/* NOTE: .movietb-ad-frame ka size ab neeche
+   "Advertisement box (single source of truth)" section mein hai. */
 
 .movietb-related {
   padding: 18px 16px 16px;
@@ -1328,54 +1322,42 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Base Container (Mobile First) */
+/* ===== Advertisement box (single source of truth) ===== */
 .movietb-ad-frame,
 .exoclick-video-container {
-    width: 100% !important;
-    max-width: 480px !important; /* Perfect for mobile/tablet */
-    height: 270px !important;
-    margin: 15px auto !important;
-    background: #000 !important;
-    position: relative !important;
-    display: block !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 16 / 9;
+  margin: 10px auto 0;
+  background: #000;
+  border-radius: 10px;
+  border: 0;
+  overflow: hidden;
+  position: relative;
+  display: block;
 }
 
-/* Base Video Elements */
+/* Ad ke andar ka har nested element box ko poora bhare */
+.movietb-ad-frame div,
 .movietb-ad-frame ins,
-.movietb-ad-frame video,
 .movietb-ad-frame iframe,
-.movietb-ad-frame > div,
+.movietb-ad-frame video,
+.movietb-ad-frame img,
+.exoclick-video-container div,
 .exoclick-video-container ins,
-.exoclick-video-container video,
 .exoclick-video-container iframe,
-.exoclick-video-container > div {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    object-fit: cover !important;
+.exoclick-video-container video {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
 }
 
-/* DESKTOP SPECIFIC FIX (Screens wider than 768px) */
-@media screen and (min-width: 768px) {
-    .movietb-ad-frame,
-    .exoclick-video-container {
-        max-width: 640px !important; /* Desktop view expansion */
-        height: 360px !important;    /* Maintain 16:9 ratio */
-    }
+.movietb-ad-frame video { object-fit: contain; }
 
-    .movietb-ad-frame ins,
-    .movietb-ad-frame video,
-    .movietb-ad-frame iframe,
-    .movietb-ad-frame > div,
-    .exoclick-video-container ins,
-    .exoclick-video-container video,
-    .exoclick-video-container iframe,
-    .exoclick-video-container > div {
-        object-fit: contain !important; /* Prevents black space stretch on wide screens */
-    }
-}
 
 /* =========================================================
    NEW — HOMEPAGE HERO CAROUSEL
