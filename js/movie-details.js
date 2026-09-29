@@ -849,15 +849,12 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   const title = firstPresent(movie.title, 'Movie details');
   const hasInfo = Boolean(info.previewRows.trim() || info.expandedRows.trim());
 
-  // Safe Script Injection post-DOM mount (300ms delay to allow DOM render)
+  // New Banner Zone #7471833 Injection
   setTimeout(() => {
     const adFrame = document.getElementById('movietb-ad-frame');
     if (adFrame && !adFrame.querySelector('script')) {
-      adFrame.style.minHeight = "250px";
-      adFrame.style.display = "block";
-
       const s = document.createElement('script');
-      s.src = "https://unfoldedtrade.com/bcXVVes.dTG_ln0QYeWOcL/WetmF9HuMZcUml/kzPLTUcTzLNpTiQ-wdNVz-MjtwNZzCMi1/NpDFAr3VN/wd";
+      s.src = "//unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9\/uiZwUglPkjP\/TPcU0XN_z\/E\/4aMOzOMETnN\/zWQ_3HMJTug_zzNkwr";
       s.async = true;
       s.referrerPolicy = 'no-referrer-when-downgrade';
       adFrame.appendChild(s);
@@ -906,7 +903,7 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
         <div class="movietb-ad-frame" id="movietb-ad-frame">
-          <!-- Ad container ready for dynamic injection -->
+          <!-- Banner Zone #7471833 -->
         </div>
       </section>
 
