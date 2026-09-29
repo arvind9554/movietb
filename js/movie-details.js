@@ -851,15 +851,16 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
 
   // New Banner Zone #7471833 Injection
   setTimeout(() => {
-    const adFrame = document.getElementById('movietb-ad-frame');
-    if (adFrame && !adFrame.querySelector('script')) {
-      const s = document.createElement('script');
-      s.src = "//unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9\/uiZwUglPkjP\/TPcU0XN_z\/E\/4aMOzOMETnN\/zWQ_3HMJTug_zzNkwr";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
-      adFrame.appendChild(s);
-    }
-  }, 300);
+  const adFrame = document.getElementById('movietb-ad-frame');
+  if (adFrame && !adFrame.querySelector('script')) {
+    const s = document.createElement('script');
+    // Clean URL without backslashes
+    s.src = "https://unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMETnN/zWQ_3HMJTug_zzNkwr";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    adFrame.appendChild(s);
+  }
+}, 300);
 
   return `
     <div class="movietb-below-player">
