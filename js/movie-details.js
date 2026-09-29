@@ -850,14 +850,25 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   const hasInfo = Boolean(info.previewRows.trim() || info.expandedRows.trim());
 
   // New Banner Zone #7471833 Injection
-  setTimeout(() => {
+ setTimeout(() => {
   const adFrame = document.getElementById('movietb-ad-frame');
   if (adFrame && !adFrame.querySelector('script')) {
     const s = document.createElement('script');
-    // Clean URL without backslashes
-    s.src = "https://unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMETnN/zWQ_3HMJTug_zzNkwr";
-    s.async = true;
-    s.referrerPolicy = 'no-referrer-when-downgrade';
+    
+    // HilltopAds official inline wrapper execution
+    s.textContent = `
+      (function(trhtfe){
+        var d = document,
+            s = d.createElement('script'),
+            l = d.scripts[d.scripts.length - 1];
+        s.settings = trhtfe || {};
+        s.src = "//unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMETnN/zWQ_3HMJTug_zzNkwr";
+        s.async = true;
+        s.referrerPolicy = 'no-referrer-when-downgrade';
+        l.parentNode.insertBefore(s, l);
+      })({});
+    `;
+    
     adFrame.appendChild(s);
   }
 }, 300);
