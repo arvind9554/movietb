@@ -849,29 +849,21 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   const title = firstPresent(movie.title, 'Movie details');
   const hasInfo = Boolean(info.previewRows.trim() || info.expandedRows.trim());
 
-  // New Banner Zone #7471833 Injection
- setTimeout(() => {
-  const adFrame = document.getElementById('movietb-ad-frame');
-  if (adFrame && !adFrame.querySelector('script')) {
-    const s = document.createElement('script');
-    
-    // HilltopAds official inline wrapper execution
-    s.textContent = `
-      (function(trhtfe){
-        var d = document,
-            s = d.createElement('script'),
-            l = d.scripts[d.scripts.length - 1];
-        s.settings = trhtfe || {};
-        s.src = "//unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMETnN/zWQ_3HMJTug_zzNkwr";
-        s.async = true;
-        s.referrerPolicy = 'no-referrer-when-downgrade';
-        l.parentNode.insertBefore(s, l);
-      })({});
-    `;
-    
-    adFrame.appendChild(s);
-  }
-}, 300);
+  // New Banner Zone #7471833 Injection (Clean Dynamic Insertion)
+  setTimeout(() => {
+    const adFrame = document.getElementById('movietb-ad-frame');
+    if (adFrame && !adFrame.querySelector('script')) {
+      adFrame.innerHTML = ''; // Container clear
+
+      const s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.src = "https://unfoldedtrade.com/b.XYVysddfGTls0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMEtnN/zWQ_3HMJTug_zzNkwr";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+
+      adFrame.appendChild(s);
+    }
+  }, 300);
 
   return `
     <div class="movietb-below-player">
@@ -915,7 +907,7 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
         <div class="movietb-ad-frame" id="movietb-ad-frame">
-          <!-- Banner Zone #7471833 -->
+          <!-- Banner Zone #7471833 will inject here -->
         </div>
       </section>
 
