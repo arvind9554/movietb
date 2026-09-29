@@ -1232,7 +1232,7 @@ body.player-fullscreen-active .movietb-below-player {
 .movietb-ad-label {
   display: block;
   margin-bottom: 8px;
-  color: var(--text-muted);
+  color: var(--text-muted, #888);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -1323,37 +1323,29 @@ body.player-fullscreen-active .movietb-below-player {
 
 
 /* ===== Advertisement box (single source of truth) ===== */
-.movietb-ad-frame,
-.exoclick-video-container {
+.movietb-ad-frame {
   width: 100%;
-  max-width: 720px;
-  aspect-ratio: 16 / 9;
-  margin: 10px auto 0;
-  background: #000;
+  min-height: auto !important; /* Auto-height to eliminate empty black gaps */
+  padding: 10px 0;
   border-radius: 10px;
-  border: 0;
-  overflow: hidden;
-  position: relative;
-  display: block;
+  border: 1px dashed #333;
+  background: #101010;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  position: relative !important;
 }
 
 /* Ad ke andar ka har nested element box ko poora bhare */
-.movietb-ad-frame div,
-.movietb-ad-frame ins,
+/* Dynamic responsive scaling for iframe / img inside */
 .movietb-ad-frame iframe,
-.movietb-ad-frame video,
-.movietb-ad-frame img,
-.exoclick-video-container div,
-.exoclick-video-container ins,
-.exoclick-video-container iframe,
-.exoclick-video-container video {
-  width: 100% !important;
-  height: 100% !important;
+.movietb-ad-frame div,
+.movietb-ad-frame img {
   max-width: 100% !important;
-  max-height: 100% !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  display: block !important;
 }
 
 .movietb-ad-frame video { object-fit: contain; }
