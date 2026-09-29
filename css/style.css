@@ -1226,7 +1226,11 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 .movietb-ad-placeholder {
-  padding: 12px 12px 14px;
+  padding: 6px 8px; /* Inner spacing ghatane ke liye (pehle 12px 14px tha) */
+  margin-bottom: 12px; /* Niche wale section se gap kam karne ke liye */
+  max-width: 320px; /* Ya jitni width aapko chahiye (jaise 300px ya 320px) */
+  margin-left: auto; /* Box ko center me align karne ke liye */
+  margin-right: auto; /* Box ko center me align karne ke liye */
 }
 
 .movietb-ad-label {
