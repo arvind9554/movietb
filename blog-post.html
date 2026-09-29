@@ -8,7 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
   <link rel="apple-touch-icon" href="https://www.movietb.com/assets/images/logo.png" />
 
-  <!-- Open Graph / Social Sharing Tags (PNG/JPG Recommended for og:image) -->
+  <!-- Open Graph / Social Sharing Tags -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.movietb.com/" />
   <meta property="og:title" content="MovieTB - Watch Latest Movies & Series" />
@@ -46,6 +46,183 @@
   <title id="page-title">Blog - MovieTB</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    /* Navbar Alignment & Dropdown Fix */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background-color: #0b0f19;
+      position: relative;
+      z-index: 1000;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropbtn {
+      background: #1e293b;
+      color: #ffffff;
+      border: 1px solid #334155;
+      padding: 8px 14px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Dropdown content popup positioning */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: #0f172a;
+      min-width: 200px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.6);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      z-index: 9999;
+      padding: 6px 0;
+      margin-top: 5px;
+    }
+
+    .dropdown-content a {
+      color: #cbd5e1;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 13.5px;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #1e293b;
+      color: #e2e8f0;
+    }
+
+    /* Hover action */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+
+    /* Recommendation Sections */
+.recommend-section {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #1e293b;
+}
+
+.recommend-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recommend-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  background-color: #e11d48; /* Accent Color */
+  border-radius: 2px;
+}
+
+/* Related Blogs Grid */
+.related-blogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.related-blog-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.related-blog-card:hover {
+  transform: translateY(-3px);
+  border-color: #334155;
+}
+
+.related-blog-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.related-blog-card .info {
+  padding: 10px;
+}
+
+.related-blog-card h4 {
+  font-size: 14px;
+  color: #f1f5f9;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+/* Recommended Movies Horizontal Scroll / Grid */
+.movies-scroll-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.movie-mini-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.movie-mini-card:hover {
+  transform: scale(1.03);
+}
+
+.movie-mini-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.movie-mini-card p {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  padding: 8px;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+  </style>
 </head>
 <body>
 
@@ -78,6 +255,22 @@
     <article class="blog-article" id="blog-article">
       <p class="loading">Loading article...</p>
     </article>
+
+    <!-- 1. Related Blogs Section -->
+  <section class="recommend-section">
+    <h3 class="recommend-title">More Related Articles</h3>
+    <div class="related-blogs-grid" id="related-blogs">
+      <!-- JavaScript Dynamic Render Karega -->
+    </div>
+  </section>
+
+  <!-- 2. Recommended Movies Section -->
+  <section class="recommend-section">
+    <h3 class="recommend-title" id="recommended-movies-title">Recommended Movies</h3>
+    <div class="movies-scroll-grid" id="recommended-movies">
+      <!-- Category Matching Movies Here -->
+    </div>
+  </section>
   </main>
 
   <footer class="site-footer">
@@ -137,5 +330,153 @@
       article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
     }
   </script>
+  
+<script type="module" src="js/main.js"></script>
+<script type="module">
+  import { blogs } from './js/blogs-data.js';
+  import { db } from './js/firebase-config.js';
+  import { collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  const blog = blogs.find(b => b.id === id);
+  const article = document.getElementById('blog-article');
+
+  if (blog) {
+    document.getElementById('page-title').textContent = blog.title + ' - MovieTB';
+    
+    // 1. Current Blog Article Render
+    article.innerHTML = `
+      <span class="blog-badge-inline">${blog.category}</span>
+      <h1>${blog.title}</h1>
+      <div class="blog-meta">By ${blog.author} • ${blog.date}</div>
+      <img src="${blog.image}" alt="${blog.title}" class="blog-hero-img">
+      <div class="blog-content">
+        ${blog.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+      </div>
+      <a href="blog.html" class="back-link">← Back to Blog</a>
+    `;
+
+    // 2. Related Articles Render
+    const relatedBlogs = blogs.filter(b => b.id !== blog.id).slice(0, 3);
+    const relatedContainer = document.getElementById('related-blogs');
+    if (relatedContainer) {
+      relatedContainer.innerHTML = relatedBlogs.map(b => `
+        <a href="blog-post.html?id=${b.id}" class="related-blog-card">
+          <img src="${b.image}" alt="${b.title}">
+          <div class="info">
+            <h4>${b.title}</h4>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // 3. Recommended Movies Load
+    loadRecommendedMovies(blog.category);
+
+  } else {
+    article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
+  }
+
+  // --- Helper Function: Category Names को Clean/Normalize करने के लिए ---
+  function normalizeCategory(categoryStr) {
+    if (!categoryStr) return '';
+    const cat = String(categoryStr).toLowerCase().trim();
+
+    if (cat.includes('hollywood')) return 'hollywood';
+    if (cat.includes('bollywood') || cat.includes('south') || cat.includes('hindi')) return 'bollywood';
+    if (cat.includes('trailer')) return 'trailer';
+    if (cat.includes('series') || cat.includes('tv')) return 'series';
+
+    return cat;
+  }
+
+  // --- Helper Function: YouTube URL से Poster Extract करने के लिए ---
+  function getYouTubePoster(url) {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = String(url).match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
+    }
+    return null;
+  }
+
+  // --- Main Function: Firestore से Movies Load करना ---
+  async function loadRecommendedMovies(categoryName) {
+    const moviesContainer = document.getElementById('recommended-movies');
+    const titleElem = document.getElementById('recommended-movies-title');
+    if (!moviesContainer || !titleElem) return;
+
+    titleElem.textContent = `Recommended ${categoryName} Movies`;
+
+    try {
+      const moviesRef = collection(db, "movies");
+      // Fetch top 100 movies to ensure accurate category filtering
+      const q = query(moviesRef, limit(100));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">No movies found.</p>`;
+        return;
+      }
+
+      const allMovies = [];
+      querySnapshot.forEach((doc) => {
+        allMovies.push({ id: doc.id, ...doc.data() });
+      });
+
+      // Category Filtering Logic using Normalizer
+      const targetTag = normalizeCategory(categoryName);
+
+      let filtered = allMovies.filter(m => {
+        const movieCat = normalizeCategory(m.category || m.cat || m.genre || '');
+        if (Array.isArray(m.categories)) {
+          return m.categories.some(c => normalizeCategory(c) === targetTag);
+        }
+        return movieCat === targetTag || movieCat.includes(targetTag);
+      });
+
+      // If no category match, fallback to first 20 movies
+      if (filtered.length === 0) {
+        filtered = allMovies.slice(0, 20);
+      } else {
+        filtered = filtered.slice(0, 20);
+      }
+
+      let html = '';
+      filtered.forEach((movie) => {
+        // 1. Direct poster/image check
+        let posterImg = movie.poster || movie.posterUrl || movie.image || movie.thumbnail || movie.poster_path;
+
+        // 2. Extract poster from YouTube embed URL if direct image missing
+        if (!posterImg) {
+          const ytLink = movie.youtubeUrl || movie.youtube || movie.trailer || movie.embedUrl || movie.url || movie.videoUrl || movie.youtubeId;
+          posterImg = getYouTubePoster(ytLink);
+        }
+
+        // 3. Default fallback
+        if (!posterImg) {
+          posterImg = 'assets/images/placeholder.jpg';
+        }
+
+        const movieTitle = movie.title || movie.name || 'Untitled';
+
+        html += `
+          <a href="movie-details.html?id=${movie.id}" class="movie-mini-card">
+            <img src="${posterImg}" alt="${movieTitle}" onerror="this.src='assets/images/placeholder.jpg'">
+            <p>${movieTitle}</p>
+          </a>
+        `;
+      });
+
+      moviesContainer.innerHTML = html;
+
+    } catch (err) {
+      console.error("Error fetching recommended movies:", err);
+      moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">Unable to load recommendations.</p>`;
+    }
+  }
+</script>
 </body>
 </html>
