@@ -127,18 +127,29 @@ if (typeof gtag === 'function') {
       // Plyr (custom branded player, loaded on demand below) takes over this
       // <video> element - no native `controls` attribute needed, and no
       // custom fullscreen button here since Plyr ships its own.
-      playerHtml = `
-        <div class="player-container">
-          <div class="video-responsive">
-            <video
-              src="${escapeHtml(videoSrc)}"
-              poster="${escapeHtml(resolveRelatedPoster(movie))}"
-              playsinline
-              preload="metadata"
-            ></video>
+playerHtml = `
+      <div class="player-container" id="player-wrapper" style="position: relative;">
+        <div class="video-responsive">
+          
+          <!-- Pre-roll Ad Overlay Container -->
+          <div id="ad-overlay" class="ad-overlay hidden">
+            <div class="ad-badge">ADVERTISEMENT</div>
+            <div id="skip-btn" class="skip-btn disabled">Skip in <span id="ad-timer">5</span>s</div>
+            <video id="ad-video-player" playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
           </div>
+
+          <!-- Main Movie Player Video Tag -->
+          <video
+            id="main-movie-player"
+            src="${escapeHtml(videoSrc)}"
+            poster="${escapeHtml(resolveRelatedPoster(movie))}"
+            playsinline
+            preload="metadata"
+            controls
+          ></video>
         </div>
-      `;
+      </div>
+    `;
     } else if (PLAYER_DIAGNOSTIC) {
       playerHtml = `
         <div class="player-container player-diagnostic">
@@ -1128,3 +1139,61 @@ function initYouTubeTracking() {
 // Global Event Listeners & Execution Entrypoint
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 loadMovieDetails();
+
+
+export function initPreRollAd() {
+  const mainPlayer = document.getElementById('main-movie-player');
+  const adOverlay = document.getElementById('ad-overlay');
+  const adVideo = document.getElementById('ad-video-player');
+  const skipBtn = document.getElementById('skip-btn');
+  const adTimer = document.getElementById('ad-timer');
+
+  if (!mainPlayer || !adOverlay) return;
+
+  // HilltopAds Video Zone Tag/Stream Link
+  const VAST_AD_URL = "https://unfoldedtrade.com/b/XKVts/d.GKlV0mYIWOcd/zemm_9fugZ/U/lHkzP/T/cZzXNmTqQrw/NKzIMftMNLzcM-1HN/DSAz3ANowb"; 
+  
+  let timeLeft = 5;
+  let timerInterval = null;
+
+  mainPlayer.addEventListener('play', function onFirstPlay(e) {
+    if (!mainPlayer.dataset.adPlayed) {
+      e.preventDefault();
+      mainPlayer.pause(); 
+
+      adOverlay.classList.remove('hidden');
+      adVideo.src = VAST_AD_URL;
+      adVideo.play().catch(() => {});
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        if (adTimer) adTimer.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          skipBtn.classList.remove('disabled');
+          skipBtn.innerHTML = 'Skip Ad ⏭';
+          skipBtn.style.cursor = 'pointer';
+        }
+      }, 1000);
+
+      skipBtn.addEventListener('click', function() {
+        if (timeLeft <= 0) {
+          closeAdAndPlayMovie();
+        }
+      });
+
+      adVideo.addEventListener('ended', closeAdAndPlayMovie);
+
+      mainPlayer.dataset.adPlayed = "true";
+      mainPlayer.removeEventListener('play', onFirstPlay);
+    }
+  });
+
+  function closeAdAndPlayMovie() {
+    if (timerInterval) clearInterval(timerInterval);
+    adVideo.pause();
+    adOverlay.classList.add('hidden');
+    mainPlayer.play();
+  }
+}
