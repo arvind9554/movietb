@@ -1661,64 +1661,7 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Rating & Actions Compact Spacing */
-.action-buttons-container,
-.rating-section-wrapper {
-  padding: 6px 12px !important;
-  margin-bottom: 6px !important;
-  gap: 8px !important;
-}
 
-/* Single Line Title with Ellipsis */
-.movie-title-single {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-
-.movie-title-single.expanded {
-  white-space: normal;
-  -webkit-line-clamp: unset;
-}
-
-/* Collapsible Details Card */
-.movie-details-compact {
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-.summary-text-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #ccc;
-}
-
-.summary-text-clamp.expanded {
-  display: block;
-  -webkit-line-clamp: unset;
-  overflow: visible;
-}
-
-/* Toggle Link Styling */
-.more-toggle-btn {
-  color: #e50914;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  margin-left: 6px;
-  text-decoration: underline;
-  display: inline-block;
-}
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
 .category-pill:nth-child(3) .category-pill-icon { background: rgba(255, 171, 64, 0.12); border-color: rgba(255, 171, 64, 0.3); }
