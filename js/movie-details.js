@@ -203,7 +203,7 @@ if (typeof gtag === 'function') {
     }
 
     initMovieTbBelowPlayer(movie, movieId);
-    setupCollapsibleMovieInfo();
+
     // Inject external Ad Provider script - but ONLY for the YouTube/iframe
     // path. This script auto-scans the page for <video> elements and turns
     // them into its own "outstream" ad player - which was harmless before
@@ -866,49 +866,43 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   }, 300);
 
   return `
-   <div class="movietb-below-player">
-  <section class="movietb-reactions" aria-label="Movie reactions">
-    <div class="movietb-vote-pill" role="group" aria-label="Like or dislike this movie">
-      <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
-        <span aria-hidden="true">👍</span>
-        <span class="movietb-like-count">${formatCompactCount(getDisplayedLikeCount(state))}</span>
-      </button>
-      <span class="movietb-vote-divider" aria-hidden="true"></span>
-      <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
-        <span aria-hidden="true">👎</span>
-      </button>
-    </div>
-    <div class="movietb-rating" aria-label="Movie rating">
-      <div class="movietb-stars" role="group" aria-label="Rate this movie">
-        ${[1, 2, 3, 4, 5].map((star) => `
-          <button type="button" class="movietb-star" data-star="${star}" aria-label="Rate ${star} star${star > 1 ? 's' : ''}" aria-pressed="${state.rating >= star}">★</button>
-        `).join('')}
-      </div>
-      <div class="movietb-rating-copy">
-        <strong class="movietb-rating-score">${formatRatingLabel(state)}</strong>
-        <span class="movietb-rating-count">${formatRatingCount(state)}</span>
-      </div>
-    </div>
-  </section>
+    <div class="movietb-below-player">
+      <section class="movietb-reactions" aria-label="Movie reactions">
+        <div class="movietb-vote-pill" role="group" aria-label="Like or dislike this movie">
+          <button type="button" class="movietb-react-btn" data-vote="like" aria-label="Like this movie" aria-pressed="${state.vote === 'like'}">
+            <span aria-hidden="true">👍</span>
+            <span class="movietb-like-count">${formatCompactCount(getDisplayedLikeCount(state))}</span>
+          </button>
+          <span class="movietb-vote-divider" aria-hidden="true"></span>
+          <button type="button" class="movietb-react-btn" data-vote="dislike" aria-label="Dislike this movie" aria-pressed="${state.vote === 'dislike'}">
+            <span aria-hidden="true">👎</span>
+          </button>
+        </div>
+        <div class="movietb-rating" aria-label="Movie rating">
+          <div class="movietb-stars" role="group" aria-label="Rate this movie">
+            ${[1, 2, 3, 4, 5].map((star) => `
+              <button type="button" class="movietb-star" data-star="${star}" aria-label="Rate ${star} star${star > 1 ? 's' : ''}" aria-pressed="${state.rating >= star}">★</button>
+            `).join('')}
+          </div>
+          <div class="movietb-rating-copy">
+            <strong class="movietb-rating-score">${formatRatingLabel(state)}</strong>
+            <span class="movietb-rating-count">${formatRatingCount(state)}</span>
+          </div>
+        </div>
+      </section>
 
-  <section class="movietb-movie-info" aria-label="Movie information">
-    <div class="movietb-info-top">
-      <h1 class="movie-title-single" title="${escapeHtml(title)}">${escapeHtml(title)}</h1>
-    </div>
-
-    <!-- Collapsible Summary Section -->
-    <p class="summary-text-clamp mb-2">
-      <span>${info.summary || 'No summary available.'}</span>
-      <span id="toggle-more-btn" class="more-toggle-btn">...more</span>
-    </p>
-
-    ${hasInfo ? `
-      <dl class="movietb-info-preview">${info.previewRows}</dl>
-      <div class="movietb-info-expand-wrap">
-        <dl class="movietb-info-expanded">${info.expandedRows}</dl>
-      </div>
-    ` : ''}
-  </section>
+      <section class="movietb-movie-info" aria-label="Movie information">
+        <div class="movietb-info-top">
+          <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
+          ${hasInfo ? `<button type="button" class="movietb-info-toggle" aria-expanded="false">View</button>` : ''}
+        </div>
+        ${hasInfo ? `
+          <dl class="movietb-info-preview">${info.previewRows}</dl>
+          <div class="movietb-info-expand-wrap">
+            <dl class="movietb-info-expanded">${info.expandedRows}</dl>
+          </div>
+        ` : ''}
+      </section>
 
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
@@ -1134,25 +1128,3 @@ function initYouTubeTracking() {
 // Global Event Listeners & Execution Entrypoint
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 loadMovieDetails(); 
-
-function setupCollapsibleMovieInfo() {
-  const titleEl = document.querySelector('.movie-title-single');
-  const summaryEl = document.querySelector('.summary-text-clamp');
-  const toggleBtn = document.getElementById('toggle-more-btn');
-
-  if (toggleBtn && summaryEl) {
-    toggleBtn.addEventListener('click', function () {
-      const isExpanded = summaryEl.classList.contains('expanded');
-      
-      if (isExpanded) {
-        summaryEl.classList.remove('expanded');
-        if (titleEl) titleEl.classList.remove('expanded');
-        toggleBtn.textContent = '...more';
-      } else {
-        summaryEl.classList.add('expanded');
-        if (titleEl) titleEl.classList.add('expanded');
-        toggleBtn.textContent = ' show less';
-      }
-    });
-  }
-}
