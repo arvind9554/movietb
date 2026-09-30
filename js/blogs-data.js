@@ -374,5 +374,36 @@ export const blogs = [
         <hr>
         <p><strong>SEO Keywords:</strong> Hanuman Ansh 2026, Hanuman Ansh full movie stream, Hanuman Ansh cast, Hanuman Ansh HD review, divine action movies, MovieTB original blogs</p>
     `
-}
+},
+
+{
+    id: 11,
+    title: "Toxic: A Fairy Tale for Grown-Ups (2026) - Yash’s Dark Action Thriller",
+    image: "assets/images/toxic-movie.jpg",
+    category: "South Cinema",
+    date: "15 Sep 2026",
+    author: "Arvind Kumar Pandey",
+    excerpt: "Superstar Yash returns after KGF 2 in 'Toxic', a high-octane dark action drama directed by Geetu Mohandas exploring the world of the drug mafia.",
+    content: `
+<h1>Toxic: A Fairy Tale for Grown-Ups (2026) - Yash's Gritty Comeback</h1>
+
+<p>After shattering global box office records with the <em>KGF</em> franchise, Rocking Star <strong>Yash</strong> is back with his highly anticipated next venture, <em>Toxic: A Fairy Tale for Grown-Ups</em>. Directed by acclaimed filmmaker Geetu Mohandas and produced by KVN Productions along with Monster Mind Creations, this film promises a bold, stylish, and darker take on action cinema.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <img src="assets/images/toxic-poster.jpg" alt="Toxic Movie Poster" style="max-width: 100%; height: auto; border-radius: 8px;" />
+</div>
+
+<h2>Plot & Dark Mafia Theme</h2>
+<p>Set against the backdrop of an international drug cartel operating in coastal regions, <em>Toxic</em> dives deep into the gritty underworld of crime and vengeance. The narrative contrasts a raw, brutal criminal landscape with fairy-tale undertones, offering an intense thriller experience crafted specifically for mature audiences.</p>
+
+<h2>Stellar Cast & Pan-World Scale</h2>
+<p>Alongside Yash’s commanding screen presence, the film boasts a massive ensemble cast featuring leading actresses like <strong>Nayanthara</strong> and <strong>Kiara Advani</strong> in pivotal roles. Designed as a multilingual pan-world spectacle, the movie is being shot with international technicians to deliver top-tier action choreography and cinematography.</p>
+
+<h2>Release & Expectations</h2>
+<p>With high-voltage action sequences, a haunting background score, and Yash’s completely transformed look, <em>Toxic</em> stands as one of the biggest cinematic events of 2026. Fans and trade analysts expect it to set new box office benchmarks across Indian and global markets.</p>
+
+<hr>
+<p><strong>SEO Keywords:</strong> Yash Toxic Movie 2026, Toxic Yash Nayanthara, Geetu Mohandas Toxic, KGF Yash New Movie, Toxic Release Date, MovieTB South News.</p>
+`
+  },
 ];
