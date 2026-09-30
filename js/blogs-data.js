@@ -377,7 +377,7 @@ export const blogs = [
 },
 
 {
-    id: 11,
+    id: 12,
     title: "Toxic: A Fairy Tale for Grown-Ups (2026) - Yash’s Dark Action Thriller",
     image: "assets/images/toxic-movie.jpg",
     category: "South Cinema",
