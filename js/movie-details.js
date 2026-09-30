@@ -1127,4 +1127,4 @@ function initYouTubeTracking() {
 
 // Global Event Listeners & Execution Entrypoint
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
-loadMovieDetails();
+loadMovieDetails(); 
