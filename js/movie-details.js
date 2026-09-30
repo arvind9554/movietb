@@ -127,29 +127,18 @@ if (typeof gtag === 'function') {
       // Plyr (custom branded player, loaded on demand below) takes over this
       // <video> element - no native `controls` attribute needed, and no
       // custom fullscreen button here since Plyr ships its own.
-playerHtml = `
-      <div class="player-container" id="player-wrapper" style="position: relative;">
-        <div class="video-responsive">
-          
-          <!-- Pre-roll Ad Overlay Container -->
-          <div id="ad-overlay" class="ad-overlay hidden">
-            <div class="ad-badge">ADVERTISEMENT</div>
-            <div id="skip-btn" class="skip-btn disabled">Skip in <span id="ad-timer">5</span>s</div>
-            <video id="ad-video-player" playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
+      playerHtml = `
+        <div class="player-container">
+          <div class="video-responsive">
+            <video
+              src="${escapeHtml(videoSrc)}"
+              poster="${escapeHtml(resolveRelatedPoster(movie))}"
+              playsinline
+              preload="metadata"
+            ></video>
           </div>
-
-          <!-- Main Movie Player Video Tag -->
-          <video
-            id="main-movie-player"
-            src="${escapeHtml(videoSrc)}"
-            poster="${escapeHtml(resolveRelatedPoster(movie))}"
-            playsinline
-            preload="metadata"
-            controls
-          ></video>
         </div>
-      </div>
-    `;
+      `;
     } else if (PLAYER_DIAGNOSTIC) {
       playerHtml = `
         <div class="player-container player-diagnostic">
@@ -1139,80 +1128,3 @@ function initYouTubeTracking() {
 // Global Event Listeners & Execution Entrypoint
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 loadMovieDetails();
-
-// Exact location for Ad Trigger:
-setTimeout(() => {
-    initPreRollAd();
-}, 800);
-
-
-// Pre-Roll Ad Trigger Logic (Updated Robust Version)
-function initPreRollAd() {
-  const adOverlay = document.getElementById('ad-overlay');
-  const skipBtn = document.getElementById('skip-btn');
-  const adTimer = document.getElementById('ad-timer');
-
-  if (!adOverlay) return;
-
-  const VAST_AD_URL = "https://smooth-survey.com/dJmYFnz.dHG/NPvVZA3UJv/seTmM9Iu17qUm17kPP-TAcQ0-NGzuMb0/MOZhMTTgNszCQX37M/zUQ/zGNSud"; 
-
-  let timeLeft = 5;
-  let timerInterval = null;
-  let adPlayed = false;
-
-  function triggerAd(videoTarget) {
-    if (adPlayed) return;
-    adPlayed = true;
-
-    if (videoTarget && typeof videoTarget.pause === 'function') {
-      videoTarget.pause();
-    }
-
-    adOverlay.classList.remove('hidden');
-
-    let adFrame = document.getElementById('vast-ad-iframe');
-    if (!adFrame) {
-      adFrame = document.createElement('iframe');
-      adFrame.id = 'vast-ad-iframe';
-      adFrame.style.cssText = 'width:100%; height:100%; border:none; position:absolute; top:0; left:0; z-index:9999; background:#000;';
-      adFrame.src = VAST_AD_URL;
-      adOverlay.appendChild(adFrame);
-    }
-
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      if (adTimer) adTimer.textContent = timeLeft;
-
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        if (skipBtn) {
-          skipBtn.classList.remove('disabled');
-          skipBtn.innerHTML = 'Skip Ad ⏭';
-          skipBtn.style.cursor = 'pointer';
-        }
-      }
-    }, 1000);
-
-    const closeAd = () => {
-      if (timeLeft > 0) return;
-      if (timerInterval) clearInterval(timerInterval);
-      adOverlay.classList.add('hidden');
-      const frame = document.getElementById('vast-ad-iframe');
-      if (frame) frame.remove();
-      if (videoTarget && typeof videoTarget.play === 'function') {
-        videoTarget.play();
-      }
-    };
-
-    if (skipBtn) {
-      skipBtn.onclick = closeAd;
-    }
-  }
-
-  // Fallback: Global play event capture (covers plyr / standard / dynamically created videos)
-  document.addEventListener('play', function (e) {
-    if (e.target && e.target.tagName === 'VIDEO' && e.target.id !== 'ad-video-player') {
-      triggerAd(e.target);
-    }
-  }, true);
-}
