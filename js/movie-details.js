@@ -1140,6 +1140,11 @@ function initYouTubeTracking() {
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 loadMovieDetails();
 
+// Exact location for Ad Trigger:
+setTimeout(() => {
+    initPreRollAd();
+}, 800);
+
 
 // Pre-Roll Ad Trigger Logic (VAST Ads Integration)
 function initPreRollAd() {
