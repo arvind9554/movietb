@@ -1141,7 +1141,8 @@ document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 loadMovieDetails();
 
 
-export function initPreRollAd() {
+// Pre-Roll Ad Trigger Logic (VAST Ads Integration)
+function initPreRollAd() {
   const mainPlayer = document.getElementById('main-movie-player');
   const adOverlay = document.getElementById('ad-overlay');
   const adVideo = document.getElementById('ad-video-player');
@@ -1150,9 +1151,9 @@ export function initPreRollAd() {
 
   if (!mainPlayer || !adOverlay) return;
 
-  // HilltopAds Video Zone Tag/Stream Link
-  const VAST_AD_URL = "https://unfoldedtrade.com/b/XKVts/d.GKlV0mYIWOcd/zemm_9fugZ/U/lHkzP/T/cZzXNmTqQrw/NKzIMftMNLzcM-1HN/DSAz3ANowb"; 
-  
+  // Aapka HilltopAds Zone #7473433 VAST URL
+  const VAST_AD_URL = "https://smooth-survey.com/dJmYFnz.dHG/NPvVZA3UJv/seTmM9Iu17qUm17kPP-TAcQ0-NGzuMb0/MOZhMTTgNszCQX37M/zUQ/zGNSud"; 
+
   let timeLeft = 5;
   let timerInterval = null;
 
@@ -1161,29 +1162,50 @@ export function initPreRollAd() {
       e.preventDefault();
       mainPlayer.pause(); 
 
+      // Overlay Display
       adOverlay.classList.remove('hidden');
-      adVideo.src = VAST_AD_URL;
-      adVideo.play().catch(() => {});
 
+      // VAST Link / Frame setup
+      const adContainer = adOverlay;
+      
+      // Iframe fallback for Hilltop VAST redirect tags
+      let adFrame = document.getElementById('vast-ad-iframe');
+      if (!adFrame) {
+        adFrame = document.createElement('iframe');
+        adFrame.id = 'vast-ad-iframe';
+        adFrame.style.width = '100%';
+        adFrame.style.height = '100%';
+        adFrame.style.border = 'none';
+        adFrame.style.position = 'absolute';
+        adFrame.style.top = '0';
+        adFrame.style.left = '0';
+        adFrame.src = VAST_AD_URL;
+        adOverlay.appendChild(adFrame);
+      }
+
+      // 5 Seconds Countdown
       timerInterval = setInterval(() => {
         timeLeft--;
         if (adTimer) adTimer.textContent = timeLeft;
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          skipBtn.classList.remove('disabled');
-          skipBtn.innerHTML = 'Skip Ad ⏭';
-          skipBtn.style.cursor = 'pointer';
+          if (skipBtn) {
+            skipBtn.classList.remove('disabled');
+            skipBtn.innerHTML = 'Skip Ad ⏭';
+            skipBtn.style.cursor = 'pointer';
+          }
         }
       }, 1000);
 
-      skipBtn.addEventListener('click', function() {
-        if (timeLeft <= 0) {
-          closeAdAndPlayMovie();
-        }
-      });
-
-      adVideo.addEventListener('ended', closeAdAndPlayMovie);
+      // Skip Click Event
+      if (skipBtn) {
+        skipBtn.addEventListener('click', function() {
+          if (timeLeft <= 0) {
+            closeAdAndPlayMovie();
+          }
+        });
+      }
 
       mainPlayer.dataset.adPlayed = "true";
       mainPlayer.removeEventListener('play', onFirstPlay);
@@ -1192,8 +1214,12 @@ export function initPreRollAd() {
 
   function closeAdAndPlayMovie() {
     if (timerInterval) clearInterval(timerInterval);
-    adVideo.pause();
     adOverlay.classList.add('hidden');
+    
+    // Cleanup iframe if exists
+    const adFrame = document.getElementById('vast-ad-iframe');
+    if (adFrame) adFrame.remove();
+
     mainPlayer.play();
   }
 }
