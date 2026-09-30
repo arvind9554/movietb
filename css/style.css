@@ -1661,7 +1661,48 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
+.telegram-banner-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
+.telegram-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #0088cc, #00a8ff);
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 10px;
+  text-decoration: none !important;
+  box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+  transition: all 0.25s ease-in-out;
+  animation: pulse-glow 2s infinite;
+}
+
+.telegram-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
+  background: linear-gradient(135deg, #0099e6, #1ab1ff);
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 136, 204, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 136, 204, 0);
+  }
+}
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
 .category-pill:nth-child(3) .category-pill-icon { background: rgba(255, 171, 64, 0.12); border-color: rgba(255, 171, 64, 0.3); }

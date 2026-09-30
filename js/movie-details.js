@@ -891,6 +891,16 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
         </div>
       </section>
 
+<!-- High-Converting Telegram Download Banner -->
+  <div class="telegram-banner-wrapper my-3 px-2">
+    <a href="https://telegram.me/movietbofficial" target="_blank" rel="noopener noreferrer" class="telegram-download-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.5 2L2.5 9.5L9 12.5L18 6.5L11.5 14L11 21.5L15 17.5L19.5 20.5L21.5 2Z"/>
+      </svg>
+      <span>⚡ Download Full Movie HD (Join Telegram Channel)</span>
+    </a>
+  </div>
+
       <section class="movietb-movie-info" aria-label="Movie information">
         <div class="movietb-info-top">
           <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
