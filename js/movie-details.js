@@ -1146,85 +1146,73 @@ setTimeout(() => {
 }, 800);
 
 
-// Pre-Roll Ad Trigger Logic (VAST Ads Integration)
+// Pre-Roll Ad Trigger Logic (Updated Robust Version)
 function initPreRollAd() {
-  const mainPlayer = document.getElementById('main-movie-player');
   const adOverlay = document.getElementById('ad-overlay');
-  const adVideo = document.getElementById('ad-video-player');
   const skipBtn = document.getElementById('skip-btn');
   const adTimer = document.getElementById('ad-timer');
 
-  if (!mainPlayer || !adOverlay) return;
+  if (!adOverlay) return;
 
-  // Aapka HilltopAds Zone #7473433 VAST URL
   const VAST_AD_URL = "https://smooth-survey.com/dJmYFnz.dHG/NPvVZA3UJv/seTmM9Iu17qUm17kPP-TAcQ0-NGzuMb0/MOZhMTTgNszCQX37M/zUQ/zGNSud"; 
 
   let timeLeft = 5;
   let timerInterval = null;
+  let adPlayed = false;
 
-  mainPlayer.addEventListener('play', function onFirstPlay(e) {
-    if (!mainPlayer.dataset.adPlayed) {
-      e.preventDefault();
-      mainPlayer.pause(); 
+  function triggerAd(videoTarget) {
+    if (adPlayed) return;
+    adPlayed = true;
 
-      // Overlay Display
-      adOverlay.classList.remove('hidden');
-
-      // VAST Link / Frame setup
-      const adContainer = adOverlay;
-      
-      // Iframe fallback for Hilltop VAST redirect tags
-      let adFrame = document.getElementById('vast-ad-iframe');
-      if (!adFrame) {
-        adFrame = document.createElement('iframe');
-        adFrame.id = 'vast-ad-iframe';
-        adFrame.style.width = '100%';
-        adFrame.style.height = '100%';
-        adFrame.style.border = 'none';
-        adFrame.style.position = 'absolute';
-        adFrame.style.top = '0';
-        adFrame.style.left = '0';
-        adFrame.src = VAST_AD_URL;
-        adOverlay.appendChild(adFrame);
-      }
-
-      // 5 Seconds Countdown
-      timerInterval = setInterval(() => {
-        timeLeft--;
-        if (adTimer) adTimer.textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          if (skipBtn) {
-            skipBtn.classList.remove('disabled');
-            skipBtn.innerHTML = 'Skip Ad ⏭';
-            skipBtn.style.cursor = 'pointer';
-          }
-        }
-      }, 1000);
-
-      // Skip Click Event
-      if (skipBtn) {
-        skipBtn.addEventListener('click', function() {
-          if (timeLeft <= 0) {
-            closeAdAndPlayMovie();
-          }
-        });
-      }
-
-      mainPlayer.dataset.adPlayed = "true";
-      mainPlayer.removeEventListener('play', onFirstPlay);
+    if (videoTarget && typeof videoTarget.pause === 'function') {
+      videoTarget.pause();
     }
-  });
 
-  function closeAdAndPlayMovie() {
-    if (timerInterval) clearInterval(timerInterval);
-    adOverlay.classList.add('hidden');
-    
-    // Cleanup iframe if exists
-    const adFrame = document.getElementById('vast-ad-iframe');
-    if (adFrame) adFrame.remove();
+    adOverlay.classList.remove('hidden');
 
-    mainPlayer.play();
+    let adFrame = document.getElementById('vast-ad-iframe');
+    if (!adFrame) {
+      adFrame = document.createElement('iframe');
+      adFrame.id = 'vast-ad-iframe';
+      adFrame.style.cssText = 'width:100%; height:100%; border:none; position:absolute; top:0; left:0; z-index:9999; background:#000;';
+      adFrame.src = VAST_AD_URL;
+      adOverlay.appendChild(adFrame);
+    }
+
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      if (adTimer) adTimer.textContent = timeLeft;
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        if (skipBtn) {
+          skipBtn.classList.remove('disabled');
+          skipBtn.innerHTML = 'Skip Ad ⏭';
+          skipBtn.style.cursor = 'pointer';
+        }
+      }
+    }, 1000);
+
+    const closeAd = () => {
+      if (timeLeft > 0) return;
+      if (timerInterval) clearInterval(timerInterval);
+      adOverlay.classList.add('hidden');
+      const frame = document.getElementById('vast-ad-iframe');
+      if (frame) frame.remove();
+      if (videoTarget && typeof videoTarget.play === 'function') {
+        videoTarget.play();
+      }
+    };
+
+    if (skipBtn) {
+      skipBtn.onclick = closeAd;
+    }
   }
+
+  // Fallback: Global play event capture (covers plyr / standard / dynamically created videos)
+  document.addEventListener('play', function (e) {
+    if (e.target && e.target.tagName === 'VIDEO' && e.target.id !== 'ad-video-player') {
+      triggerAd(e.target);
+    }
+  }, true);
 }
