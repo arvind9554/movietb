@@ -851,19 +851,37 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
 
   // New Banner Zone #7471833 Injection (Clean Dynamic Insertion)
   setTimeout(() => {
+    // 1. Bottom Banner Ad Injection
     const adFrame = document.getElementById('movietb-ad-frame');
     if (adFrame && !adFrame.querySelector('script')) {
-      adFrame.innerHTML = ''; // Container clear
+        adFrame.innerHTML = ''; 
 
-      const s = document.createElement('script');
-      s.type = 'text/javascript';
-      s.src = "https://unfoldedtrade.com/b.XYVysddfGTls0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMEtnN/zWQ_3HMJTug_zzNkwr";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
+        const s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = "https://unfoldedtrade.com/b.XYVysddfGTls0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMEtnN/zWQ_3HMJTug_zzNkwr";
+        s.async = true;
+        s.referrerPolicy = 'no-referrer-when-downgrade';
 
-      adFrame.appendChild(s);
+        adFrame.appendChild(s);
     }
-  }, 300);
+
+    // 2. Side Video Ad Injection (New Code Provided)
+    const sideVideoFrame = document.getElementById('movietb-side-video-ad');
+    if (sideVideoFrame && !sideVideoFrame.querySelector('script')) {
+        sideVideoFrame.innerHTML = '';
+
+        (function(zfcsl){
+            var d = document,
+                s = d.createElement('script'),
+                l = sideVideoFrame; // Targeted side video container
+            s.settings = zfcsl || {};
+            s.src = "//unfoldedtrade.com/b/XKVts/d.GKlV0mYIWOcd/zemm_9fugZ/U/lHkzP/T/cZzXNmTqQrw/NKzIMftMNLzcM-1HN/DSAz3ANowb";
+            s.async = true;
+            s.referrerPolicy = 'no-referrer-when-downgrade';
+            l.appendChild(s);
+        })({});
+    }
+}, 300);
 
   return `
     <div class="movietb-below-player">
