@@ -1776,10 +1776,10 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
   </a>
 
 </section>
-      <section class="movietb-ad-placeholder" aria-label="Advertisement">
+      <section class="movietb-ad-placeholder" aria-label="Movie Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
         <div class="movietb-ad-frame" id="movietb-ad-frame">
-          <!-- Banner Zone #7471833 will inject here -->
+          <script type="text/javascript" src="https://unfoldedtrade.com/b.XYVysddfGT1s0xY/WQcH/Ke/mJ9/uiZwZwUg1PkP/TPcU0" async></script>
         </div>
       </section>
 
