@@ -2,6 +2,27 @@ import { db } from './firebase-config.js';
 import { doc, getDoc, collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getYouTubeId } from './main.js';
 
+/*
+  MOVIETB PREROLL + TELEGRAM CONFIG
+  ---------------------------------
+  IMPORTANT:
+  - Pre-roll sirf Direct/Native video player ke liye hai.
+  - YouTube iframe ke andar custom 30-sec ad inject nahi ki ja sakti.
+  - PREROLL_AD_URL me apni direct MP4/WebM ad URL lagao.
+*/
+
+const PREROLL_AD_URL = 'https://smooth-survey.com/d.mpFEzddOGRNyvvZEGYUn/uemmM9/u/Z/UilwkOP-TJc/0MNozsMX0TMvzHMrtNNfzPQY3JMmz/QgzwNiwz';
+// Example:
+// const PREROLL_AD_URL = 'https://your-domain.com/ads/movietb-ad.mp4';
+
+const PREROLL_DURATION = 30;
+const PREROLL_SKIP_AFTER = 5;
+
+// Apna actual Telegram channel URL yahan lagao
+const TELEGRAM_CHANNEL_URL = 'https://t.me/movietb_official';
+
+const PREROLL_SESSION_KEY_PREFIX = 'movietb-preroll-seen-';
+
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
 const PLAYER_DEBUG = urlParams.get('playerDebug') === '1';
@@ -128,17 +149,72 @@ if (typeof gtag === 'function') {
       // <video> element - no native `controls` attribute needed, and no
       // custom fullscreen button here since Plyr ships its own.
       playerHtml = `
-        <div class="player-container">
-          <div class="video-responsive">
-            <video
-              src="${escapeHtml(videoSrc)}"
-              poster="${escapeHtml(resolveRelatedPoster(movie))}"
-              playsinline
-              preload="metadata"
-            ></video>
-          </div>
+  <div class="player-container movietb-native-player">
+
+    <div class="video-responsive">
+
+      <video
+        src="${escapeHtml(videoSrc)}"
+        poster="${escapeHtml(resolveRelatedPoster(movie))}"
+        playsinline
+        preload="metadata"
+      ></video>
+
+    </div>
+
+
+    <!-- MovieTB Pre-roll Advertisement -->
+
+    <div
+      class="movietb-preroll-overlay"
+      hidden
+      aria-hidden="true"
+    >
+
+      <div class="movietb-preroll-panel">
+
+        <div class="movietb-preroll-topline">
+
+          <span class="movietb-preroll-badge">
+            ADVERTISEMENT
+          </span>
+
+          <span class="movietb-preroll-countdown">
+            Ad • 30s
+          </span>
+
         </div>
-      `;
+
+
+        <video
+          class="movietb-preroll-video"
+          playsinline
+          preload="metadata"
+        ></video>
+
+
+        <div class="movietb-preroll-bottom">
+
+          <span class="movietb-preroll-copy">
+            Your movie will start after the ad.
+          </span>
+
+          <button
+            type="button"
+            class="movietb-preroll-skip"
+            hidden
+          >
+            Skip Ad
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+`;
     } else if (PLAYER_DIAGNOSTIC) {
       playerHtml = `
         <div class="player-container player-diagnostic">
@@ -202,8 +278,760 @@ if (typeof gtag === 'function') {
       // called again here, to avoid double-firing video_start/progress events.
     }
 
-    initMovieTbBelowPlayer(movie, movieId);
+/* =========================================================
+   MOVIETB 30 SECOND PREROLL
+   DIRECT / NATIVE VIDEO ONLY
+   ========================================================= */
 
+function prerollSessionKey(movieIdValue) {
+  return `${PREROLL_SESSION_KEY_PREFIX}${movieIdValue || 'unknown'}`;
+}
+
+function hasSeenPreroll(movieIdValue) {
+  try {
+    return sessionStorage.getItem(
+      prerollSessionKey(movieIdValue)
+    ) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function markPrerollSeen(movieIdValue) {
+  try {
+    sessionStorage.setItem(
+      prerollSessionKey(movieIdValue),
+      '1'
+    );
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+
+/* =========================================================
+   PREROLL + TELEGRAM CSS
+   ========================================================= */
+
+function injectPrerollStyles() {
+
+  if (document.getElementById('movietb-preroll-styles')) {
+    return;
+  }
+
+  const style = document.createElement('style');
+
+  style.id = 'movietb-preroll-styles';
+
+  style.textContent = `
+
+    /* ===============================
+       NATIVE PLAYER
+       =============================== */
+
+    .movietb-native-player {
+      position: relative;
+      overflow: hidden;
+    }
+
+
+    /* ===============================
+       PREROLL OVERLAY
+       =============================== */
+
+    .movietb-preroll-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      background: #000;
+    }
+
+    .movietb-preroll-overlay[hidden] {
+      display: none !important;
+    }
+
+
+    .movietb-preroll-panel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+    }
+
+
+    /* ===============================
+       TOP BAR
+       =============================== */
+
+    .movietb-preroll-topline {
+      min-height: 38px;
+      padding: 10px 14px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,.95),
+          rgba(0,0,0,.60)
+        );
+
+      color: #fff;
+
+      font:
+        600 12px/1.2
+        Arial,
+        sans-serif;
+    }
+
+
+    .movietb-preroll-badge {
+      letter-spacing: .08em;
+      opacity: .82;
+    }
+
+
+    .movietb-preroll-countdown {
+      font-variant-numeric: tabular-nums;
+    }
+
+
+    /* ===============================
+       AD VIDEO
+       =============================== */
+
+    .movietb-preroll-video {
+
+      width: 100%;
+      height: 100%;
+
+      min-height: 0;
+
+      flex:
+        1 1 auto;
+
+      display: block;
+
+      object-fit: contain;
+
+      background: #000;
+    }
+
+
+    /* ===============================
+       BOTTOM BAR
+       =============================== */
+
+    .movietb-preroll-bottom {
+
+      min-height: 48px;
+
+      padding:
+        9px
+        12px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 12px;
+
+      background:
+        linear-gradient(
+          0deg,
+          rgba(0,0,0,.96),
+          rgba(0,0,0,.68)
+        );
+
+      color: #fff;
+
+      font:
+        500 12px/1.35
+        Arial,
+        sans-serif;
+    }
+
+
+    .movietb-preroll-copy {
+      opacity: .8;
+    }
+
+
+    /* ===============================
+       SKIP BUTTON
+       =============================== */
+
+    .movietb-preroll-skip {
+
+      border:
+        1px solid
+        rgba(255,255,255,.32);
+
+      border-radius: 999px;
+
+      padding:
+        8px
+        13px;
+
+      background:
+        rgba(255,255,255,.10);
+
+      color: #fff;
+
+      font:
+        700 12px/1
+        Arial,
+        sans-serif;
+
+      cursor: pointer;
+
+      transition:
+        background .18s ease,
+        transform .18s ease;
+    }
+
+
+    .movietb-preroll-skip:hover {
+
+      background:
+        rgba(255,255,255,.20);
+
+      transform:
+        translateY(-1px);
+    }
+
+
+    /* ===============================
+       TELEGRAM BUTTON
+       =============================== */
+
+    .movietb-telegram-cta {
+
+      margin:
+        14px
+        0
+        18px;
+    }
+
+
+    .movietb-telegram-btn {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      width: 100%;
+
+      box-sizing: border-box;
+
+      padding:
+        13px
+        15px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.10);
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(30,136,229,.18),
+          rgba(90,70,255,.13)
+        );
+
+      color: #fff;
+
+      text-decoration: none;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.18);
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+
+    .movietb-telegram-btn:hover {
+
+      transform:
+        translateY(-1px);
+
+      border-color:
+        rgba(67,169,255,.46);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(30,136,229,.25),
+          rgba(90,70,255,.19)
+        );
+    }
+
+
+    .movietb-telegram-icon {
+
+      width: 38px;
+      height: 38px;
+
+      flex:
+        0 0 38px;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 50%;
+
+      background:
+        #229ED9;
+
+      color: #fff;
+
+      font-size: 19px;
+    }
+
+
+    .movietb-telegram-btn strong {
+
+      display: block;
+
+      font:
+        800 14px/1.2
+        Arial,
+        sans-serif;
+    }
+
+
+    .movietb-telegram-btn small {
+
+      display: block;
+
+      margin-top: 3px;
+
+      color:
+        rgba(255,255,255,.64);
+
+      font:
+        500 11px/1.3
+        Arial,
+        sans-serif;
+    }
+
+
+    .movietb-telegram-arrow {
+
+      margin-left: auto;
+
+      font-size: 20px;
+
+      opacity: .72;
+    }
+
+
+    /* ===============================
+       MOBILE
+       =============================== */
+
+    @media (max-width: 600px) {
+
+      .movietb-preroll-topline {
+
+        min-height: 32px;
+
+        padding:
+          8px
+          10px;
+
+        font-size: 10px;
+      }
+
+
+      .movietb-preroll-bottom {
+
+        min-height: 42px;
+
+        padding:
+          7px
+          9px;
+      }
+
+
+      .movietb-preroll-copy {
+        font-size: 10px;
+      }
+
+
+      .movietb-preroll-skip {
+
+        padding:
+          7px
+          10px;
+
+        font-size: 10px;
+      }
+
+
+      .movietb-telegram-btn {
+
+        padding: 12px;
+
+        border-radius: 12px;
+      }
+
+
+      .movietb-telegram-icon {
+
+        width: 34px;
+        height: 34px;
+
+        flex-basis: 34px;
+      }
+    }
+
+  `;
+
+  document.head.appendChild(style);
+}
+
+
+/* =========================================================
+   INIT PREROLL
+   ========================================================= */
+
+function initMovieTbPreroll(movieIdValue) {
+
+  // Ad URL nahi hai to preroll disabled
+  if (!PREROLL_AD_URL) {
+    return;
+  }
+
+
+  const container =
+    document.querySelector(
+      '.movietb-native-player'
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const movieVideo =
+    container.querySelector(
+      '.video-responsive video'
+    );
+
+
+  const overlay =
+    container.querySelector(
+      '.movietb-preroll-overlay'
+    );
+
+
+  const adVideo =
+    container.querySelector(
+      '.movietb-preroll-video'
+    );
+
+
+  const countdown =
+    container.querySelector(
+      '.movietb-preroll-countdown'
+    );
+
+
+  const skipBtn =
+    container.querySelector(
+      '.movietb-preroll-skip'
+    );
+
+
+  if (
+    !movieVideo ||
+    !overlay ||
+    !adVideo ||
+    !countdown ||
+    !skipBtn
+  ) {
+    return;
+  }
+
+
+  // Same session me same movie par ad dobara nahi
+  if (hasSeenPreroll(movieIdValue)) {
+    return;
+  }
+
+
+  injectPrerollStyles();
+
+
+  adVideo.src =
+    PREROLL_AD_URL;
+
+  adVideo.muted = false;
+
+  adVideo.playsInline = true;
+
+  adVideo.controls = false;
+
+
+  let adStarted = false;
+
+  let adFinished = false;
+
+  let allowMoviePlay = false;
+
+  let timer = null;
+
+  let elapsed = 0;
+
+
+  /* ===============================
+     CLEANUP
+     =============================== */
+
+  function cleanup() {
+
+    if (timer) {
+
+      clearInterval(timer);
+
+      timer = null;
+    }
+
+
+    overlay.hidden = true;
+
+    overlay.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+
+    adVideo.pause();
+
+    adVideo.removeAttribute(
+      'src'
+    );
+
+    adVideo.load();
+  }
+
+
+  /* ===============================
+     FINISH AD
+     =============================== */
+
+  function finish() {
+
+    if (adFinished) {
+      return;
+    }
+
+
+    adFinished = true;
+
+
+    markPrerollSeen(
+      movieIdValue
+    );
+
+
+    cleanup();
+
+
+    allowMoviePlay = true;
+
+
+    movieVideo
+      .play()
+      .catch(() => {});
+  }
+
+
+  /* ===============================
+     COUNTDOWN
+     =============================== */
+
+  function updateCountdown() {
+
+    const remaining =
+      Math.max(
+        0,
+        Math.ceil(
+          PREROLL_DURATION -
+          elapsed
+        )
+      );
+
+
+    countdown.textContent =
+      `Ad • ${remaining}s`;
+
+
+    if (
+      elapsed >=
+      PREROLL_SKIP_AFTER
+    ) {
+
+      skipBtn.hidden = false;
+    }
+  }
+
+
+  /* ===============================
+     START AD
+     =============================== */
+
+  function startAd() {
+
+    if (
+      adStarted ||
+      adFinished
+    ) {
+      return;
+    }
+
+
+    adStarted = true;
+
+    elapsed = 0;
+
+    skipBtn.hidden = true;
+
+
+    overlay.hidden = false;
+
+    overlay.setAttribute(
+      'aria-hidden',
+      'false'
+    );
+
+
+    updateCountdown();
+
+
+    const playPromise =
+      adVideo.play();
+
+
+    if (
+      playPromise &&
+      typeof playPromise.catch ===
+        'function'
+    ) {
+
+      playPromise.catch(() => {
+
+        // Browser autoplay restriction
+        adVideo.muted = true;
+
+        adVideo
+          .play()
+          .catch(() => {});
+      });
+    }
+
+
+    timer =
+      setInterval(() => {
+
+        elapsed += 1;
+
+        updateCountdown();
+
+
+        if (
+          elapsed >=
+          PREROLL_DURATION
+        ) {
+
+          finish();
+        }
+
+      }, 1000);
+  }
+
+
+  /* ===============================
+     MOVIE PLAY INTERCEPT
+     =============================== */
+
+  movieVideo.addEventListener(
+    'play',
+    () => {
+
+      if (
+        allowMoviePlay ||
+        adFinished
+      ) {
+        return;
+      }
+
+
+      movieVideo.pause();
+
+
+      startAd();
+
+    },
+    {
+      capture: true
+    }
+  );
+
+
+  /* ===============================
+     AD EVENTS
+     =============================== */
+
+  adVideo.addEventListener(
+    'ended',
+    finish
+  );
+
+
+  skipBtn.addEventListener(
+    'click',
+    finish
+  );
+
+
+  adVideo.addEventListener(
+    'error',
+    () => {
+
+      console.warn(
+        '[MovieTB] Pre-roll ad failed to load; starting movie.'
+      );
+
+      finish();
+    }
+  );
+}
+
+    initMovieTbBelowPlayer(movie, movieId);
+  
     // Inject external Ad Provider script - but ONLY for the YouTube/iframe
     // path. This script auto-scans the page for <video> elements and turns
     // them into its own "outstream" ad player - which was harmless before
@@ -905,7 +1733,49 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
           </div>
         ` : ''}
       </section>
+     <section
+  class="movietb-telegram-cta"
+  aria-label="MovieTB Telegram channel"
+>
 
+  <a
+    class="movietb-telegram-btn"
+    href="${escapeHtml(TELEGRAM_CHANNEL_URL)}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    <span
+      class="movietb-telegram-icon"
+      aria-hidden="true"
+    >
+      ✈
+    </span>
+
+
+    <span>
+
+      <strong>
+        Join MovieTB on Telegram
+      </strong>
+
+      <small>
+        Get new movie & trailer updates first
+      </small>
+
+    </span>
+
+
+    <span
+      class="movietb-telegram-arrow"
+      aria-hidden="true"
+    >
+      →
+    </span>
+
+  </a>
+
+</section>
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
         <div class="movietb-ad-frame" id="movietb-ad-frame">
