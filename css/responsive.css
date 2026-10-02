@@ -635,3 +635,37 @@ body {
     }
 }
 
+
+/* Popular Categories Horizontal Scroll & Indicator Fix */
+@media (max-width: 768px) {
+    .popular-categories-row {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 12px !important;
+        padding-bottom: 10px !important;
+        padding-right: 24px !important; /* Next pill ka peek effect */
+    }
+
+    .popular-categories-row .category-pill {
+        scroll-snap-align: start !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Red Scrollbar Indicator */
+    .popular-categories-row::-webkit-scrollbar {
+        height: 4px !important;
+        display: block !important;
+    }
+
+    .popular-categories-row::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 4px !important;
+    }
+
+    .popular-categories-row::-webkit-scrollbar-thumb {
+        background: #e50914 !important; /* Red scrollbar */
+        border-radius: 4px !important;
+    }
+}

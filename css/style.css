@@ -1763,43 +1763,6 @@ section.hero,
 }
 
 
-/* Mobile Scroll Indicator Only for Popular Categories */
-@media (max-width: 768px) {
-    .category-grid,
-    #category-grid {
-        display: flex !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding-bottom: 10px !important;
-        padding-right: 24px !important; /* Next item partial peek effect */
-    }
-
-    .category-item,
-    .category-card {
-        scroll-snap-align: start !important;
-        flex-shrink: 0 !important;
-    }
-
-    /* Red Scrollbar Indicator for Categories */
-    .category-grid::-webkit-scrollbar,
-    #category-grid::-webkit-scrollbar {
-        height: 4px !important;
-        display: block !important;
-    }
-
-    .category-grid::-webkit-scrollbar-track,
-    #category-grid::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border-radius: 4px !important;
-    }
-
-    .category-grid::-webkit-scrollbar-thumb,
-    #category-grid::-webkit-scrollbar-thumb {
-        background: #e50914 !important; /* Red indicator bar */
-        border-radius: 4px !important;
-    }
-}
 
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
