@@ -62,14 +62,14 @@ async function loadHeroCarousel() {
       });
 
       badgeEl.textContent = index === 0 ? '↗ #1 TRENDING' : `↗ TRENDING #${index + 1}`;
-      titleEl.textContent = movie.title || 'MovieTB';
+      titleEl.textContent = formatShortTitle(movie.title, 3);
 
       const metaParts = [movie.year, movie.format, movie.language].filter(Boolean);
       metaEl.innerHTML = metaParts
         .map((part) => `<span class="hero-meta-pill">${part}</span>`)
         .join('');
 
-      taglineEl.textContent = 'Experience the latest release in stunning quality.';
+      taglineEl.textContent = '';
 
       const targetUrl = `movie.html?id=${id}`;
       playBtn.href = targetUrl;
@@ -198,6 +198,15 @@ async function loadHomepageMovies() {
       gridContainer.innerHTML = `<p class="loading">Failed to load content.</p>`;
     }
   }
+}
+
+function formatShortTitle(title, wordLimit = 3) {
+  if (!title) return 'MovieTB';
+  const words = title.trim().split(/\s+/);
+  if (words.length > wordLimit) {
+    return words.slice(0, wordLimit).join(' ') + '...';
+  }
+  return title;
 }
 
 loadHomepageMovies();
