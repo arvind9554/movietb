@@ -441,49 +441,60 @@ body {
 
 @media (max-width: 640px) {
     .hero.hero-enhanced {
-        padding: 36px 5% 26px;
-        height: 460px;
-        justify-content: flex-end;
+        height: auto !important;
+        aspect-ratio: 16 / 9 !important;
+        min-height: 220px !important;
+        padding: 12px 16px !important;
+        justify-content: flex-end !important;
     }
     .hero.hero-enhanced h1 {
-        font-size: 1.8rem;
-        line-height: 1.2;
-        -webkit-line-clamp: 2;
+        font-size: 1.05rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 4px !important;
+        -webkit-line-clamp: 2 !important;
     }
     .hero.hero-enhanced .hero-tagline {
-        font-size: 0.85rem;
-        max-width: 100%;
-        margin-bottom: 16px;
+        font-size: 0.72rem !important;
+        line-height: 1.2 !important;
+        max-width: 100% !important;
+        margin-bottom: 8px !important;
     }
     .hero.hero-enhanced .hero-meta-pill,
     .hero-meta-pill {
-        font-size: 0.68rem;
-        padding: 3px 8px;
+        font-size: 0.6rem !important;
+        padding: 2px 6px !important;
     }
     .hero-btn {
-        padding: 11px 18px;
-        font-size: 0.86rem;
+        padding: 6px 12px !important;
+        font-size: 0.75rem !important;
+        border-radius: 6px !important;
     }
 }
 
 @media (max-width: 380px) {
     .hero.hero-enhanced {
-        height: 420px;
-        padding: 28px 5% 20px;
+        height: auto !important;
+        aspect-ratio: 16 / 9 !important;
+        min-height: 200px !important;
+        padding: 8px 12px !important;
     }
     .hero.hero-enhanced h1 {
-        font-size: 1.5rem;
+        font-size: 0.95rem !important;
     }
     .hero.hero-enhanced .hero-tagline {
-        font-size: 0.8rem;
-        margin-bottom: 12px;
+        font-size: 0.65rem !important;
+        margin-bottom: 6px !important;
+    }
+    .hero.hero-enhanced .hero-meta-pill,
+    .hero-meta-pill {
+        font-size: 0.55rem !important;
+        padding: 1px 5px !important;
     }
     .hero-btn {
-        padding: 10px 14px;
-        font-size: 0.8rem;
+        padding: 5px 10px !important;
+        font-size: 0.7rem !important;
     }
 }
-
 /* =========================================================
    NEW — TRAILER CAROUSEL RESPONSIVE
    Desktop (>1024px): exactly 2 cards visible (rule in style.css)
