@@ -1721,21 +1721,20 @@ body.player-fullscreen-active .movietb-below-player {
 }
 
 
-/* Hero Slide Card / Box Border Styling */
-.hero-content,
-.hero-slide-card,
-.hero {
+/* Sirf Outer Hero Container Par Border Strip */
+.hero,
+#hero {
     border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
     border-radius: 16px !important;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15) !important;
     overflow: hidden !important;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-/* Active / Focus Glow Effect */
-.hero-content:hover {
-    border-color: rgba(255, 255, 255, 0.95) !important;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.25), 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+/* Inner Text Container Se Extra Border Hatao */
+.hero-content {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 
 /* subtle color variety per pill - purely decorative, not fabricated data */
