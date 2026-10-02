@@ -1719,6 +1719,25 @@ body.player-fullscreen-active .movietb-below-player {
     box-shadow: 0 0 0 0 rgba(0, 136, 204, 0);
   }
 }
+
+
+/* Hero Slide Card / Box Border Styling */
+.hero-content,
+.hero-slide-card,
+.hero {
+    border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+    overflow: hidden !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Active / Focus Glow Effect */
+.hero-content:hover {
+    border-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.25), 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+}
+
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
 .category-pill:nth-child(3) .category-pill-icon { background: rgba(255, 171, 64, 0.12); border-color: rgba(255, 171, 64, 0.3); }
