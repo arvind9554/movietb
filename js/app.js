@@ -61,7 +61,7 @@ async function loadHeroCarousel() {
         }
       });
 
-      badgeEl.textContent = index === 0 ? '↗ #1 TRENDING' : `↗ TRENDING #${index + 1}`;
+      //badgeEl.textContent = index === 0 ? '↗ #1 TRENDING' : `↗ TRENDING #${index + 1}`;
       titleEl.textContent = formatShortTitle(movie.title, 3);
 
       const metaParts = [movie.year, movie.format, movie.language].filter(Boolean);
