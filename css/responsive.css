@@ -671,3 +671,88 @@ body {
         border-radius: 10px !important;
     }
 }
+
+/* Skeleton Loader Base Styling */
+.skeleton {
+    background: #1e1e1e !important;
+    background: linear-gradient(
+        90deg,
+        #1e1e1e 25%,
+        #2a2a2a 50%,
+        #1e1e1e 75%
+    ) !important;
+    background-size: 200% 100% !important;
+    animation: skeleton-loading 1.5s infinite !important;
+    border-radius: 8px !important;
+    color: transparent !important;
+    pointer-events: none !important;
+    border: none !important;
+}
+
+/* Skeleton Shimmer Animation */
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton Card Layouts */
+.skeleton-card {
+    width: 100%;
+    height: 220px;
+    border-radius: 12px;
+}
+
+.skeleton-pill {
+    width: 100px;
+    height: 38px;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+
+/* Custom Red Scroll Indicator Line */
+.scroll-indicator-bar {
+    display: none; /* Desktop par hide rahega */
+}
+
+@media (max-width: 768px) {
+    .scroll-indicator-bar {
+        display: block !important;
+        width: 70px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        margin: 12px auto 0 auto;
+        overflow: hidden;
+    }
+
+    .scroll-indicator-progress {
+        width: 40%;
+        height: 100%;
+        background: #e50914; /* Theme Accent Red */
+        border-radius: 10px;
+    }
+
+    .popular-categories-row {
+        display: flex !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        gap: 12px !important;
+        padding-bottom: 4px !important;
+        padding-right: 35px !important; /* Next category pill ka peek effect */
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important; /* Hide native scrollbar */
+    }
+
+    .popular-categories-row::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .popular-categories-row .category-pill {
+        flex: 0 0 auto !important;
+    }
+}
