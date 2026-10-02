@@ -608,3 +608,29 @@ body {
         font-size: 1.15rem;
     }
 }
+
+
+/* Desktop Grid Fix for Latest Trailers Section */
+@media (min-width: 1024px) {
+    /* Main grid container ko 4 columns me limit karein */
+    .movie-grid,
+    #latest-trailers-grid,
+    #trending-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 20px !important;
+    }
+
+    /* Trailer poster height & ratio balance */
+    .movie-card .poster-container,
+    .movie-card img {
+        height: 220px !important;
+        object-fit: cover !important;
+    }
+
+    /* Trailer cards max width constraint */
+    .movie-card {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+    }
+}
