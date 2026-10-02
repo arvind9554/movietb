@@ -1737,6 +1737,31 @@ body.player-fullscreen-active .movietb-below-player {
     background: transparent !important;
 }
 
+/* Outer Hero Container Par Border Strip */
+section.hero,
+#hero,
+.hero-container {
+    border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15) !important;
+    overflow: hidden !important;
+}
+
+/* Sabhi Inner Containers/Cards Ka Border Permanently Remove Karein */
+.hero-content,
+.hero-slide-card,
+.hero-card,
+.hero-details-box,
+.hero-overlay-card,
+[class*="hero-card"],
+[class*="hero-content"] {
+    border: none !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent !important;
+}
+
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
 .category-pill:nth-child(3) .category-pill-icon { background: rgba(255, 171, 64, 0.12); border-color: rgba(255, 171, 64, 0.3); }
