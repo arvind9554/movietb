@@ -654,11 +654,22 @@ a { color: var(--text-primary); text-decoration: none; }
 }
 
 .hero-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.70));
-  pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        to top, 
+        rgba(0, 0, 0, 0.85) 0%, 
+        rgba(0, 0, 0, 0.25) 50%, 
+        rgba(0, 0, 0, 0.05) 100%
+    );
+    pointer-events: none;
+}
+
+.hero-poster-bg {
+    background-size: cover !important;
+    background-position: center 20% !important;
+    filter: brightness(1.15) contrast(1.05) !important;
 }
 
 .hero.hero-has-video {
