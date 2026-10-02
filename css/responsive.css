@@ -636,36 +636,38 @@ body {
 }
 
 
-/* Popular Categories Horizontal Scroll & Indicator Fix */
+/* Popular Categories Scroll Fix */
 @media (max-width: 768px) {
     .popular-categories-row {
         display: flex !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory !important;
+        flex-wrap: nowrap !important;
+        overflow-x: scroll !important;
         -webkit-overflow-scrolling: touch !important;
         gap: 12px !important;
-        padding-bottom: 10px !important;
-        padding-right: 24px !important; /* Next pill ka peek effect */
+        padding-bottom: 12px !important;
+        padding-right: 30px !important;
+        scrollbar-width: thin !important; /* Firefox support */
+        scrollbar-color: #e50914 rgba(255, 255, 255, 0.1) !important;
     }
 
     .popular-categories-row .category-pill {
-        scroll-snap-align: start !important;
-        flex-shrink: 0 !important;
+        flex: 0 0 auto !important; /* Items shrink nahi honge */
+        white-space: nowrap !important;
     }
 
-    /* Red Scrollbar Indicator */
+    /* Red Bar Scrollbar for Webkit / Mobile Chrome */
     .popular-categories-row::-webkit-scrollbar {
-        height: 4px !important;
+        height: 5px !important;
         display: block !important;
     }
 
     .popular-categories-row::-webkit-scrollbar-track {
         background: rgba(255, 255, 255, 0.1) !important;
-        border-radius: 4px !important;
+        border-radius: 10px !important;
     }
 
     .popular-categories-row::-webkit-scrollbar-thumb {
-        background: #e50914 !important; /* Red scrollbar */
-        border-radius: 4px !important;
+        background: #e50914 !important;
+        border-radius: 10px !important;
     }
 }
