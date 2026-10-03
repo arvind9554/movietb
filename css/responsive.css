@@ -714,55 +714,64 @@ body {
 }
 
 
-/* Mobile Optimization Fix */
 @media screen and (max-width: 768px) {
-  
-  /* Header Nav Clean Row Alignment */
-  .header-container, header nav {
+  /* Header main wrapper */
+  header, .header-container {
     display: flex !important;
-    flex-direction: row !important;
     flex-wrap: wrap !important;
-    justify-content: space-between !important;
     align-items: center !important;
-    gap: 8px !important;
-    padding: 10px !important;
+    justify-content: space-between !important;
+    padding: 8px 12px !important;
   }
 
-  /* Nav Links in Single Row */
-  nav ul, .nav-links {
+  /* Logo */
+  .logo, header a.logo {
+    font-size: 1.2rem !important;
+  }
+
+  /* Right Side Navigation Links & Dropdown in One Line */
+  header nav, .nav-container, .nav-links {
     display: flex !important;
     flex-direction: row !important;
-    gap: 12px !important;
     align-items: center !important;
+    gap: 8px !important;
     margin: 0 !important;
     padding: 0 !important;
   }
 
-  nav ul li a, .nav-links a {
-    font-size: 13px !important;
+  header nav ul {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Categories Dropdown Size Fix */
-  .categories-dropdown, select, .dropdown-btn {
-    padding: 5px 10px !important;
+  header nav a, .nav-links a {
     font-size: 12px !important;
+    padding: 2px 4px !important;
+    white-space: nowrap !important;
   }
 
-  /* Search Bar Optimization */
+  /* Categories Button Size Fix */
+  .categories-dropdown, select, .dropdown-btn, #category-select {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+
+  /* Search Bar Full Width Below Logo & Links */
   .search-container, form.search-form {
     width: 100% !important;
     max-width: 100% !important;
-    margin-top: 6px !important;
+    margin-top: 8px !important;
+    order: 3 !important;
   }
 
-  /* Blog Content Padding & Image Fit */
-  .blog-container, .single-post-container {
-    padding: 12px !important;
-  }
-
-  .featured-image, .post-thumbnail img, .blog-container img {
-    width: 100% !important;
-    height: auto !important;
-    border-radius: 8px !important;
+  /* Blog Title Size Adjust */
+  .blog-post h1, h1.post-title {
+    font-size: 1.4rem !important;
+    line-height: 1.3 !important;
   }
 }
