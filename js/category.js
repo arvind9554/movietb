@@ -3,7 +3,10 @@ import { collection, getDocs, query, where } from "https://www.gstatic.com/fireb
 import { createMovieCard } from './main.js';
 
 const urlParams = new URLSearchParams(window.location.search);
-const catParam = urlParams.get('cat');
+const rawCatParam = urlParams.get('cat') || '';
+
+// Clean parameter (spaces ko hyphen me normalize karein)
+const catParam = rawCatParam.trim().toLowerCase().replace(/\s+/g, '-');
 
 const headingMap = {
   'latest-trailers': 'Latest Trailers',
@@ -20,20 +23,53 @@ async function loadCategoryMovies() {
   const container = document.getElementById('category-movies-grid');
   const heading = document.getElementById('category-heading');
 
-  if (!catParam || !headingMap[catParam]) {
+  // Agar URL me catParam missing ho toh redirect karein
+  if (!catParam) {
     window.location.href = 'index.html';
     return;
   }
 
-  heading.innerText = headingMap[catParam];
-  document.getElementById('cat-page-title').innerText = `${headingMap[catParam]} - MovieTB`;
+  // Heading set karein (Map me na hone par raw value ko capitalize karein)
+  const titleText = headingMap[catParam] || catParam.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  
+  if (heading) heading.innerText = titleText;
+  const pageTitle = document.getElementById('cat-page-title');
+  if (pageTitle) pageTitle.innerText = `${titleText} - MovieTB`;
 
   try {
-    const q = query(collection(db, "movies"), where("category", "==", catParam));
-    const snapshot = await getDocs(q);
+    // Possible category values in DB
+    const possibleCategories = [
+      catParam,                             // "bhojpuri-movies"
+      catParam.replace(/-/g, ' '),          // "bhojpuri movies"
+      catParam.replace('-movies', ''),       // "bhojpuri"
+      rawCatParam                           // original raw param
+    ];
 
+    // Array contains query for flexibility
+    const q = query(collection(db, "movies"), where("category", "in", possibleCategories));
+    let snapshot = await getDocs(q);
+
+    // Fallback: Agar exact match na mile toh manual case-insensitive search
     if (snapshot.empty) {
-      container.innerHTML = `<p class="loading">No movies found in this category.</p>`;
+      const allDocs = await getDocs(collection(db, "movies"));
+      let html = '';
+      let matchCount = 0;
+
+      allDocs.forEach((doc) => {
+        const data = doc.data();
+        const docCat = (data.category || '').toLowerCase().trim();
+        
+        if (possibleCategories.includes(docCat) || docCat.includes(catParam.replace('-movies', ''))) {
+          html += createMovieCard(data, doc.id);
+          matchCount++;
+        }
+      });
+
+      if (matchCount > 0 && container) {
+        container.innerHTML = html;
+      } else if (container) {
+        container.innerHTML = `<p class="loading">No movies found in this category.</p>`;
+      }
       return;
     }
 
@@ -41,10 +77,16 @@ async function loadCategoryMovies() {
     snapshot.forEach((doc) => {
       html += createMovieCard(doc.data(), doc.id);
     });
-    container.innerHTML = html;
+
+    if (container) {
+      container.innerHTML = html;
+    }
 
   } catch (error) {
     console.error("Error fetching category:", error);
+    if (container) {
+      container.innerHTML = `<p class="loading">Error loading content. Please refresh.</p>`;
+    }
   }
 }
 
