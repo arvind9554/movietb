@@ -29,10 +29,8 @@ async function loadCategoryMovies() {
     heading.innerText = formattedTitle;
   }
 
-  // Normalize search terms: e.g., "bhojpuri-movies" -> ["bhojpuri"]
-  // "story-tv" -> ["story", "tv"]
-  const cleanCategory = rawCategory.toLowerCase().replace(/-/g, ' ').replace(/\bmovies\b/g, '').trim();
-  const searchKeywords = cleanCategory.split(/\s+/).filter(k => k.length > 0);
+  // Raw parameter normalized (e.g., "hollywood-english" -> "hollywood english")
+  const targetSlug = rawCategory.toLowerCase().replace(/-/g, ' ').trim();
 
   try {
     const snapshot = await getDocs(collection(db, "movies"));
@@ -52,8 +50,56 @@ async function loadCategoryMovies() {
 
       const combinedText = `${cat} ${type} ${lang} ${tags} ${title}`;
 
-      // Check if any core keyword from URL parameter exists in movie metadata
-      const isMatch = searchKeywords.some(keyword => combinedText.includes(keyword));
+      let isMatch = false;
+
+      // 🎬 1. HOLLYWOOD / ENGLISH SECTION
+      if (targetSlug.includes('hollywood') || targetSlug.includes('english')) {
+        const isHollywoodOrEnglish = cat.includes('hollywood') || 
+                                     tags.includes('hollywood') || 
+                                     title.includes('hollywood') || 
+                                     lang.includes('english');
+
+        // Exclude Indian regional movies unless explicitly tagged Hollywood
+        const isIndianContent = cat.includes('bollywood') || cat.includes('bhojpuri') || 
+                                lang.includes('bhojpuri') || cat.includes('south') || 
+                                (lang.includes('hindi') && !cat.includes('hollywood'));
+
+        if (isHollywoodOrEnglish && !isIndianContent) {
+          isMatch = true;
+        }
+      } 
+      // 🎬 2. BOLLYWOOD / HINDI MOVIES SECTION
+      else if (targetSlug.includes('bollywood') || targetSlug.includes('hindi')) {
+        const isBollywoodOrHindi = cat.includes('bollywood') || lang.includes('hindi') || cat.includes('hindi');
+        const isOther = cat.includes('bhojpuri') || cat.includes('hollywood') || lang.includes('bhojpuri');
+
+        if (isBollywoodOrHindi && !isOther) {
+          isMatch = true;
+        }
+      } 
+      // 🎬 3. BHOJPURI MOVIES SECTION
+      else if (targetSlug.includes('bhojpuri')) {
+        if (cat.includes('bhojpuri') || lang.includes('bhojpuri') || tags.includes('bhojpuri')) {
+          isMatch = true;
+        }
+      } 
+      // 📺 4. STORY TV / SERIALS SECTION
+      else if (targetSlug.includes('story') || targetSlug.includes('tv') || targetSlug.includes('serial')) {
+        if (cat.includes('story') || cat.includes('serial') || type.includes('story') || tags.includes('story')) {
+          isMatch = true;
+        }
+      } 
+      // 🍿 5. WEB SERIES SECTION
+      else if (targetSlug.includes('series') || targetSlug.includes('webseries')) {
+        if (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('episode')) {
+          isMatch = true;
+        }
+      } 
+      // 🎯 6. GENERAL DEFAULT MATCH (For other custom categories)
+      else {
+        const cleanKeyword = targetSlug.replace(/\bmovies\b/g, '').trim();
+        isMatch = combinedText.includes(cleanKeyword);
+      }
 
       if (isMatch) {
         matchedMovies.push({ id: doc.id, ...movie });
