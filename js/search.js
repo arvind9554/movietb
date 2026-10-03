@@ -70,31 +70,38 @@ async function performSearch() {
 
       const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags} ${type}`;
 
-      // 🛑 STRICT EXCLUSIONS
-      if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01') || title.includes('episode') || title.includes('ep '))) return;
-      if (!isTrailerTarget && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
-      if (!isStoryTvTarget && !isSeriesTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
+      // Check direct title match or full text match first
+      const hasDirectTitleMatch = title.includes(cleanQuery) || queryWords.every(word => title.includes(word));
+      const hasFullTextMatch = fullMovieText.includes(cleanQuery);
 
-      // Isolation Checks
-      if (isHollywoodTarget) {
-        const isHollywoodExplicit = cat.includes('hollywood') || tags.includes('hollywood') || title.includes('hollywood');
-        const isEnglishLang = lang.includes('english') || cat.includes('english');
-        const isIndianContent = cat.includes('bollywood') || cat.includes('south') || cat.includes('bhojpuri') ||
-                                lang.includes('bhojpuri') || cat.includes('hindi movie');
+      // 🛑 STRICT EXCLUSIONS (Bypass if title directly matches user search query)
+      if (!hasDirectTitleMatch) {
+        if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01') || title.includes('episode') || title.includes('ep '))) return;
+        if (!isTrailerTarget && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
+        if (!isStoryTvTarget && !isSeriesTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
 
-        if (!isHollywoodExplicit && !isEnglishLang) return;
-        if (isIndianContent && !isHollywoodExplicit) return;
+        if (isHollywoodTarget) {
+          const isHollywoodExplicit = cat.includes('hollywood') || tags.includes('hollywood') || title.includes('hollywood');
+          const isEnglishLang = lang.includes('english') || cat.includes('english');
+          const isIndianContent = cat.includes('bollywood') || cat.includes('south') || cat.includes('bhojpuri') ||
+                                  lang.includes('bhojpuri') || cat.includes('hindi movie');
+
+          if (!isHollywoodExplicit && !isEnglishLang) return;
+          if (isIndianContent && !isHollywoodExplicit) return;
+        }
+
+        if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) return;
       }
-
-      if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) return;
 
       let score = 0;
 
-      // Exact query match anywhere (High Priority)
-      if (fullMovieText.includes(cleanQuery)) score += 50;
-      if (title.includes(cleanQuery)) score += 30; // Extra boost if matched in title
+      // Exact title match gets maximum priority
+      if (title === cleanQuery) score += 100;
+      else if (title.includes(cleanQuery)) score += 60;
+      else if (hasDirectTitleMatch) score += 40;
+      else if (hasFullTextMatch) score += 30;
 
-      // Keyword level matching
+      // Word level matching
       let matchedWordCount = 0;
       queryWords.forEach((word) => {
         if (fullMovieText.includes(word)) {
@@ -104,9 +111,8 @@ async function performSearch() {
         }
       });
 
-      // Bonus if all query words exist in full text
       if (matchedWordCount === queryWords.length) {
-        score += 25;
+        score += 20;
       }
 
       // Year Match
