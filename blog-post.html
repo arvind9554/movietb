@@ -176,6 +176,92 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+/* ==========================================
+   MOBILE HEADER FIX (Directly in HTML)
+   ========================================== */
+@media screen and (max-width: 768px) {
+  /* Main Header Container */
+  header, .header-container, .navbar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 10px 14px !important;
+    background-color: #0b0f19 !important;
+  }
+
+  /* Left Header Group (Hamburger Menu + Logo) */
+  .header-left, .logo-wrapper, .navbar-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    order: 1 !important;
+  }
+
+  /* Hamburger Menu (☰) Styling */
+  .menu-toggle, .hamburger, #menu-btn, #menu-toggle {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    width: 22px !important;
+    height: 18px !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    color: #ffffff !important;
+  }
+
+  .menu-toggle span, .hamburger span {
+    width: 100% !important;
+    height: 2px !important;
+    background-color: #ffffff !important;
+    display: block !important;
+  }
+
+  /* MovieTB Logo Style */
+  .logo, .logo a, header a.logo {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    text-decoration: none !important;
+  }
+
+  /* Right Side Navigation Links (Home, Blog, About) */
+  header nav ul, .nav-links {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    order: 2 !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header nav a, .nav-links a {
+    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+  }
+
+  /* Search Bar Full Width Below Logo & Links */
+  .search-box, .search-container, form.search-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 10px !important;
+    order: 3 !important;
+    display: flex !important;
+  }
+
+  .search-box input, .search-container input, form.search-form input {
+    flex: 1 !important;
+    width: 100% !important;
+  }
+}
   </style>
 </head>
 <body>
