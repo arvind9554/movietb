@@ -41,11 +41,10 @@ async function performSearch() {
     const isBollywoodTarget = cleanQuery.includes('bollywood');
     const isHindiTarget = cleanQuery.includes('hindi');
     const isBhojpuriTarget = cleanQuery.includes('bhojpuri');
-    const isSouthTarget = cleanQuery.includes('south');
     const isTrailerTarget = cleanQuery.includes('trailer') || cleanQuery.includes('teaser');
     const isStoryTvTarget = cleanQuery.includes('story') || cleanQuery.includes('tv') || cleanQuery.includes('serial');
     
-    // Updated Series & Episode Intent Detection
+    // Series & Episode Intent Detection
     const isSeriesTarget = cleanQuery.includes('series') || 
                            cleanQuery.includes('webseries') || 
                            cleanQuery.includes('web series') || 
@@ -55,12 +54,8 @@ async function performSearch() {
 
     const has2026 = cleanQuery.includes('2026');
 
-    // Extract search keywords excluding common query intent tokens (Keep 'episode' / numbers intact)
-    const keywords = cleanQuery
-      .replace(/\b(2026|hollywood|bollywood|hindi|south|bhojpuri|movie|movies|film|films|ki|sabse|awaited|all|in|show|full)\b/g, '')
-      .trim()
-      .split(/\s+/)
-      .filter(w => w.length > 0);
+    // Split words cleanly without removing valid search terms
+    const queryWords = cleanQuery.split(/\s+/).filter(w => w.length > 0);
 
     let filteredMovies = [];
 
@@ -76,37 +71,43 @@ async function performSearch() {
       const fullMovieText = `${title} ${cat} ${lang} ${year} ${desc} ${tags} ${type}`;
 
       // 🛑 STRICT EXCLUSIONS
-      // Allow Series/Episodes if user explicitly targeted series/episodes/seasons
       if (!isSeriesTarget && (cat.includes('series') || type.includes('series') || title.includes('season') || title.includes('s01') || title.includes('episode') || title.includes('ep '))) return;
       if (!isTrailerTarget && (cat.includes('trailer') || title.includes('trailer') || cat.includes('teaser'))) return;
       if (!isStoryTvTarget && !isSeriesTarget && (cat.includes('story tv') || cat.includes('story-tv') || cat.includes('serial'))) return;
 
-      // Hollywood Isolation Check
+      // Isolation Checks
       if (isHollywoodTarget) {
         const isHollywoodExplicit = cat.includes('hollywood') || tags.includes('hollywood') || title.includes('hollywood');
         const isEnglishLang = lang.includes('english') || cat.includes('english');
         const isIndianContent = cat.includes('bollywood') || cat.includes('south') || cat.includes('bhojpuri') ||
-                                lang.includes('bhojpuri') || title.includes('baahubali') || title.includes('baaghi') || 
-                                title.includes('bichhoo') || cat.includes('hindi movie');
+                                lang.includes('bhojpuri') || cat.includes('hindi movie');
 
         if (!isHollywoodExplicit && !isEnglishLang) return;
         if (isIndianContent && !isHollywoodExplicit) return;
       }
 
-      // Bhojpuri Isolation Check
       if (!isBhojpuriTarget && (lang.includes('bhojpuri') || cat.includes('bhojpuri'))) return;
 
       let score = 0;
 
-      // Exact query match (e.g. "episode 1")
-      if (fullMovieText.includes(cleanQuery)) score += 30;
+      // Exact query match anywhere (High Priority)
+      if (fullMovieText.includes(cleanQuery)) score += 50;
+      if (title.includes(cleanQuery)) score += 30; // Extra boost if matched in title
 
-      // Check each keyword
-      keywords.forEach((word) => {
-        if (title.includes(word)) score += 10;
-        if (cat.includes(word)) score += 5;
-        if (tags.includes(word)) score += 5;
+      // Keyword level matching
+      let matchedWordCount = 0;
+      queryWords.forEach((word) => {
+        if (fullMovieText.includes(word)) {
+          matchedWordCount++;
+          if (title.includes(word)) score += 15;
+          else score += 5;
+        }
       });
+
+      // Bonus if all query words exist in full text
+      if (matchedWordCount === queryWords.length) {
+        score += 25;
+      }
 
       // Year Match
       if (has2026 && (year.includes('2026') || title.includes('2026') || cat.includes('2026') || tags.includes('2026'))) {
