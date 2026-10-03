@@ -1773,6 +1773,43 @@ header {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
 }
 
+/* Social Connect Section Styling */
+.social-connect-section {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.social-heading {
+    font-size: 13px;
+    color: #888888;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cccccc;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background: #e50914;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
 .category-pill:nth-child(3) .category-pill-icon { background: rgba(255, 171, 64, 0.12); border-color: rgba(255, 171, 64, 0.3); }
