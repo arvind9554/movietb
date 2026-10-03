@@ -3,7 +3,7 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/f
 import { createMovieCard, renderSkeletonCards } from './main.js';
 
 const urlParams = new URLSearchParams(window.location.search);
-const selectedCategory = urlParams.get('cat');
+const rawCategory = urlParams.get('cat');
 
 async function loadCategoryMovies() {
   const container = document.getElementById('category-results-grid') || document.querySelector('.movie-grid');
@@ -11,29 +11,28 @@ async function loadCategoryMovies() {
 
   if (!container) return;
 
-  // Render Skeleton Loader
+  // Show Skeleton Loader
   if (typeof renderSkeletonCards === 'function') {
     renderSkeletonCards(container, 8);
   }
 
-  if (!selectedCategory) {
-    container.innerHTML = `<p class="no-results">No category specified.</p>`;
+  if (!rawCategory || !rawCategory.trim()) {
+    container.innerHTML = `<p class="no-results" style="grid-column: 1 / -1; text-align: center;">No category specified.</p>`;
     return;
   }
 
-  // Clean and normalize the incoming URL slug (e.g. "bhojpuri-movies" -> "bhojpuri")
-  const normalizedCategory = selectedCategory
-    .toLowerCase()
-    .replace(/-/g, ' ')
-    .replace(/\bmovies\b/g, '')
-    .trim();
-
+  // Heading Format
   if (heading) {
-    const formattedTitle = selectedCategory
+    const formattedTitle = rawCategory
       .replace(/-/g, ' ')
       .replace(/\b\w/g, l => l.toUpperCase());
     heading.innerText = formattedTitle;
   }
+
+  // Normalize search terms: e.g., "bhojpuri-movies" -> ["bhojpuri"]
+  // "story-tv" -> ["story", "tv"]
+  const cleanCategory = rawCategory.toLowerCase().replace(/-/g, ' ').replace(/\bmovies\b/g, '').trim();
+  const searchKeywords = cleanCategory.split(/\s+/).filter(k => k.length > 0);
 
   try {
     const snapshot = await getDocs(collection(db, "movies"));
@@ -45,14 +44,16 @@ async function loadCategoryMovies() {
 
       const cat = String(movie.category || '').toLowerCase();
       const lang = String(movie.language || '').toLowerCase();
+      const type = String(movie.type || '').toLowerCase();
+      const title = String(movie.title || '').toLowerCase();
       const tags = Array.isArray(movie.tags) 
         ? movie.tags.join(' ').toLowerCase() 
         : String(movie.tags || '').toLowerCase();
 
-      // Flexible category matching rule
-      const isMatch = cat.includes(normalizedCategory) || 
-                      lang.includes(normalizedCategory) || 
-                      tags.includes(normalizedCategory);
+      const combinedText = `${cat} ${type} ${lang} ${tags} ${title}`;
+
+      // Check if any core keyword from URL parameter exists in movie metadata
+      const isMatch = searchKeywords.some(keyword => combinedText.includes(keyword));
 
       if (isMatch) {
         matchedMovies.push({ id: doc.id, ...movie });
@@ -67,15 +68,19 @@ async function loadCategoryMovies() {
       container.innerHTML = html;
     } else {
       container.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 40px 0;">
-          <p style="color: #b3b3b3;">No movies found in this category.</p>
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px 0; color: #b3b3b3;">
+          <p>No content found in this category.</p>
         </div>
       `;
     }
 
   } catch (error) {
     console.error("Category fetch error:", error);
-    container.innerHTML = `<p class="loading">Network error. Please check your connection and reload.</p>`;
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 0; color: #ff4d4d;">
+        <p>Error loading content. Please refresh the page.</p>
+      </div>
+    `;
   }
 }
 
