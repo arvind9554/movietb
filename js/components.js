@@ -70,15 +70,43 @@ const footerHTML = `
   </footer>
 `;
 
-// Inject Placeholders
-document.addEventListener("DOMContentLoaded", () => {
-    const headerPlaceholder = document.getElementById("header-placeholder");
-    const footerPlaceholder = document.getElementById("footer-placeholder");
+// Helper Function for Search Redirect
+function attachSearchEvents() {
+  const searchInput = document.getElementById("search-input");
+  const searchBtn = document.getElementById("search-btn");
 
-    if (headerPlaceholder) {
-        headerPlaceholder.innerHTML = headerHTML;
+  const performSearch = () => {
+    const query = searchInput ? searchInput.value.trim() : "";
+    if (query) {
+      window.location.href = `search.html?q=${encodeURIComponent(query)}`;
     }
-    if (footerPlaceholder) {
-        footerPlaceholder.innerHTML = footerHTML;
-    }
+  };
+
+  if (searchBtn) {
+    searchBtn.onclick = performSearch;
+  }
+
+  if (searchInput) {
+    searchInput.onkeypress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        performSearch();
+      }
+    };
+  }
+}
+
+// Inject Placeholders and Bind Events
+document.addEventListener("DOMContentLoaded", () => {
+  const headerPlaceholder = document.getElementById("header-placeholder");
+  const footerPlaceholder = document.getElementById("footer-placeholder");
+
+  if (headerPlaceholder) {
+    headerPlaceholder.innerHTML = headerHTML;
+    attachSearchEvents(); // Search handlers ko HTML inject hone ke baad attach kiya gaya hai
+  }
+  
+  if (footerPlaceholder) {
+    footerPlaceholder.innerHTML = footerHTML;
+  }
 });
