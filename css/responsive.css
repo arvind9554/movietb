@@ -714,45 +714,55 @@ body {
 }
 
 
-/* Mobile Responsive Fix for Blog & Header */
+/* Mobile Optimization Fix */
 @media screen and (max-width: 768px) {
   
-  /* Header & Navigation Fix */
+  /* Header Nav Clean Row Alignment */
   .header-container, header nav {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px 15px;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px !important;
   }
 
-  /* Search Container Width Fix */
+  /* Nav Links in Single Row */
+  nav ul, .nav-links {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  nav ul li a, .nav-links a {
+    font-size: 13px !important;
+  }
+
+  /* Categories Dropdown Size Fix */
+  .categories-dropdown, select, .dropdown-btn {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Search Bar Optimization */
   .search-container, form.search-form {
     width: 100% !important;
     max-width: 100% !important;
-    margin-top: 5px;
+    margin-top: 6px !important;
   }
 
-  /* Blog Content & Title Mobile Fix */
+  /* Blog Content Padding & Image Fit */
   .blog-container, .single-post-container {
-    padding: 15px !important;
-    max-width: 100% !important;
+    padding: 12px !important;
   }
 
-  .blog-post h1, 
-  .post-title,
-  h1 {
-    font-size: 1.5rem !important;
-    line-height: 1.3 !important;
-    margin-top: 8px !important;
-    margin-bottom: 10px !important;
-  }
-
-  /* Featured Image Size Fix */
-  .featured-image, 
-  .post-thumbnail img,
-  .blog-container img {
+  .featured-image, .post-thumbnail img, .blog-container img {
     width: 100% !important;
     height: auto !important;
-    border-radius: 10px !important;
-    object-fit: cover !important;
+    border-radius: 8px !important;
   }
 }
