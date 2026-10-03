@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Results - MovieTB</title>
@@ -52,13 +51,8 @@
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
-    <div class="search-box">
-      <input type="text" id="search-input" placeholder="Search movies...">
-      <button id="search-btn">Search</button>
-    </div>
-  </header>
+  <!-- Dynamic Header Placeholder -->
+  <div id="header-placeholder"></div>
 
   <main class="container">
     <h1 id="search-query-heading" class="page-heading">Search Results</h1>
@@ -67,33 +61,27 @@
     </div>
   </main>
 
+  <!-- Ads Section -->
+  <div style="text-align: center; margin: 20px 0;">
+    <script>
+      atOptions = {
+        'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    </script>
+    <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+  </div>
+
+  <!-- Dynamic Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/components.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/search.js"></script>
-
-  <!-- Ads Scripts -->
-  <script>
-    atOptions = {
-      'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
-      'format' : 'iframe',
-      'height' : 60,
-      'width' : 468,
-      'params' : {}
-    };
-  </script>
-  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
-
-<!-- <script>
-(function(zlyv){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = zlyv || {};
-s.src = "\/\/unfoldedtrade.com\/b.XZVwsOdYGQl\/0SYqW\/cH\/seim\/9\/uNZ\/URlCkNPxT\/clzlNJTnQSwaNiznM\/tKNEzgM\/1_NVDJAe3UNhwr";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script> -->
 
 </body>
 </html>
