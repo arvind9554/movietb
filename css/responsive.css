@@ -712,3 +712,47 @@ body {
     border-radius: 20px;
     flex-shrink: 0;
 }
+
+
+/* Mobile Responsive Fix for Blog & Header */
+@media screen and (max-width: 768px) {
+  
+  /* Header & Navigation Fix */
+  .header-container, header nav {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 15px;
+  }
+
+  /* Search Container Width Fix */
+  .search-container, form.search-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 5px;
+  }
+
+  /* Blog Content & Title Mobile Fix */
+  .blog-container, .single-post-container {
+    padding: 15px !important;
+    max-width: 100% !important;
+  }
+
+  .blog-post h1, 
+  .post-title,
+  h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+    margin-top: 8px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Featured Image Size Fix */
+  .featured-image, 
+  .post-thumbnail img,
+  .blog-container img {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 10px !important;
+    object-fit: cover !important;
+  }
+}
