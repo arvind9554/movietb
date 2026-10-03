@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="canonical" href="https://www.movietb.com/movie" />
   <meta name="monetag" content="be3612b8a8bfa09677a3cf45b8a4b3b8">
-
-<meta name="6a97888e-site-verification" content="a657d0141e2ffb5fed992392d055a4bf">
-
-<meta name="referrer" content="no-referrer-when-downgrade" />
+  <meta name="6a97888e-site-verification" content="a657d0141e2ffb5fed992392d055a4bf">
+  <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <!-- Favicon / Apple Touch Icon -->
   <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
@@ -161,13 +159,21 @@
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
-    <div class="search-box">
-      <input type="text" id="search-input" placeholder="Search movies...">
-      <button id="search-btn">Search</button>
-    </div>
-  </header>
+  <!-- Header Placeholder (Dynamic Component injection) -->
+  <div id="header-placeholder">
+    <header class="navbar">
+      <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search movies...">
+        <button id="search-btn">Search</button>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+      </nav>
+    </header>
+  </div>
 
   <main class="container">
     <div id="movie-content-wrapper">
@@ -175,81 +181,100 @@
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-glow" aria-hidden="true"></div>
-    <div class="footer-main">
-      <div class="footer-brand">
-        <a href="index.html" class="footer-logo">Movie<span class="accent">TB</span></a>
-        <span class="footer-accent-line" aria-hidden="true"></span>
-        <p class="footer-tagline">Your destination for official trailers, movies and web series.</p>
+  <!-- Footer Placeholder (Dynamic Component injection) -->
+  <div id="footer-placeholder">
+    <footer class="site-footer">
+      <div class="footer-glow" aria-hidden="true"></div>
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">Movie<span class="accent">TB</span></a>
+          <span class="footer-accent-line" aria-hidden="true"></span>
+          <p class="footer-tagline">Your destination for official trailers, movies and web series.</p>
+        </div>
+        <nav class="footer-col" aria-label="Footer quick links">
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Footer legal links">
+          <h3 class="footer-heading">Legal</h3>
+          <ul class="footer-links-list">
+            <li><a href="dmca.html">DMCA Disclaimer</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          </ul>
+        </nav>
       </div>
-      <nav class="footer-col" aria-label="Footer quick links">
-        <h3 class="footer-heading">Quick Links</h3>
-        <ul class="footer-links-list">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-      </nav>
-      <nav class="footer-col" aria-label="Footer legal links">
-        <h3 class="footer-heading">Legal</h3>
-        <ul class="footer-links-list">
-          <li><a href="dmca.html">DMCA Disclaimer</a></li>
-          <li><a href="privacy-policy.html">Privacy Policy</a></li>
-        </ul>
-      </nav>
-    </div>
-    <p class="footer-legal">All content embedded legally from public domains / YouTube.</p>
-    <div class="footer-divider" aria-hidden="true"></div>
-    <div class="footer-bottom">
-      <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
-      <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
+
+      <p class="footer-legal">All content embedded legally from public domains / YouTube.</p>
+
+      <div class="footer-divider" aria-hidden="true"></div>
+
+      <!-- Social Media Section -->
+      <div class="social-links-wrapper">
+        <p class="social-title">Follow Us / Connect With Us</p>
+        <div class="social-icons">
+          <a href="https://instagram.com/movietb_" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61593529134134" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="https://telegram.me/movietbofficial" target="_blank" rel="noopener" aria-label="Telegram" class="social-btn telegram">
+            <i class="fa-brands fa-telegram"></i>
+          </a>
+        </div>
       </div>
-  </footer>
 
-  <script type="module" src="js/main.js"></script>
-  <script type="module" src="js/movie-details.js"></script>
-
-<script>
-  atOptions = {
-    'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
-
-<!-- Full Screen Ad Modal Container -->
-  <div id="adModal" class="ad-modal-overlay" style="display: none;">
-      <div class="ad-modal-content">
-          <div class="ad-header">
-              <span id="adTimer">Ad ends in 15s</span>
-              <button id="closeAdBtn" class="close-ad-btn" onclick="closeAdModal()">✕</button>
-          </div>
-          <iframe id="adIframe" src="" frameborder="0"></iframe>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
+        <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
       </div>
+    </footer>
   </div>
 
+  <!-- Scripts -->
+  <script src="js/components.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/movie-details.js"></script>
-  
-  
 
-<script>
-(function(zlyv){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = zlyv || {};
-s.src = "\/\/unfoldedtrade.com\/b.XZVwsOdYGQl\/0SYqW\/cH\/seim\/9\/uNZ\/URlCkNPxT\/clzlNJTnQSwaNiznM\/tKNEzgM\/1_NVDJAe3UNhwr";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
+  <!-- Ads Config -->
+  <script>
+    atOptions = {
+      'key' : 'd5880242ed90264e3eb8a6a3e9f527a6',
+      'format' : 'iframe',
+      'height' : 60,
+      'width' : 468,
+      'params' : {}
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
 
+  <!-- Full Screen Ad Modal Container -->
+  <div id="adModal" class="ad-modal-overlay" style="display: none;">
+    <div class="ad-modal-content">
+      <div class="ad-header">
+        <span id="adTimer">Ad ends in 15s</span>
+        <button id="closeAdBtn" class="close-ad-btn" onclick="closeAdModal()">✕</button>
+      </div>
+      <iframe id="adIframe" src="" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <script>
+  (function(zlyv){
+  var d = document,
+      s = d.createElement('script'),
+      l = d.scripts[d.scripts.length - 1];
+  s.settings = zlyv || {};
+  s.src = "\/\/unfoldedtrade.com\/b.XZVwsOdYGQl\/0SYqW\/cH\/seim\/9\/uNZ\/URlCkNPxT\/clzlNJTnQSwaNiznM\/tKNEzgM\/1_NVDJAe3UNhwr";
+  s.async = true;
+  s.referrerPolicy = 'no-referrer-when-downgrade';
+  l.parentNode.insertBefore(s, l);
+  })({})
+  </script>
 
 </body>
 </html>
