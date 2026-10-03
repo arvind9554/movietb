@@ -406,4 +406,44 @@ export const blogs = [
 <p><strong>SEO Keywords:</strong> Yash Toxic Movie 2026, Toxic Yash Nayanthara, Geetu Mohandas Toxic, KGF Yash New Movie, Toxic Release Date, MovieTB South News.</p>
 `
   },
+
+  {
+  id: 13,
+  title: "Call of Duty: The Live-Action Movie (2026) - Hollywood’s Ultimate Military Action Spectacle",
+  image: "assets/images/call-of-duty-movie.jpg",
+  category: "Hollywood",
+  date: "03 Oct 2026",
+  author: "Arvind Kumar Pandey",
+  excerpt: "Dwayne Johnson, Jason Statham, Scarlett Johansson, and Chris Hemsworth star in Hollywood’s massive live-action adaptation of Call of Duty: The Mission Is Not Over.",
+  content: `
+<h1>Call of Duty: The Live-Action Movie (2026) - The Ultimate Military Action Spectacle</h1>
+
+<p>For decades, Activision’s legendary franchise <em>Call of Duty</em> has dominated the global gaming industry, shaping the way modern military thrillers are experienced across consoles and PC platforms. Now, Hollywood is taking this iconic universe to unmatched cinematic heights with the release of the live-action blockbuster, <strong>Call of Duty (2026)</strong>. Directed with visceral energy and featuring an ensemble cast of global action heavyweights, the movie delivers an adrenaline-fueled experience crafted for both hardcore fans and action film enthusiasts alike.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <img src="assets/images/call-of-duty-poster.jpg" alt="Call of Duty Movie Poster - Dwayne Johnson, Jason Statham, Scarlett Johansson, Chris Hemsworth" style="max-width: 100%; height: auto; border-radius: 8px;" />
+</div>
+
+<h2>An Unprecedented A-List Action Ensemble</h2>
+<p>The cinematic adaptation brings together a power-packed star cast, combining some of the biggest icons of modern action cinema:</p>
+<ul>
+    <li><strong>Dwayne "The Rock" Johnson</strong> leads the charge as Commander Price, bringing raw authority, battlefield leadership, and unmatched physical dominance.</li>
+    <li><strong>Jason Statham</strong> portrays the lethal tactical operative Captain John "Soap" MacTavish, specializing in close-quarters combat and stealth extractions.</li>
+    <li><strong>Scarlett Johansson</strong> plays Sarah Carter, a top-tier covert intelligence specialist and sharpshooter navigating high-stakes espionage.</li>
+    <li><strong>Chris Hemsworth</strong> stars as Ghost (Simon Riley), executing high-risk sniper cover operations in snow-bound mountainous warzones.</li>
+</ul>
+
+<h2>High-Stakes Plot & Tactical War Narrative</h2>
+<p>Carrying the tagline <em>"The Mission Is Not Over"</em>, the storyline follows Special Operations Task Force 141 as they face a rogue paramilitary syndicate threatening global stability. From fiery desert combat zones packed with tactical helicopter strikes to frozen arctic peaks, the narrative mirrors the signature multi-theater war campaigns that made the video games a global phenomenon.</p>
+
+<h2>Groundbreaking Visual Effects & Stunt Choreography</h2>
+<p>Built with IMAX-certified cameras and real-life military stunt choreography, <em>Call of Duty</em> blends practical explosives with cutting-edge visual effects. The film captures first-person tactical sequences, intense gunfights, aerial dogfights, and fast-paced breach operations that recreate the immersive tension of iconic game missions like <em>"No Russian"</em> and <em>"All Ghillied Up"</em> on a grand cinematic scale.</p>
+
+<h2>Release & Global Box Office Potential</h2>
+<p>Distributed globally across theaters, 3D, and IMAX screens, <em>Call of Duty (2026)</em> is poised to set record-breaking box office figures for video game movie adaptations. Trade analysts predict it will redefine the modern military action genre and establish a multi-film franchise ecosystem.</p>
+
+<hr>
+<p><strong>SEO Keywords:</strong> Call of Duty Movie 2026, Call of Duty Live Action, Dwayne Johnson Call of Duty, Jason Statham COD Film, Scarlett Johansson COD, Chris Hemsworth Ghost, Call of Duty Movie Release Date, MovieTB Hollywood News.</p>
+`
+},
 ];
