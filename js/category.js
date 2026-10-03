@@ -1,92 +1,81 @@
 import { db } from './firebase-config.js';
-import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createMovieCard } from './main.js';
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { createMovieCard, renderSkeletonCards } from './main.js';
 
 const urlParams = new URLSearchParams(window.location.search);
-const rawCatParam = urlParams.get('cat') || '';
-
-// Clean parameter (spaces ko hyphen me normalize karein)
-const catParam = rawCatParam.trim().toLowerCase().replace(/\s+/g, '-');
-
-const headingMap = {
-  'latest-trailers': 'Latest Trailers',
-  'new-releases': 'New Releases',
-  'hollywood-english': 'Hollywood (English)',
-  'south-dubbed-movies': 'Bollywood Movies',
-  'classic-cinema': 'Hollywood (Hindi)',
-  'movie-reviews': 'Web Series',
-  'story-tv': 'Story TV',
-  'bhojpuri-movies': 'Bhojpuri Movies',
-};
+const selectedCategory = urlParams.get('cat');
 
 async function loadCategoryMovies() {
-  const container = document.getElementById('category-movies-grid');
-  const heading = document.getElementById('category-heading');
+  const container = document.getElementById('category-results-grid') || document.querySelector('.movie-grid');
+  const heading = document.querySelector('.page-heading');
 
-  // Agar URL me catParam missing ho toh redirect karein
-  if (!catParam) {
-    window.location.href = 'index.html';
+  if (!container) return;
+
+  // Render Skeleton Loader
+  if (typeof renderSkeletonCards === 'function') {
+    renderSkeletonCards(container, 8);
+  }
+
+  if (!selectedCategory) {
+    container.innerHTML = `<p class="no-results">No category specified.</p>`;
     return;
   }
 
-  // Heading set karein (Map me na hone par raw value ko capitalize karein)
-  const titleText = headingMap[catParam] || catParam.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  
-  if (heading) heading.innerText = titleText;
-  const pageTitle = document.getElementById('cat-page-title');
-  if (pageTitle) pageTitle.innerText = `${titleText} - MovieTB`;
+  // Clean and normalize the incoming URL slug (e.g. "bhojpuri-movies" -> "bhojpuri")
+  const normalizedCategory = selectedCategory
+    .toLowerCase()
+    .replace(/-/g, ' ')
+    .replace(/\bmovies\b/g, '')
+    .trim();
+
+  if (heading) {
+    const formattedTitle = selectedCategory
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, l => l.toUpperCase());
+    heading.innerText = formattedTitle;
+  }
 
   try {
-    // Possible category values in DB
-    const possibleCategories = [
-      catParam,                             // "bhojpuri-movies"
-      catParam.replace(/-/g, ' '),          // "bhojpuri movies"
-      catParam.replace('-movies', ''),       // "bhojpuri"
-      rawCatParam                           // original raw param
-    ];
+    const snapshot = await getDocs(collection(db, "movies"));
+    const matchedMovies = [];
 
-    // Array contains query for flexibility
-    const q = query(collection(db, "movies"), where("category", "in", possibleCategories));
-    let snapshot = await getDocs(q);
-
-    // Fallback: Agar exact match na mile toh manual case-insensitive search
-    if (snapshot.empty) {
-      const allDocs = await getDocs(collection(db, "movies"));
-      let html = '';
-      let matchCount = 0;
-
-      allDocs.forEach((doc) => {
-        const data = doc.data();
-        const docCat = (data.category || '').toLowerCase().trim();
-        
-        if (possibleCategories.includes(docCat) || docCat.includes(catParam.replace('-movies', ''))) {
-          html += createMovieCard(data, doc.id);
-          matchCount++;
-        }
-      });
-
-      if (matchCount > 0 && container) {
-        container.innerHTML = html;
-      } else if (container) {
-        container.innerHTML = `<p class="loading">No movies found in this category.</p>`;
-      }
-      return;
-    }
-
-    let html = '';
     snapshot.forEach((doc) => {
-      html += createMovieCard(doc.data(), doc.id);
+      const movie = doc.data();
+      if (!movie || !movie.title) return;
+
+      const cat = String(movie.category || '').toLowerCase();
+      const lang = String(movie.language || '').toLowerCase();
+      const tags = Array.isArray(movie.tags) 
+        ? movie.tags.join(' ').toLowerCase() 
+        : String(movie.tags || '').toLowerCase();
+
+      // Flexible category matching rule
+      const isMatch = cat.includes(normalizedCategory) || 
+                      lang.includes(normalizedCategory) || 
+                      tags.includes(normalizedCategory);
+
+      if (isMatch) {
+        matchedMovies.push({ id: doc.id, ...movie });
+      }
     });
 
-    if (container) {
+    if (matchedMovies.length > 0) {
+      let html = '';
+      matchedMovies.forEach((movie) => {
+        html += createMovieCard(movie, movie.id);
+      });
       container.innerHTML = html;
+    } else {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px 0;">
+          <p style="color: #b3b3b3;">No movies found in this category.</p>
+        </div>
+      `;
     }
 
   } catch (error) {
-    console.error("Error fetching category:", error);
-    if (container) {
-      container.innerHTML = `<p class="loading">Error loading content. Please refresh.</p>`;
-    }
+    console.error("Category fetch error:", error);
+    container.innerHTML = `<p class="loading">Network error. Please check your connection and reload.</p>`;
   }
 }
 
