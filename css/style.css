@@ -1763,6 +1763,15 @@ section.hero,
 }
 
 
+/* Sticky Upper Navbar */
+.main-header,
+header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background-color: #0f0f0f !important; /* Page background match */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+}
 
 /* subtle color variety per pill - purely decorative, not fabricated data */
 .category-pill:nth-child(2) .category-pill-icon { background: rgba(124, 77, 255, 0.12); border-color: rgba(124, 77, 255, 0.3); }
