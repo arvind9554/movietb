@@ -48,92 +48,76 @@
   <link rel="stylesheet" href="css/responsive.css">
 
   <style>
-    
-    /* Desktop Par Categories Sidebar Hidden Rahegi */
-@media screen and (min-width: 769px) {
-  .categories-sidebar, 
-  .sidebar-overlay,
-  .dropdown,
-  .categories-dropdown {
-    display: none !important;
-  }
+    /* Navbar Alignment & Dropdown Fix */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background-color: #0b0f19;
+      position: relative;
+      z-index: 1000;
+    }
 
-  /* Header Layout Alignment */
-  .navbar {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 12px 28px !important;
-  }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-  .nav-links {
-    display: flex !important;
-    align-items: center !important;
-    gap: 20px !important;
-  }
-}
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
 
+    .dropbtn {
+      background: #1e293b;
+      color: #ffffff;
+      border: 1px solid #334155;
+      padding: 8px 14px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-/* Mobile Par Header Fix (Width <= 768px) */
-@media screen and (max-width: 768px) {
-  
-  /* Navbar Container */
-  .navbar {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 10px 14px !important;
-  }
+    /* Dropdown content popup positioning */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: #0f172a;
+      min-width: 200px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.6);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      z-index: 9999;
+      padding: 6px 0;
+      margin-top: 5px;
+    }
 
-  /* Hamburger Icon (☰) & Logo Box */
-  .navbar-left {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
+    .dropdown-content a {
+      color: #cbd5e1;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 13.5px;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
+    }
 
-  /* Menu Toggle Icon */
-  .menu-toggle, #menu-toggle, .hamburger {
-    display: flex !important;
-    cursor: pointer !important;
-    font-size: 20px !important;
-    color: #ffffff !important;
-    background: transparent !important;
-    border: none !important;
-  }
+    .dropdown-content a:hover {
+      background-color: #1e293b;
+      color: #e2e8f0;
+    }
 
-  /* Navigation Links (Home | Blog | About) */
-  .nav-links {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 12px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-  }
-
-  .nav-links a {
-    font-size: 13px !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    text-decoration: none !important;
-    white-space: nowrap !important;
-  }
-
-  /* Search Box (Full Width On Mobile Bottom) */
-  .search-box, .search-container {
-    width: 100% !important;
-    margin-top: 10px !important;
-    order: 3 !important;
-    display: flex !important;
-  }
-
-  .search-box input, .search-container input {
-    width: 100% !important;
-    flex: 1 !important;
-  }
-}
+    /* Hover action */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
 
 
     /* Recommendation Sections */
@@ -238,9 +222,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-
-
   </style>
 </head>
 <body>
