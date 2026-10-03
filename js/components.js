@@ -1,4 +1,22 @@
-// Complete Footer Component with Social Connect Links
+// Header Component
+const headerHTML = `
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html">Movie<span class="accent">TB</span></a>
+    </div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies, trailers...">
+      <button id="search-btn">Search</button>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+`;
+
+// Footer Component
 const footerHTML = `
   <footer class="site-footer">
     <div class="footer-glow" aria-hidden="true"></div>
@@ -29,7 +47,6 @@ const footerHTML = `
 
     <div class="footer-divider" aria-hidden="true"></div>
 
-    <!-- Social Connect Section -->
     <div class="social-connect-section">
       <p class="social-heading">Follow Us / Connect With Us</p>
       <div class="social-icons">
@@ -52,10 +69,15 @@ const footerHTML = `
   </footer>
 `;
 
+// Inject Placeholders
 document.addEventListener("DOMContentLoaded", () => {
     const headerPlaceholder = document.getElementById("header-placeholder");
     const footerPlaceholder = document.getElementById("footer-placeholder");
 
-    if (headerPlaceholder) headerPlaceholder.innerHTML = headerHTML;
-    if (footerPlaceholder) footerPlaceholder.innerHTML = footerHTML;
+    if (headerPlaceholder) {
+        headerPlaceholder.innerHTML = headerHTML;
+    }
+    if (footerPlaceholder) {
+        footerPlaceholder.innerHTML = footerHTML;
+    }
 });
