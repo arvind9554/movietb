@@ -18,39 +18,7 @@ const categoryNames = {
   'bhojpuri-movies': 'Bhojpuri Movies',
 };
 
-/* =========================================================
-   DIRECT / TELEGRAM VIDEO URL RESOLUTION
-   Different admin forms / manual Firestore edits over time may
-   have used different field names for the same idea. This checks
-   all of them so the player works no matter which one your data
-   actually has, instead of silently falling through to YouTube.
 
-   Priority:
-   1) movie.videoUrl / movie.streamUrl / movie.directVideoUrl /
-      movie.directUrl - a complete, ready-to-play URL.
-   2) movie.channelId + movie.messageId (or msgId/telegramMsgId)
-      combined with a backend base URL, IF that base URL is also
-      present on the doc (movie.streamBackendUrl / backendUrl).
-      We never guess/hardcode a backend domain - a wrong guess
-      would silently produce a broken (but non-empty) src, which
-      is worse than falling back to the normal iframe path.
-   ========================================================= */
-function resolveDirectVideoUrl(movie) {
-  const explicit = firstPresent(movie.videoUrl, movie.streamUrl, movie.directVideoUrl, movie.directUrl);
-  if (explicit) return explicit;
-
-  const base = firstPresent(movie.streamBackendUrl, movie.backendUrl);
-  const channelId = firstPresent(movie.channelId);
-  const messageId = firstPresent(movie.messageId, movie.msgId, movie.telegramMsgId);
-
-  if (base && channelId && messageId) {
-    return `${base.replace(/\/$/, '')}/stream/${encodeURIComponent(channelId)}/${encodeURIComponent(messageId)}`;
-  }
-  if (base && messageId) {
-    return `${base.replace(/\/$/, '')}/stream/${encodeURIComponent(messageId)}`;
-  }
-  return '';
-}
 
 async function loadMovieDetails() {
   const wrapper = document.getElementById('movie-content-wrapper');
@@ -110,36 +78,13 @@ if (typeof gtag === 'function') {
       }
     }
 
-    // Direct video / Telegram stream support (checks several possible field
-    // names - see resolveDirectVideoUrl above) vs YouTube iframe
-    const directVideoUrl = resolveDirectVideoUrl(movie);
-    const embedLooksLikeFile = !isYouTube && /\.(mp4|webm|ogg|m3u8)(\?|#|$)/i.test(embedUrl);
-    const useNativeVideo = Boolean(directVideoUrl) || embedLooksLikeFile;
-    const videoSrc = directVideoUrl || embedUrl;
-
     if (PLAYER_DEBUG) {
-      console.log('[PlayerDebug] isYouTube:', isYouTube, '| useNativeVideo:', useNativeVideo, '| videoSrc:', videoSrc);
+      console.log('[PlayerDebug] isYouTube:', isYouTube, '| embedUrl:', embedUrl);
     }
 
     let playerHtml;
 
-    if (useNativeVideo) {
-      // Plyr (custom branded player, loaded on demand below) takes over this
-      // <video> element - no native `controls` attribute needed, and no
-      // custom fullscreen button here since Plyr ships its own.
-      playerHtml = `
-        <div class="player-container">
-          <div class="video-responsive">
-            <video
-              src="${escapeHtml(videoSrc)}"
-              poster="${escapeHtml(resolveRelatedPoster(movie))}"
-              playsinline
-              preload="metadata"
-            ></video>
-          </div>
-        </div>
-      `;
-    } else if (PLAYER_DIAGNOSTIC) {
+    if (PLAYER_DIAGNOSTIC) {
       playerHtml = `
         <div class="player-container player-diagnostic">
           <div class="video-responsive">
@@ -190,38 +135,22 @@ if (typeof gtag === 'function') {
       ${buildMovieTbBelowPlayerHtml(movie, movieId)}
     `;
 
-    if (useNativeVideo) {
-      initCustomVideoPlayer();
-      initNativeVideoTracking();
-    } else if (PLAYER_DIAGNOSTIC) {
+    if (PLAYER_DIAGNOSTIC) {
       initDiagnosticPlayer();
     } else {
       initVideoPlayer();
-      // Note: YouTube analytics tracking is wired up once, globally, via the
-      // DOMContentLoaded listener at the bottom of this file - it is NOT
-      // called again here, to avoid double-firing video_start/progress events.
     }
 
     initMovieTbBelowPlayer(movie, movieId);
 
-    // Inject external Ad Provider script - but ONLY for the YouTube/iframe
-    // path. This script auto-scans the page for <video> elements and turns
-    // them into its own "outstream" ad player - which was harmless before
-    // (YouTube path never had a real <video> tag), but for our new native
-    // Telegram/direct-video player it hijacks the movie's own <video>,
-    // covering real playback with a blank ad overlay. Skipping it here
-    // keeps the movie playable; the below-player banner ad slot (the
-    // .eas6a97888e37 <ins> tag) is unaffected either way since it's a
-    // separate ad unit, not tied to this script specifically.
-    if (!useNativeVideo && !document.querySelector('script[src*="ad-provider.js"]')) {
+    // Inject external Ad Provider script
+    if (!document.querySelector('script[src*="ad-provider.js"]')) {
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://a.magsrv.com/ad-provider.js';
       document.head.appendChild(script);
     }
-    if (!useNativeVideo) {
-      (window.AdProvider = window.AdProvider || []).push({ "serve": {} });
-    }
+    (window.AdProvider = window.AdProvider || []).push({ "serve": {} });
 
     if (PLAYER_DEBUG || PLAYER_DIAGNOSTIC) {
       initPlayerDimensionLogging();
@@ -260,7 +189,7 @@ function initVideoPlayer() {
   function isPlayerFullscreen() {
     return playerContainer.classList.contains('is-player-fullscreen') || isNativeFullscreen();
   }
-
+  
   function requestNativeFullscreen() {
     const el = playerContainer;
     if (el.requestFullscreen) return el.requestFullscreen();
@@ -441,145 +370,7 @@ function initVideoPlayer() {
    ships its own fullscreen control, so it doesn't use
    initVideoPlayer().
    ========================================================= */
-function ensurePlyrAssets() {
-  if (window.__plyrAssetsPromise) return window.__plyrAssetsPromise;
 
-  window.__plyrAssetsPromise = new Promise((resolve, reject) => {
-    if (!document.querySelector('link[data-plyr-css]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://cdn.plyr.io/3.7.8/plyr.css';
-      link.setAttribute('data-plyr-css', '1');
-      document.head.appendChild(link);
-    }
-
-    if (window.Plyr) {
-      resolve(window.Plyr);
-      return;
-    }
-
-    if (!document.querySelector('script[data-plyr-js]')) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.plyr.io/3.7.8/plyr.js';
-      script.setAttribute('data-plyr-js', '1');
-      script.onload = () => resolve(window.Plyr);
-      script.onerror = () => reject(new Error('Failed to load Plyr from CDN'));
-      document.head.appendChild(script);
-    } else {
-      const waitForPlyr = () => {
-        if (window.Plyr) resolve(window.Plyr);
-        else setTimeout(waitForPlyr, 50);
-      };
-      waitForPlyr();
-    }
-  });
-
-  return window.__plyrAssetsPromise;
-}
-
-function initCustomVideoPlayer(streamUrl, posterUrl) {
-    const video = document.querySelector('#player') || document.querySelector('video');
-
-    if (!video) return;
-
-    // 1. Direct video element parameters (Format/MIME error avoid karne ke liye)
-    video.setAttribute('crossorigin', 'anonymous');
-    if (streamUrl) {
-        video.src = streamUrl;
-        video.type = 'video/mp4';
-    }
-
-    // 2. Safely initialize Plyr player
-    try {
-        if (typeof Plyr !== 'undefined') {
-            const player = new Plyr(video, {
-                controls: [
-                    'play-large', 'play', 'progress', 'current-time', 
-                    'mute', 'volume', 'captions', 'settings', 'pip', 'fullscreen'
-                ],
-                settings: ['speed'],
-                clickToPlay: true,
-                resetOnEnd: false,
-            });
-
-            if (streamUrl) {
-                player.source = {
-                    type: 'video',
-                    title: 'Movie',
-                    poster: posterUrl || '',
-                    sources: [
-                        {
-                            src: streamUrl,
-                            type: 'video/mp4',
-                        },
-                    ],
-                };
-            }
-
-            window.__movietbPlayer = player;
-        } else {
-            video.setAttribute('controls', '');
-        }
-    } catch (err) {
-        console.error('Plyr initialization error, falling back to native controls:', err);
-        video.setAttribute('controls', '');
-    }
-}
-
-/* =========================================================
-   NATIVE <video> ANALYTICS
-   ========================================================= */
-function initNativeVideoTracking() {
-  const video = document.querySelector('.video-responsive video');
-  if (!video) return;
-
-  const trackedPoints = { 25: false, 50: false, 75: false };
-  let hasTrackedStart = false;
-
-  video.addEventListener('play', () => {
-    if (!hasTrackedStart && typeof gtag === 'function') {
-      gtag('event', 'video_start', {
-        video_title: document.title,
-        video_provider: 'direct'
-      });
-      hasTrackedStart = true;
-    }
-  });
-
-  video.addEventListener('timeupdate', () => {
-    if (!video.duration) return;
-    const percent = Math.floor((video.currentTime / video.duration) * 100);
-    [25, 50, 75].forEach((pt) => {
-      if (percent >= pt && !trackedPoints[pt]) {
-        trackedPoints[pt] = true;
-        if (typeof gtag === 'function') {
-          gtag('event', 'video_progress', {
-            video_percent: pt,
-            video_title: document.title
-          });
-        }
-      }
-    });
-  });
-
-  video.addEventListener('ended', () => {
-    if (typeof gtag === 'function') {
-      gtag('event', 'video_complete', {
-        video_title: document.title,
-        video_provider: 'direct'
-      });
-    }
-  });
-
-  video.addEventListener('error', () => {
-    const err = video.error;
-    console.error('[MovieTB] Video failed to load.', {
-      src: video.currentSrc || video.src,
-      code: err ? err.code : null,
-      message: err ? err.message : null
-    });
-  });
-}
 
 function logPlayerDimensions(label) {
   const playerContainer = document.querySelector('.player-container');
