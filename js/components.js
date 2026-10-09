@@ -57,7 +57,7 @@ const footerHTML = `
         <a href="https://facebook.com/profile.php?id=61593529134134" class="social-btn facebook" target="_blank" rel="noopener" aria-label="Facebook">
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
         </a>
-        <a href="https://t.me/movietbofficial" class="social-btn telegram" target="_blank" rel="noopener" aria-label="Telegram">
+        <a href="https://tg.me/movietbofficial" class="social-btn telegram" target="_blank" rel="noopener" aria-label="Telegram">
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.128.832.941z"/></svg>
         </a>
       </div>
