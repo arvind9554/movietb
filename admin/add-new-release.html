@@ -1,192 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add New Release - MovieTB Admin</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/responsive.css">
-  <style>
-    .admin-main {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .admin-card {
-      background: #181818;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    }
-    .admin-card-header h2 {
-      margin-bottom: 8px;
-      color: #fff;
-      font-size: 1.5rem;
-    }
-    .admin-subtext {
-      color: #aaa;
-      font-size: 0.9rem;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-    .form-row {
-      margin-bottom: 20px;
-    }
-    .form-row.two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .form-group label {
-      font-weight: 600;
-      color: #ddd;
-      font-size: 0.95rem;
-    }
-    .form-group input, 
-    .form-group textarea {
-      width: 100%;
-      background: #0f0f0f;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      box-sizing: border-box;
-      transition: border-color 0.2s ease;
-    }
-    .form-group input:focus, 
-    .form-group textarea:focus {
-      border-color: #e50914;
-    }
-    .field-hint {
-      font-size: 0.8rem;
-      color: #888;
-      margin-top: 4px;
-    }
-    .optional-tag {
-      font-size: 0.75rem;
-      color: #666;
-      font-weight: normal;
-      margin-left: 6px;
-    }
-    .btn-submit {
-      background: #e50914;
-      color: #fff;
-      font-weight: 700;
-      padding: 14px 24px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 1rem;
-      margin-top: 10px;
-      transition: background 0.2s ease;
-    }
-    .btn-submit:hover {
-      background: #b80710;
-    }
-    @media (max-width: 600px) {
-      .form-row.two-col {
-        grid-template-columns: 1fr;
-      }
-      .admin-card {
-        padding: 20px 16px;
-      }
-    }
-  </style>
-</head>
-<body class="admin-body">
+import { db } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  <header class="navbar admin-navbar">
-    <div class="navbar-left">
-      <div class="logo"><a href="dashboard.html">Movie<span class="accent">TB</span> <span class="admin-tag">Admin</span></a></div>
-    </div>
-    <nav class="nav-links">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="add-movie.html">Add Movie</a>
-      <a href="add-new-release.html">New Releases</a>
-      <a href="hero-banner.html">Hero Banners</a>
-    </nav>
-    <button class="btn-logout" id="btn-logout">Logout</button>
-  </header>
+const form = document.getElementById('new-release-form');
+const newReleaseList = document.getElementById('new-release-list');
 
-  <main class="admin-main">
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <h2>New Releases (Telegram Redirection)</h2>
-        <p class="admin-subtext">
-          These movies appear in the homepage's <strong>"New Releases"</strong> row.
-          When users click to download/watch, they pass through your timer page (<code style="color:#e50914">download.html</code>) 
-          and redirect to your Cloudflare Worker Telegram gateway link.
-        </p>
-      </div>
+// 1. Fetch & Display Existing New Releases
+async function loadNewReleases() {
+  if (!newReleaseList) return;
+  newReleaseList.innerHTML = '<p class="admin-subtext">Loading current New Releases…</p>';
 
-      <!-- Existing new releases list -->
-      <div id="new-release-list" class="hero-slides-list">
-        <p class="admin-subtext">Loading current New Releases…</p>
-      </div>
+  try {
+    const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
 
-      <hr style="border-color: #2a2a2a; margin: 26px 0;">
+    if (snapshot.empty) {
+      newReleaseList.innerHTML = '<p class="admin-subtext">No New Releases added yet. Add your first one below.</p>';
+      return;
+    }
 
-      <!-- Add new movie form -->
-      <form id="new-release-form" class="admin-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nr-title">Title</label>
-            <input type="text" id="nr-title" placeholder="e.g. Hanuman Ansh 2026 HD Latest Movie" required>
+    let html = '';
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      html += `
+        <div class="hero-slide-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #222; margin-bottom: 8px; border-radius: 6px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="${data.posterUrl || ''}" alt="${data.title}" style="width: 40px; height: 55px; object-fit: cover; border-radius: 4px;">
+            <div>
+              <strong style="color:#fff; font-size: 0.95rem;">${data.title}</strong>
+              <div style="color:#aaa; font-size: 0.8rem;">Msg ID: ${data.telegramMsgId || data.messageId || 'N/A'} | ${data.year || '2026'}</div>
+            </div>
           </div>
+          <button class="btn-delete" data-id="${docSnap.id}" style="background: #e50914; color:#fff; border:none; padding: 6px 12px; border-radius: 4px; cursor:pointer;">Delete</button>
         </div>
+      `;
+    });
 
-        <div class="form-row two-col">
-          <div class="form-group">
-            <label for="nr-poster-url">Poster URL</label>
-            <input type="url" id="nr-poster-url" placeholder="https://domain.com/poster.jpg" required>
-            <span class="field-hint">Required - Used for homepage and details page poster view.</span>
-          </div>
-          <div class="form-group">
-            <label for="nr-telegram-msg-id">Telegram Post Link / Message ID</label>
-            <input type="text" id="nr-telegram-msg-id" placeholder="e.g. 27" required>
-            <span class="field-hint">Used for Cloudflare worker gateway redirection.</span>
-          </div>
-        </div>
+    newReleaseList.innerHTML = html;
 
-        <div class="form-row two-col">
-          <div class="form-group">
-            <label for="nr-year">Year <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-year" placeholder="2026">
-          </div>
-          <div class="form-group">
-            <label for="nr-format">Quality Badge <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-format" placeholder="1080p HD">
-          </div>
-        </div>
+    // Attach Delete Listeners
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.target.getAttribute('data-id');
+        if (confirm("Are you sure you want to delete this release?")) {
+          await deleteDoc(doc(db, "movies", id));
+          loadNewReleases();
+        }
+      });
+    });
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nr-language">Language <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-language" placeholder="Hindi / Dual Audio">
-          </div>
-        </div>
+  } catch (err) {
+    console.error("Error fetching new releases:", err);
+    newReleaseList.innerHTML = '<p class="admin-subtext" style="color:#ff4d4d;">Error loading releases.</p>';
+  }
+}
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nr-summary">Summary <span class="optional-tag">Optional</span></label>
-            <textarea id="nr-summary" rows="3" placeholder="Short synopsis shown on the movie page"></textarea>
-          </div>
-        </div>
+// 2. Safe Form Submit Event
+if (form) {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        <button type="submit" class="btn-submit">Add to New Releases</button>
-      </form>
-    </div>
-  </main>
+    // Safe getters with fallbacks (no null errors)
+    const title = document.getElementById('nr-title')?.value?.trim() || '';
+    const posterUrl = document.getElementById('nr-poster-url')?.value?.trim() || '';
+    const telegramMsgId = document.getElementById('nr-telegram-msg-id')?.value?.trim() || '';
+    const year = document.getElementById('nr-year')?.value?.trim() || '2026';
+    const format = document.getElementById('nr-format')?.value?.trim() || '1080p HD';
+    const language = document.getElementById('nr-language')?.value?.trim() || 'Hindi';
+    const summary = document.getElementById('nr-summary')?.value?.trim() || '';
 
-  <script type="module" src="../js/add-new-release.js"></script>
-</body>
-</html>
+    if (!title || !posterUrl || !telegramMsgId) {
+      alert("Please fill in Title, Poster URL, and Telegram Link/Message ID.");
+      return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      await addDoc(collection(db, "movies"), {
+        title: title,
+        posterUrl: posterUrl,
+        telegramMsgId: telegramMsgId,
+        messageId: telegramMsgId,
+        year: year,
+        quality: format,
+        language: language,
+        summary: summary,
+        category: "New Releases",
+        isNewRelease: true,
+        createdAt: serverTimestamp()
+      });
+
+      alert("New Release added successfully!");
+      form.reset();
+      loadNewReleases();
+    } catch (err) {
+      console.error("Error adding movie:", err);
+      alert("Failed to add movie: " + err.message);
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+}
+
+// Initial Call
+loadNewReleases();
