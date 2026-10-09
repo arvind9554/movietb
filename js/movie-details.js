@@ -918,6 +918,13 @@ function initYouTubeTracking() {
   }, 500);
 }
 
+// Timer Download Page Redirection Link
+const downloadBtn = document.getElementById('telegram-redirect-btn') || document.querySelector('a[href*="workers.dev"]') || document.querySelector('.telegram-action-box a');
+
+if (downloadBtn && movieId) {
+  downloadBtn.href = `download.html?id=${encodeURIComponent(movieId)}`;
+}
+
 // Global Event Listeners & Execution Entrypoint
 document.addEventListener('DOMContentLoaded', initYouTubeTracking);
 loadMovieDetails(); 

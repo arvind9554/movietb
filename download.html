@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Movie - MovieTB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .download-wrapper {
+      max-width: 750px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .download-card {
+      background: var(--bg-elevated, #181818);
+      border: 1px solid var(--border, #2a2a2a);
+      border-radius: 12px;
+      padding: 32px 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .movie-poster-preview {
+      width: 140px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+    .timer-circle {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #e50914;
+      margin: 20px 0;
+    }
+    .btn-download-final {
+      display: inline-block;
+      background: #e50914;
+      color: #fff;
+      font-weight: bold;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-download-final:disabled {
+      background: #444;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .ad-banner-placeholder {
+      margin: 25px 0;
+      min-height: 90px;
+      background: #0f0f0f;
+      border: 1px dashed #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+  </header>
+
+  <main class="download-wrapper">
+    <div class="download-card">
+      <img id="dl-poster" class="movie-poster-preview" src="" alt="Poster" style="display:none;">
+      <h1 id="dl-title" style="font-size: 1.6rem; color: #fff; margin-bottom: 8px;">Preparing Your File...</h1>
+      <p id="dl-meta" style="color: #aaa; font-size: 0.9rem; margin-bottom: 15px;"></p>
+
+      <!-- Top Ad Banner Space -->
+      <div class="ad-banner-placeholder" id="ad-top">
+        <!-- Aapki Banner Ad Script yahan aayegi -->
+      </div>
+
+      <p style="color: #ddd; font-size: 0.95rem;">Please wait a few seconds while we generate your secure download link...</p>
+      
+      <div id="timer-box" class="timer-circle">12</div>
+
+      <button id="btn-download" class="btn-download-final" disabled>
+        Please Wait...
+      </button>
+
+      <!-- Bottom Ad Banner Space -->
+      <div class="ad-banner-placeholder" id="ad-bottom">
+        <!-- Aapki Banner Ad Script yahan aayegi -->
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/download.js"></script>
+</body>
+</html>
