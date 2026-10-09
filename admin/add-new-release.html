@@ -17,7 +17,18 @@
       border: 1px solid #2a2a2a;
       border-radius: 12px;
       padding: 30px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .admin-card-header h2 {
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: 1.5rem;
+    }
+    .admin-subtext {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
     .form-row {
       margin-bottom: 20px;
@@ -37,7 +48,8 @@
       color: #ddd;
       font-size: 0.95rem;
     }
-    .form-group input, .form-group textarea {
+    .form-group input, 
+    .form-group textarea {
       width: 100%;
       background: #0f0f0f;
       border: 1px solid #333;
@@ -47,8 +59,10 @@
       font-size: 0.95rem;
       outline: none;
       box-sizing: border-box;
+      transition: border-color 0.2s ease;
     }
-    .form-group input:focus, .form-group textarea:focus {
+    .form-group input:focus, 
+    .form-group textarea:focus {
       border-color: #e50914;
     }
     .field-hint {
@@ -73,14 +87,20 @@
       width: 100%;
       font-size: 1rem;
       margin-top: 10px;
-      transition: background 0.2s ease;
+      transition: background 0.2s ease, transform 0.1s ease;
     }
     .btn-submit:hover {
       background: #b80710;
     }
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
     @media (max-width: 600px) {
       .form-row.two-col {
         grid-template-columns: 1fr;
+      }
+      .admin-card {
+        padding: 20px 16px;
       }
     }
   </style>
@@ -103,64 +123,63 @@
   <main class="admin-main">
     <div class="admin-card">
       <div class="admin-card-header">
-        <h2 style="margin-bottom: 8px; color: #fff;">New Releases (Telegram Redirection)</h2>
-        <p class="admin-subtext" style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px;">
-          These movies appear in the homepage's <strong>"New Releases"</strong> section. 
-          Visitors click on the movie to redirect directly to Telegram via your Cloudflare Worker gateway.
+        <h2>New Releases (Telegram Movie Redirect)</h2>
+        <p class="admin-subtext">
+          In movies ke "Download/Watch" button par click karte hi visitor direct aapke Cloudflare Worker gateway page par jayega, jahan se wo Telegram Bot / Channel link open karke movie file le sakta hai.
         </p>
       </div>
 
-      <!-- Existing new releases -->
+      <!-- Existing new releases list -->
       <div id="new-release-list" class="hero-slides-list">
         <p class="admin-subtext">Loading current New Releases…</p>
       </div>
 
-      <hr style="border-color: #333; margin: 26px 0;">
+      <hr style="border-color: #2a2a2a; margin: 26px 0;">
 
-      <!-- Add new movie -->
+      <!-- Add new movie form -->
       <form id="new-release-form" class="admin-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="nr-title">Title</label>
-            <input type="text" id="nr-title" placeholder="e.g. Hanuman Ansh" required>
+            <label for="nr-title">Movie Title</label>
+            <input type="text" id="nr-title" placeholder="e.g. Hanuman Ansh 2026" required>
           </div>
         </div>
 
         <div class="form-row two-col">
           <div class="form-group">
-            <label for="nr-telegram-msg-id">Telegram Message ID</label>
-            <input type="text" id="nr-telegram-msg-id" placeholder="e.g. 27" required>
-            <span class="field-hint">Used to generate the gateway redirect link for Telegram.</span>
+            <label for="nr-poster-url">Poster Image URL</label>
+            <input type="url" id="nr-poster-url" placeholder="https://domain.com/poster.jpg" required>
+            <span class="field-hint">Homepage & Movie details page par poster image dikhane ke liye.</span>
           </div>
           <div class="form-group">
-            <label for="nr-poster-url">Poster URL</label>
-            <input type="url" id="nr-poster-url" placeholder="https://.../poster.jpg" required>
-            <span class="field-hint">Poster image for homepage and details page.</span>
+            <label for="nr-telegram-msg-id">Telegram Post Link / Message ID</label>
+            <input type="text" id="nr-telegram-msg-id" placeholder="e.g. https://t.me/your_channel/104 ya 104" required>
+            <span class="field-hint">User button par click karke direct iss Telegram post/bot par redirect hoga.</span>
           </div>
         </div>
 
         <div class="form-row two-col">
           <div class="form-group">
-            <label for="nr-year">Year <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-year" placeholder="2026">
+            <label for="nr-year">Release Year <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-year" placeholder="e.g. 2026">
           </div>
           <div class="form-group">
             <label for="nr-format">Quality Badge <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-format" placeholder="1080p HD">
+            <input type="text" id="nr-format" placeholder="e.g. 1080p HD, 720p">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="nr-language">Language <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-language" placeholder="Hindi / Dual Audio">
+            <input type="text" id="nr-language" placeholder="e.g. Hindi / Dual Audio">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="nr-summary">Summary <span class="optional-tag">Optional</span></label>
-            <textarea id="nr-summary" rows="3" placeholder="Short synopsis shown on the movie page"></textarea>
+            <label for="nr-summary">Movie Synopsis / Summary <span class="optional-tag">Optional</span></label>
+            <textarea id="nr-summary" rows="3" placeholder="Short description of the movie..."></textarea>
           </div>
         </div>
 
