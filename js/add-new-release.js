@@ -12,12 +12,11 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const CATEGORY = 'new-releases';
+const CATEGORY = 'New Releases';
 const moviesCol = collection(db, 'movies');
 
 /* =========================================================
-   AUTH GUARD - same Firebase Auth pattern as the rest of the
-   admin panel (login.html / dashboard.html).
+   AUTH GUARD
    ========================================================= */
 const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
@@ -43,10 +42,8 @@ async function loadEntries() {
 
   let snapshot;
   try {
-    // Prefer newest-first if createdAt exists on all docs
     snapshot = await getDocs(query(moviesCol, where('category', '==', CATEGORY), orderBy('createdAt', 'desc')));
   } catch (err) {
-    // orderBy can fail if some older docs lack createdAt / no index yet - fall back to unordered
     snapshot = await getDocs(query(moviesCol, where('category', '==', CATEGORY)));
   }
 
@@ -60,15 +57,18 @@ async function loadEntries() {
   } else {
     listEl.innerHTML = entries
       .map((movie) => `
-        <div class="hero-slide-row" data-id="${movie.id}">
-          <img src="${movie.posterUrl || ''}" alt="${movie.title || 'Poster'}" class="hero-slide-thumb"
-               onerror="this.style.opacity='0.3'">
-          <div class="hero-slide-info">
-            <strong>${movie.title || '(untitled)'}</strong>
-            <span>${[movie.year, movie.format, movie.language].filter(Boolean).join(' • ') || 'No meta set'}</span>
+        <div class="hero-slide-row" data-id="${movie.id}" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #222; margin-bottom: 8px; border-radius: 6px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="${movie.posterUrl || ''}" alt="${movie.title || 'Poster'}" class="hero-slide-thumb" style="width: 40px; height: 55px; object-fit: cover; border-radius: 4px;" onerror="this.style.opacity='0.3'">
+            <div class="hero-slide-info">
+              <strong style="color: #fff; font-size: 0.95rem;">${movie.title || '(untitled)'}</strong>
+              <div style="color: #aaa; font-size: 0.8rem;">${[movie.year, movie.format, movie.language].filter(Boolean).join(' • ') || 'No meta set'} | Msg ID: ${movie.telegramMsgId || 'N/A'}</div>
+            </div>
           </div>
-          <a class="btn-logout" href="movie.html?id=${movie.id}" target="_blank" style="text-decoration:none;">View</a>
-          <button type="button" class="btn-logout btn-delete-entry" data-id="${movie.id}">Delete</button>
+          <div style="display: flex; gap: 8px;">
+            <a class="btn-logout" href="../movie.html?id=${movie.id}" target="_blank" style="text-decoration:none; padding: 6px 12px; font-size: 0.85rem;">View</a>
+            <button type="button" class="btn-logout btn-delete-entry" data-id="${movie.id}" style="padding: 6px 12px; font-size: 0.85rem; background: #e50914;">Delete</button>
+          </div>
         </div>
       `)
       .join('');
@@ -100,45 +100,47 @@ if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const title = document.getElementById('nr-title').value.trim();
-    const videoUrl = document.getElementById('nr-video-url').value.trim();
-    const posterUrl = document.getElementById('nr-poster-url').value.trim();
+    const title = document.getElementById('nr-title')?.value.trim() || '';
+    const posterUrl = document.getElementById('nr-poster-url')?.value.trim() || '';
+    const telegramMsgId = document.getElementById('nr-telegram-msg-id')?.value.trim() || '';
 
-    if (!title || !videoUrl || !posterUrl) {
-      alert('Title, Video URL and Poster URL are required.');
-      return;
-    }
-
-    if (videoUrl.includes('[') || videoUrl.includes('](')) {
-      alert('That looks like markdown formatting, e.g. "[text](url)". Paste just the raw URL instead.');
+    if (!title || !posterUrl || !telegramMsgId) {
+      alert('Title, Poster URL, and Telegram Post Link/Message ID are required.');
       return;
     }
 
     const submitBtn = form.querySelector('.btn-submit');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Adding…';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Adding…';
+    }
 
     try {
       await addDoc(moviesCol, {
         title,
         category: CATEGORY,
-        videoUrl,
+        isNewRelease: true,
         posterUrl,
-        year: document.getElementById('nr-year').value.trim(),
-        format: document.getElementById('nr-format').value.trim(),
-        language: document.getElementById('nr-language').value.trim(),
-        telegramMsgId: document.getElementById('nr-telegram-msg-id').value.trim(),
-        summary: document.getElementById('nr-summary').value.trim(),
+        telegramMsgId,
+        messageId: telegramMsgId,
+        year: document.getElementById('nr-year')?.value.trim() || '2026',
+        format: document.getElementById('nr-format')?.value.trim() || '1080p HD',
+        language: document.getElementById('nr-language')?.value.trim() || 'Hindi',
+        summary: document.getElementById('nr-summary')?.value.trim() || '',
         createdAt: serverTimestamp(),
       });
+
       form.reset();
       await loadEntries();
+      alert('Movie added to New Releases successfully!');
     } catch (err) {
       console.error('Failed to add new release:', err);
       alert('Could not add this movie. Check console for details.');
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Add to New Releases';
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Add to New Releases';
+      }
     }
   });
 }

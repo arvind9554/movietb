@@ -25,12 +25,11 @@
   <main class="admin-main">
     <div class="admin-card">
       <div class="admin-card-header">
-        <h2>New Releases (Telegram Movies)</h2>
+        <h2>New Releases (Timer Download / Gateway Movies)</h2>
         <p class="admin-subtext">
-          These movies show in the homepage's <strong>"New Releases"</strong> row and play through your
-          own Plyr video player using a <strong>direct stream URL</strong> (your Telegram → Render streaming
-          endpoint) - not a YouTube embed. Category is fixed automatically, so anything added here always
-          lands in that section.
+          These movies appear in the homepage's <strong>"New Releases"</strong> section.
+          When users click to watch/download, they pass through your timer page (<code>download.html</code>) 
+          and receive the file via your Cloudflare Worker Telegram gateway link.
         </p>
       </div>
 
@@ -46,25 +45,20 @@
         <div class="form-row">
           <div class="form-group">
             <label for="nr-title">Title</label>
-            <input type="text" id="nr-title" placeholder="e.g. Toxic" required>
+            <input type="text" id="nr-title" placeholder="e.g. Hanuman Ansh 2026" required>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nr-video-url">Direct Video / Stream URL</label>
-            <input type="url" id="nr-video-url" placeholder="https://movietb-bot.onrender.com/stream/27" required>
-            <span class="field-hint">
-              Paste the RAW url only - not the "[text](url)" markdown format. This is what actually plays in the player.
-            </span>
-          </div>
-        </div>
-
-        <div class="form-row">
+        <div class="form-row two-col">
           <div class="form-group">
             <label for="nr-poster-url">Poster URL</label>
-            <input type="url" id="nr-poster-url" placeholder="https://.../poster.jpg" required>
-            <span class="field-hint">Required - there's no YouTube thumbnail to fall back on for these movies.</span>
+            <input type="url" id="nr-poster-url" placeholder="https://domain.com/poster.jpg" required>
+            <span class="field-hint">Required for homepage card and details page image.</span>
+          </div>
+          <div class="form-group">
+            <label for="nr-telegram-msg-id">Telegram Post Link / Message ID</label>
+            <input type="text" id="nr-telegram-msg-id" placeholder="e.g. 27 or https://t.me/your_channel/27" required>
+            <span class="field-hint">Used for mapping and generating the Cloudflare Worker file download link.</span>
           </div>
         </div>
 
@@ -84,11 +78,6 @@
             <label for="nr-language">Language <span class="optional-tag">Optional</span></label>
             <input type="text" id="nr-language" placeholder="Hindi">
           </div>
-          <div class="form-group">
-            <label for="nr-telegram-msg-id">Telegram Message ID <span class="optional-tag">Optional</span></label>
-            <input type="text" id="nr-telegram-msg-id" placeholder="27">
-            <span class="field-hint">Just for your own reference/lookup - not shown to visitors.</span>
-          </div>
         </div>
 
         <div class="form-row">
@@ -105,4 +94,4 @@
 
   <script type="module" src="../js/add-new-release.js"></script>
 </body>
-</html> 
+</html>
