@@ -149,11 +149,80 @@
       margin-bottom: 10px;
     }
 
+    /* ===== New Release page (poster + details + Download Now) ===== */
+    .nr-detail {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      align-items: start;
+      max-width: 1000px;
+      margin: 24px auto 10px auto;
+    }
+
+    .nr-poster-col { position: sticky; top: 90px; }
+
+    .nr-poster {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid #262626;
+      background: #0f0f0f;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: block;
+    }
+
+    .nr-detail .movie-info-card {
+      margin: 0;
+      max-width: none;
+    }
+
+    .nr-download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 26px;
+      padding: 15px 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e50914, #b0060f);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 22px rgba(229, 9, 20, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .nr-download-btn:hover {
+      background: linear-gradient(135deg, #ff0a16, #d0060f);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(229, 9, 20, 0.55);
+    }
+
+    .nr-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    .nr-below {
+      max-width: 1000px;
+      margin: 0 auto 36px auto;
+    }
+
+    @media (max-width: 760px) {
+      .nr-detail { grid-template-columns: 1fr; margin-top: 16px; }
+      .nr-poster-col { position: static; max-width: 240px; margin: 0 auto; }
+      .nr-download-btn { width: 100%; }
+    }
+
     @media (max-width: 640px) {
       .movie-info-card { padding: 22px; border-radius: 12px; margin: 18px 12px 40px 12px; }
       .movie-info-card h1 { font-size: 1.4rem; }
       .info-grid { grid-template-columns: 1fr; row-gap: 12px; }
       .info-label { margin-bottom: -4px; }
+      .nr-detail .movie-info-card { margin: 0; }
     }
   </style>
 </head>

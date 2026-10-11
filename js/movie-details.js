@@ -7,6 +7,9 @@ const movieId = urlParams.get('id');
 const PLAYER_DEBUG = urlParams.get('playerDebug') === '1';
 const PLAYER_DIAGNOSTIC = urlParams.get('playerDiagnostic') === '1';
 
+// Movie ke neeche wale Advertisement box ka Hilltop banner script
+const HILLTOP_BANNER_SRC = "https://unfoldedtrade.com/b.XYVysddfGTls0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMEtnN/zWQ_3HMJTug_zzNkwr";
+
 const categoryNames = {
   'latest-trailers': 'Latest Trailers',
   'new-releases': 'New Releases',
@@ -17,8 +20,6 @@ const categoryNames = {
   'story-tv': 'Story TV',
   'bhojpuri-movies': 'Bhojpuri Movies',
 };
-
-
 
 async function loadMovieDetails() {
   const wrapper = document.getElementById('movie-content-wrapper');
@@ -41,16 +42,15 @@ async function loadMovieDetails() {
 
     const movie = docSnap.data();
 
-document.title = `${movie.title || 'Movie'} - MovieTB`;
+    document.title = `${movie.title || 'Movie'} - MovieTB`;
 
-// Line 74 ke theek baad paste karein:
-if (typeof gtag === 'function') {
-    gtag('event', 'page_view', {
+    if (typeof gtag === 'function') {
+      gtag('event', 'page_view', {
         'page_title': movie.title || movie.name || document.title,
         'page_location': window.location.href,
         'movie_id': movieId
-    });
-}
+      });
+    }
 
     if (PLAYER_DEBUG) {
       console.log('[PlayerDebug] Movie data:', movie);
@@ -59,6 +59,17 @@ if (typeof gtag === 'function') {
     const pageTitle = document.getElementById('movie-page-title');
     if (pageTitle) pageTitle.innerText = `${movie.title} - MovieTB`;
 
+    // ==========================================================
+    // NEW RELEASE (Telegram gateway) movies:
+    // player ki jagah poster + details + "Download Now" button.
+    // Button download.html (12 sec timer page) par bhejta hai.
+    // ==========================================================
+    if (movie.isNewRelease === true || movie.releaseType === 'gateway') {
+      renderNewReleasePage(wrapper, movie, movieId);
+      return;
+    }
+
+    // ---------------- Normal (YouTube) movie flow ----------------
     let embedUrl = movie.embedUrl || movie.trailerUrl || '';
     if (embedUrl.includes('watch?v=')) {
       embedUrl = embedUrl.replace('watch?v=', 'embed/');
@@ -71,10 +82,12 @@ if (typeof gtag === 'function') {
 
     if (isYouTube) {
       const baseUrl = embedUrl.split('?')[0];
+      // origin param: YouTube postMessage warning fix
+      const originParam = encodeURIComponent(window.location.origin);
       if (PLAYER_DIAGNOSTIC) {
-        embedUrl = `${baseUrl}?autoplay=1&controls=1&rel=0&playsinline=1`;
+        embedUrl = `${baseUrl}?autoplay=1&controls=1&rel=0&playsinline=1&origin=${originParam}`;
       } else {
-        embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1&fs=0&iv_load_policy=3`;
+        embedUrl = `${baseUrl}?autoplay=0&rel=0&modestbranding=1&playsinline=1&controls=1&enablejsapi=1&fs=0&iv_load_policy=3&origin=${originParam}`;
       }
     }
 
@@ -90,12 +103,9 @@ if (typeof gtag === 'function') {
           <div class="video-responsive">
             <iframe
               id="yt-diagnostic-iframe"
-              src="${embedUrl}"
-              title="${movie.title}"
+              src="${escapeHtml(embedUrl)}"
+              title="${escapeHtml(movie.title)}"
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowfullscreen="true"
-              webkitallowfullscreen="true"
-              mozallowfullscreen="true"
             ></iframe>
           </div>
         </div>
@@ -104,16 +114,14 @@ if (typeof gtag === 'function') {
         </p>
       `;
     } else {
+      // allowfullscreen attributes hata diye: "allow" me fullscreen already hai
       playerHtml = `
         <div class="player-container">
           <div class="video-responsive">
             <iframe
-              src="${embedUrl}"
-              title="${movie.title}"
+              src="${escapeHtml(embedUrl)}"
+              title="${escapeHtml(movie.title)}"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-              allowfullscreen="true"
-              webkitallowfullscreen="true"
-              mozallowfullscreen="true"
             ></iframe>
           </div>
           <div class="player-controls" aria-hidden="false">
@@ -135,10 +143,14 @@ if (typeof gtag === 'function') {
       ${buildMovieTbBelowPlayerHtml(movie, movieId)}
     `;
 
+    // Advertisement box me Hilltop banner (DOM ready hone ke baad)
+    injectBannerAd();
+
     if (PLAYER_DIAGNOSTIC) {
       initDiagnosticPlayer();
     } else {
       initVideoPlayer();
+      initYouTubeTracking();
     }
 
     initMovieTbBelowPlayer(movie, movieId);
@@ -160,6 +172,110 @@ if (typeof gtag === 'function') {
     console.error("Error loading movie details:", error);
     wrapper.innerHTML = `<p class="loading">Error loading movie data.</p>`;
   }
+}
+
+/* =========================================================
+   NEW RELEASE page: Poster + Details + "Download Now"
+   ========================================================= */
+function detailRow(label, value) {
+  if (!value) return '';
+  return `
+    <div class="info-label">${escapeHtml(label)}</div>
+    <div class="info-value">${escapeHtml(value)}</div>
+  `;
+}
+
+function renderNewReleasePage(wrapper, movie, id) {
+  const title = firstPresent(movie.title, 'Movie');
+  const poster = resolveRelatedPoster(movie);
+  const summary = firstPresent(movie.summary, movie.description, movie.synopsis);
+  const year = firstPresent(movie.year, movie.releaseYear);
+  const language = firstPresent(movie.language);
+  const format = firstPresent(movie.format);
+  const director = firstPresent(movie.director);
+  const starCast = firstPresent(movie.starCast, movie.cast, movie.stars);
+
+  const tagParts = [
+    format ? `<span class="tag">${escapeHtml(format)}</span>` : '',
+    year ? `<span>${escapeHtml(year)}</span>` : '',
+    language ? `<span>${escapeHtml(language)}</span>` : ''
+  ].filter(Boolean);
+  const tagsHtml = tagParts.join('<span class="meta-dot"></span>');
+
+  const downloadHref = `download.html?id=${encodeURIComponent(id)}`;
+
+  wrapper.innerHTML = `
+    <div class="nr-detail">
+      <div class="nr-poster-col">
+        <img class="nr-poster" src="${escapeHtml(poster)}" alt="${escapeHtml(title)}"
+          onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
+      </div>
+
+      <div class="movie-info-card nr-info">
+        <h1>${escapeHtml(title)}</h1>
+        ${tagsHtml ? `<div class="movie-tags">${tagsHtml}</div>` : ''}
+
+        <div class="info-grid">
+          ${detailRow('Category', categoryNames[movie.category] || 'New Releases')}
+          ${detailRow('Release Year', year)}
+          ${detailRow('Language', language)}
+          ${detailRow('Quality', format)}
+          ${detailRow('Director', director)}
+          ${detailRow('Star Cast', starCast)}
+        </div>
+
+        ${summary ? `<div class="summary-box">${escapeHtml(summary)}</div>` : ''}
+
+        <a class="nr-download-btn" id="nr-download-btn" href="${downloadHref}" rel="nofollow">
+          <span aria-hidden="true">⬇</span> Download Now
+        </a>
+        <p class="nr-note">Download page par 12 second ka timer chalega, uske baad file mil jaayegi.</p>
+      </div>
+    </div>
+
+    <div class="movietb-below-player nr-below">
+      <section class="movietb-ad-placeholder" aria-label="Advertisement">
+        <span class="movietb-ad-label">Advertisement</span>
+        <div class="movietb-ad-frame" id="movietb-ad-frame"></div>
+      </section>
+
+      <section class="movietb-related" aria-label="More New Releases">
+        <h2 class="movietb-related-heading">More From This Category</h2>
+        <div class="movietb-related-grid" id="movietb-related-grid">
+          <p class="movietb-related-status">Loading related titles...</p>
+        </div>
+      </section>
+    </div>
+  `;
+
+  document.getElementById('nr-download-btn')?.addEventListener('click', () => {
+    if (typeof gtag === 'function') {
+      gtag('event', 'download_click', {
+        movie_id: id,
+        video_title: title
+      });
+    }
+  });
+
+  injectBannerAd();
+  loadRelatedMovies(movie, id);
+}
+
+/* =========================================================
+   Below-player banner ad (Hilltop)
+   ========================================================= */
+function injectBannerAd() {
+  const adFrame = document.getElementById('movietb-ad-frame');
+  if (!adFrame || adFrame.querySelector('script')) return;
+
+  adFrame.innerHTML = '';
+
+  const s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.src = HILLTOP_BANNER_SRC;
+  s.async = true;
+  s.referrerPolicy = 'no-referrer-when-downgrade';
+  adFrame.appendChild(s);
 }
 
 function initVideoPlayer() {
@@ -361,16 +477,6 @@ function initVideoPlayer() {
 
   updateButtonState();
 }
-
-/* =========================================================
-   PLYR — custom branded video player for direct video streams
-   (your Telegram → Render → videoUrl/streamUrl pipeline).
-   Loaded from Plyr's CDN on demand, only when a movie actually
-   needs it - YouTube movies never touch this code path. Plyr
-   ships its own fullscreen control, so it doesn't use
-   initVideoPlayer().
-   ========================================================= */
-
 
 function logPlayerDimensions(label) {
   const playerContainer = document.querySelector('.player-container');
@@ -634,27 +740,13 @@ function shuffleOnce(items) {
   return list;
 }
 
+// NOTE: ad injection ab yahan nahi hota. loadMovieDetails() me innerHTML ke
+// baad injectBannerAd() call hota hai.
 function buildMovieTbBelowPlayerHtml(movie, id) {
   const state = readReactionState(id);
   const info = collectMovieInfoRows(movie);
   const title = firstPresent(movie.title, 'Movie details');
   const hasInfo = Boolean(info.previewRows.trim() || info.expandedRows.trim());
-
-  // New Banner Zone #7471833 Injection (Clean Dynamic Insertion)
-  setTimeout(() => {
-    const adFrame = document.getElementById('movietb-ad-frame');
-    if (adFrame && !adFrame.querySelector('script')) {
-      adFrame.innerHTML = ''; // Container clear
-
-      const s = document.createElement('script');
-      s.type = 'text/javascript';
-      s.src = "https://unfoldedtrade.com/b.XYVysddfGTls0xY/WQcH/Ke/mJ9/uiZwUglPkjP/TPcU0XN_z/E/4aMOzOMEtnN/zWQ_3HMJTug_zzNkwr";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
-
-      adFrame.appendChild(s);
-    }
-  }, 300);
 
   return `
     <div class="movietb-below-player">
@@ -682,8 +774,6 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
         </div>
       </section>
 
-
-      
       <section class="movietb-movie-info" aria-label="Movie information">
         <div class="movietb-info-top">
           <h1 class="movietb-movie-title">${escapeHtml(title)}</h1>
@@ -699,9 +789,7 @@ function buildMovieTbBelowPlayerHtml(movie, id) {
 
       <section class="movietb-ad-placeholder" aria-label="Advertisement">
         <span class="movietb-ad-label">Advertisement</span>
-        <div class="movietb-ad-frame" id="movietb-ad-frame">
-          <!-- Banner Zone #7471833 will inject here -->
-        </div>
+        <div class="movietb-ad-frame" id="movietb-ad-frame"></div>
       </section>
 
       <section class="movietb-related" aria-label="More from this category">
@@ -844,31 +932,40 @@ async function loadRelatedMovies(movie, currentId) {
 }
 
 // Reliable YouTube Iframe Progress Tracking
+// Ab ye sirf YouTube player render hone ke baad call hota hai aur
+// max 30 sec tak iframe dhundta hai (pehle hamesha chalta rehta tha).
 function initYouTubeTracking() {
-  if (!window.YT) {
-    var tag = document.createElement('script');
+  if (!window.YT && !document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
+    const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   }
 
-  var trackerInterval = setInterval(function () {
-    var iframe = document.querySelector('iframe[src*="youtube.com"]');
+  let attempts = 0;
+  const trackerInterval = setInterval(function () {
+    attempts += 1;
+    if (attempts > 60) {
+      clearInterval(trackerInterval);
+      return;
+    }
+
+    const iframe = document.querySelector('.video-responsive iframe[src*="youtube.com"]');
     if (iframe && window.YT && window.YT.Player) {
       clearInterval(trackerInterval);
 
-      var src = iframe.getAttribute('src');
+      const src = iframe.getAttribute('src');
       if (src && src.indexOf('enablejsapi=1') === -1) {
         iframe.setAttribute('src', src + (src.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1');
       }
 
-      var trackedPoints = { 25: false, 50: false, 75: false };
-      var progressCheckTimer = null;
+      const trackedPoints = { 25: false, 50: false, 75: false };
+      let progressCheckTimer = null;
 
       new YT.Player(iframe, {
         events: {
           'onStateChange': function (event) {
-            var player = event.target;
+            const player = event.target;
 
             if (event.data === YT.PlayerState.PLAYING) {
               if (typeof gtag === 'function' && !player.hasTrackedStart) {
@@ -881,10 +978,10 @@ function initYouTubeTracking() {
 
               if (!progressCheckTimer) {
                 progressCheckTimer = setInterval(function () {
-                  var duration = player.getDuration();
-                  var currentTime = player.getCurrentTime();
+                  const duration = player.getDuration();
+                  const currentTime = player.getCurrentTime();
                   if (duration > 0) {
-                    var percent = Math.floor((currentTime / duration) * 100);
+                    const percent = Math.floor((currentTime / duration) * 100);
                     [25, 50, 75].forEach(function (pt) {
                       if (percent >= pt && !trackedPoints[pt]) {
                         trackedPoints[pt] = true;
@@ -918,13 +1015,8 @@ function initYouTubeTracking() {
   }, 500);
 }
 
-// Timer Download Page Redirection Link
-const downloadBtn = document.getElementById('telegram-redirect-btn') || document.querySelector('a[href*="workers.dev"]') || document.querySelector('.telegram-action-box a');
-
-if (downloadBtn && movieId) {
-  downloadBtn.href = `download.html?id=${encodeURIComponent(movieId)}`;
-}
-
-// Global Event Listeners & Execution Entrypoint
-document.addEventListener('DOMContentLoaded', initYouTubeTracking);
-loadMovieDetails(); 
+// Entry point
+// (Purana "Timer Download Page Redirection Link" code hata diya: wo page load
+//  par chalta tha jab button DOM me tha hi nahi. Ab Download Now button
+//  renderNewReleasePage() khud banata hai.)
+loadMovieDetails();

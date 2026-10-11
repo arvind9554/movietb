@@ -1,66 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download Movie - MovieTB</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+  <title id="page-title">Download - MovieTB</title>
+  <link rel="canonical" href="https://www.movietb.com/download" />
+  <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KTG82NK7YD');
+  </script>
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+
   <style>
-    .download-wrapper {
-      max-width: 750px;
-      margin: 40px auto;
-      padding: 30px 20px;
+    .dl-wrap { max-width: 760px; margin: 28px auto 10px; }
+
+    .dl-card {
+      background: linear-gradient(180deg, #181818 0%, #141414 100%);
+      border: 1px solid #262626;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       text-align: center;
     }
-    .download-card {
-      background: var(--bg-elevated, #181818);
-      border: 1px solid var(--border, #2a2a2a);
-      border-radius: 12px;
-      padding: 32px 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    }
-    .movie-poster-preview {
-      width: 140px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-    }
-    .timer-circle {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #e50914;
-      margin: 20px 0;
-    }
-    .btn-download-final {
-      display: inline-block;
-      background: #e50914;
-      color: #fff;
-      font-weight: bold;
-      padding: 14px 32px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 1.1rem;
-      cursor: pointer;
-      border: none;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn-download-final:disabled {
-      background: #444;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-    .ad-banner-placeholder {
-      margin: 25px 0;
-      min-height: 90px;
-      background: #0f0f0f;
-      border: 1px dashed #333;
-      border-radius: 8px;
+
+    .dl-movie {
       display: flex;
       align-items: center;
+      gap: 16px;
+      text-align: left;
+      padding-bottom: 22px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #262626;
+    }
+
+    .dl-poster {
+      width: 72px;
+      height: 104px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #262626;
+      background: #0f0f0f;
+      flex-shrink: 0;
+    }
+
+    .dl-title { font-size: 1.25rem; font-weight: 800; color: #fff; line-height: 1.3; }
+    .dl-meta { margin-top: 6px; font-size: 0.85rem; color: #888; }
+
+    .dl-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 14px; }
+    .dl-ring svg { transform: rotate(-90deg); }
+    .dl-ring-bg { stroke: #262626; }
+    .dl-ring-fg {
+      stroke: var(--accent);
+      stroke-linecap: round;
+      stroke-dasharray: 339.292;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .dl-ring-num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem; font-weight: 800; color: #fff;
+    }
+
+    .dl-msg { color: #bbb; font-size: 0.95rem; min-height: 1.5em; }
+    .dl-msg.warn { color: #f5c518; }
+    .dl-msg.error { color: #f87171; }
+
+    .dl-btn {
+      display: none;
+      align-items: center;
       justify-content: center;
+      gap: 10px;
+      margin: 20px auto 0;
+      padding: 15px 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e50914, #b0060f);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(229, 9, 20, 0.4);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .dl-btn.is-visible { display: inline-flex; }
+    .dl-btn:hover { background: linear-gradient(135deg, #ff0a16, #d0060f); transform: translateY(-2px); }
+
+    .dl-back { display: inline-block; margin-top: 22px; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+    .dl-back:hover { text-decoration: underline; }
+
+    .dl-ad { max-width: 760px; margin: 18px auto 0; }
+    .dl-ad .blog-ad-card { margin: 0; }
+
+    @media (max-width: 560px) {
+      .dl-card { padding: 20px; }
+      .dl-btn { width: 100%; }
     }
   </style>
 </head>
@@ -68,34 +111,243 @@
 
   <header class="navbar">
     <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies...">
+      <button id="search-btn">Search</button>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </nav>
   </header>
 
-  <main class="download-wrapper">
-    <div class="download-card">
-      <img id="dl-poster" class="movie-poster-preview" src="" alt="Poster" style="display:none;">
-      <h1 id="dl-title" style="font-size: 1.6rem; color: #fff; margin-bottom: 8px;">Preparing Your File...</h1>
-      <p id="dl-meta" style="color: #aaa; font-size: 0.9rem; margin-bottom: 15px;"></p>
+  <main class="container">
+    <div class="dl-wrap">
 
-      <!-- Top Ad Banner Space -->
-      <div class="ad-banner-placeholder" id="ad-top">
-        <!-- Aapki Banner Ad Script yahan aayegi -->
+      <!-- Ad (upar) -->
+      <div class="dl-ad" id="dl-ad-top"></div>
+
+      <div class="dl-card" style="margin-top:18px;">
+        <p class="loading" id="dl-loading">Loading download details...</p>
+
+        <div id="dl-content" style="display:none;">
+          <div class="dl-movie">
+            <img class="dl-poster" id="dl-poster" src="assets/images/placeholder.jpg" alt="">
+            <div>
+              <div class="dl-title" id="dl-title"></div>
+              <div class="dl-meta" id="dl-meta"></div>
+            </div>
+          </div>
+
+          <div class="dl-ring" id="dl-ring">
+            <svg width="130" height="130" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="dl-ring-bg" cx="60" cy="60" r="54" fill="none" stroke-width="8"></circle>
+              <circle class="dl-ring-fg" id="dl-ring-fg" cx="60" cy="60" r="54" fill="none" stroke-width="8"></circle>
+            </svg>
+            <div class="dl-ring-num" id="dl-count">12</div>
+          </div>
+
+          <p class="dl-msg" id="dl-msg">Aapka download <strong id="dl-secs">12</strong> second me ready hoga. Please is tab ko khula rakhein.</p>
+
+          <a class="dl-btn" id="dl-btn" href="#" rel="nofollow noopener">
+            <span aria-hidden="true">⬇</span> Download Now
+          </a>
+
+          <div><a class="dl-back" id="dl-back" href="index.html">← Back</a></div>
+        </div>
       </div>
 
-      <p style="color: #ddd; font-size: 0.95rem;">Please wait a few seconds while we generate your secure download link...</p>
-      
-      <div id="timer-box" class="timer-circle">12</div>
-
-      <button id="btn-download" class="btn-download-final" disabled>
-        Please Wait...
-      </button>
-
-      <!-- Bottom Ad Banner Space -->
-      <div class="ad-banner-placeholder" id="ad-bottom">
-        <!-- Aapki Banner Ad Script yahan aayegi -->
-      </div>
+      <!-- Ad (neeche) -->
+      <div class="dl-ad" id="dl-ad-bottom"></div>
     </div>
   </main>
 
-  <script type="module" src="js/download.js"></script>
+  <footer class="site-footer">
+    <div class="footer-glow" aria-hidden="true"></div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">Movie<span class="accent">TB</span></a>
+        <span class="footer-accent-line" aria-hidden="true"></span>
+        <p class="footer-tagline">Your destination for official trailers, movies and web series.</p>
+      </div>
+      <nav class="footer-col" aria-label="Footer quick links">
+        <h3 class="footer-heading">Quick Links</h3>
+        <ul class="footer-links-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Footer legal links">
+        <h3 class="footer-heading">Legal</h3>
+        <ul class="footer-links-list">
+          <li><a href="dmca.html">DMCA Disclaimer</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="footer-legal">All content embedded legally from public domains / YouTube.</p>
+    <div class="footer-divider" aria-hidden="true"></div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
+      <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { adCardHTML, mountAds } from './js/ads.js';
+
+    // =====================================================================
+    // SETTINGS  (sirf yahan badalna hai)
+    // =====================================================================
+    const COUNTDOWN_SECONDS = 12;
+
+    // Apne Cloudflare Worker ka base URL yahan daalo, bina last slash ke.
+    // Example: 'https://movietb-dl.your-name.workers.dev'
+    const WORKER_BASE_URL = '';
+
+    // Worker ka download URL kaise banta hai. Worker ka code mil jaane par
+    // isko exact format ke hisaab se set kiya jaayega.
+    function buildDownloadUrl(movie) {
+      const base = WORKER_BASE_URL.replace(/\/+$/, '');
+      if (!base) return '';
+      const msg = encodeURIComponent(movie.messageId);
+      if (movie.channelId) return `${base}/${encodeURIComponent(movie.channelId)}/${msg}`;
+      return `${base}/${msg}`;
+    }
+    // =====================================================================
+
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get('id');
+
+    function showError(text) {
+      const loading = $('dl-loading');
+      loading.textContent = text;
+      loading.style.display = 'block';
+      $('dl-content').style.display = 'none';
+    }
+
+    function setMessage(html, cls = '') {
+      const el = $('dl-msg');
+      el.className = 'dl-msg' + (cls ? ' ' + cls : '');
+      el.innerHTML = html;
+    }
+
+    function startCountdown(movie) {
+      const CIRC = 339.292;
+      const ring = $('dl-ring-fg');
+      let left = COUNTDOWN_SECONDS;
+
+      $('dl-count').textContent = left;
+      $('dl-secs').textContent = left;
+      ring.style.strokeDashoffset = '0';
+
+      const timer = setInterval(() => {
+        // Tab chhupa ho (user doosre tab me) to timer ruka rahega
+        if (document.hidden) {
+          setMessage('Timer ruka hua hai. Download ke liye is tab par wapas aayein.', 'warn');
+          return;
+        }
+
+        left -= 1;
+        $('dl-count').textContent = Math.max(left, 0);
+        ring.style.strokeDashoffset = String(CIRC * (1 - left / COUNTDOWN_SECONDS));
+
+        if (left > 0) {
+          setMessage(`Aapka download <strong>${left}</strong> second me ready hoga. Please is tab ko khula rakhein.`);
+          return;
+        }
+
+        clearInterval(timer);
+        revealDownload(movie);
+      }, 1000);
+    }
+
+    function revealDownload(movie) {
+      const url = buildDownloadUrl(movie);
+      const btn = $('dl-btn');
+
+      $('dl-ring').style.display = 'none';
+
+      if (!url) {
+        console.error('[download] WORKER_BASE_URL set nahi hai (download.html ke SETTINGS me).');
+        setMessage('Download server abhi configure nahi hai. Thodi der baad try karein.', 'error');
+        return;
+      }
+
+      btn.href = url;
+      btn.classList.add('is-visible');
+      setMessage('Aapka download ready hai! Neeche button dabayein.');
+
+      btn.addEventListener('click', () => {
+        if (typeof gtag === 'function') {
+          gtag('event', 'file_download', {
+            movie_id: movieId,
+            video_title: movie.title || ''
+          });
+        }
+      }, { once: true });
+    }
+
+    async function init() {
+      // Ad slots
+      $('dl-ad-top').innerHTML = adCardHTML();
+      $('dl-ad-bottom').innerHTML = adCardHTML();
+      mountAds();
+
+      if (!movieId) {
+        showError('Download link galat hai (movie ID nahi mili).');
+        return;
+      }
+
+      try {
+        const snap = await getDoc(doc(db, 'movies', movieId));
+        if (!snap.exists()) {
+          showError('Ye movie ab available nahi hai.');
+          return;
+        }
+
+        const movie = snap.data();
+        const hasFile = movie.messageId !== undefined && movie.messageId !== null && movie.messageId !== '';
+        if (!hasFile) {
+          showError('Is movie ke liye download available nahi hai.');
+          return;
+        }
+
+        const title = movie.title || 'Movie';
+        document.title = `Download ${title} - MovieTB`;
+        $('dl-title').textContent = title;
+        $('dl-meta').textContent = [movie.year, movie.language, movie.format].filter(Boolean).join(' · ');
+
+        const poster = $('dl-poster');
+        poster.alt = title;
+        poster.src = movie.posterUrl || 'assets/images/placeholder.jpg';
+        poster.onerror = () => { poster.onerror = null; poster.src = 'assets/images/placeholder.jpg'; };
+
+        $('dl-back').href = `movie.html?id=${encodeURIComponent(movieId)}`;
+        $('dl-back').textContent = '← Back to movie page';
+
+        $('dl-loading').style.display = 'none';
+        $('dl-content').style.display = 'block';
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'download_page_view', { movie_id: movieId, video_title: title });
+        }
+
+        startCountdown(movie);
+      } catch (err) {
+        console.error('Download page load failed:', err);
+        showError('Kuch gadbad ho gayi. Page refresh karke dobara try karein.');
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>

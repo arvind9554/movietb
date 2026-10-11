@@ -13,6 +13,14 @@ function getDocTimestampMs(docSnap) {
   return 0;
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 /* =========================================================
    HERO CAROUSEL
    (Reverted to the "latest-trailers" movie-poster version per
@@ -57,7 +65,8 @@ async function loadHeroCarousel() {
 
       resolveHeroImage(movie).then((bgUrl) => {
         if (slides[activeIndex] && slides[activeIndex].id === id) {
-          posterBg.style.backgroundImage = `url('${bgUrl}')`;
+          // quotes escape: URL me " ho to CSS toot jaati hai
+          posterBg.style.backgroundImage = `url("${String(bgUrl).replace(/"/g, '%22')}")`;
         }
       });
 
@@ -67,12 +76,12 @@ async function loadHeroCarousel() {
 
       const metaParts = [movie.year, movie.format, movie.language].filter(Boolean);
       metaEl.innerHTML = metaParts
-        .map((part) => `<span class="hero-meta-pill">${part}</span>`)
+        .map((part) => `<span class="hero-meta-pill">${escapeHtml(part)}</span>`)
         .join('');
 
       taglineEl.textContent = '';
 
-      const targetUrl = `movie.html?id=${id}`;
+      const targetUrl = `movie.html?id=${encodeURIComponent(id)}`;
       playBtn.href = targetUrl;
       detailsBtn.href = targetUrl;
       ctaEl.style.display = 'flex';
@@ -153,12 +162,23 @@ function initTrailerArrows() {
 
 /* =========================================================
    HOMEPAGE CATEGORY GRIDS
-   Same data-fetching logic as before - untouched. Only addition
-   is calling initTrailerArrows() once the trailer cards exist.
+
+   Har category me ab:
+     fetchLimit = Firestore se kitne docs laane hain
+     show       = homepage par kitne cards dikhane hain
+   Jab fetchLimit > show hota hai, docs ko createdAt se newest-first sort
+   karke top `show` dikhaye jaate hain. (Pehle limit(4) bina sorting ke
+   kisi bhi 4 docs ko laata tha, isliye nayi add ki hui New Release
+   homepage par aane ki guarantee nahi thi.)
+
+   New Releases ke liye 30 laakar newest 4 dikhate hain. Zyada dikhana ho
+   to `show: 4` ko badal do.
    ========================================================= */
+const DEFAULT_LIMIT = 4;
+
 const categories = [
   'latest-trailers',
-  { id: 'new-releases', gridId: 'new-releases-grid' },
+  { id: 'new-releases', gridId: 'new-releases-grid', fetchLimit: 30, show: 4 },
   'hollywood-english',
   'south-dubbed-movies',
   'classic-cinema',
@@ -167,38 +187,50 @@ const categories = [
   'bhojpuri-movies',
 ];
 
-async function loadHomepageMovies() {
-  for (const cat of categories) {
-    const catId = typeof cat === 'string' ? cat : cat.id;
-    const gridContainer = document.getElementById(
-      typeof cat === 'string' ? `${cat}-grid` : cat.gridId
-    );
-    if (!gridContainer) continue;
+async function loadCategory(cat) {
+  const cfg = typeof cat === 'string' ? { id: cat, gridId: `${cat}-grid` } : cat;
+  const catId = cfg.id;
+  const fetchLimit = cfg.fetchLimit || DEFAULT_LIMIT;
+  const show = cfg.show || DEFAULT_LIMIT;
 
-    try {
-      const q = query(collection(db, "movies"), where("category", "==", catId), limit(4));
-      const querySnapshot = await getDocs(q);
+  const gridContainer = document.getElementById(cfg.gridId);
+  if (!gridContainer) return;
 
-      if (querySnapshot.empty) {
-        gridContainer.innerHTML = `<p class="loading">No posts available in this section.</p>`;
-        continue;
-      }
+  try {
+    const q = query(collection(db, "movies"), where("category", "==", catId), limit(fetchLimit));
+    const querySnapshot = await getDocs(q);
 
-      let html = '';
-      querySnapshot.forEach((doc) => {
-        html += createMovieCard(doc.data(), doc.id);
-      });
-      gridContainer.innerHTML = html;
-
-      if (catId === 'latest-trailers') {
-        initTrailerArrows();
-      }
-
-    } catch (error) {
-      console.error(`Error loading ${catId}:`, error);
-      gridContainer.innerHTML = `<p class="loading">Failed to load content.</p>`;
+    if (querySnapshot.empty) {
+      gridContainer.innerHTML = `<p class="loading">No posts available in this section.</p>`;
+      return;
     }
+
+    let docs = querySnapshot.docs;
+    if (fetchLimit > show) {
+      docs = docs
+        .slice()
+        .sort((a, b) => getDocTimestampMs(b) - getDocTimestampMs(a))
+        .slice(0, show);
+    }
+
+    gridContainer.innerHTML = docs
+      .map((docSnap) => createMovieCard(docSnap.data(), docSnap.id))
+      .join('');
+
+    if (catId === 'latest-trailers') {
+      initTrailerArrows();
+    }
+
+  } catch (error) {
+    console.error(`Error loading ${catId}:`, error);
+    gridContainer.innerHTML = `<p class="loading">Failed to load content.</p>`;
   }
+}
+
+// Saari categories ek saath load hoti hain (pehle ek ke baad ek, jisse
+// homepage dheere bharta tha).
+async function loadHomepageMovies() {
+  await Promise.all(categories.map(loadCategory));
 }
 
 function formatShortTitle(title, wordLimit = 3) {
