@@ -200,7 +200,6 @@
   <script type="module">
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { adCardHTML, mountAds } from './js/ads.js';
     import { TELEGRAM_JOIN_URL } from './js/site-config.js';
 
     // =====================================================================
@@ -289,11 +288,21 @@
       }, { once: true });
     }
 
+    // Ads alag se load hote hain. js/ads.js na mile (ya error aaye) tab bhi
+    // download page chalta rahega, bas ad nahi dikhega.
+    async function loadAds() {
+      try {
+        const ads = await import('./js/ads.js');
+        $('dl-ad-top').innerHTML = ads.adCardHTML();
+        $('dl-ad-bottom').innerHTML = ads.adCardHTML();
+        ads.mountAds();
+      } catch (err) {
+        console.warn('[download] ads.js load nahi hua:', err);
+      }
+    }
+
     async function init() {
-      // Ad slots
-      $('dl-ad-top').innerHTML = adCardHTML();
-      $('dl-ad-bottom').innerHTML = adCardHTML();
-      mountAds();
+      loadAds();
 
       if (!movieId) {
         showError('Download link galat hai (movie ID nahi mili).');
