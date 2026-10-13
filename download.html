@@ -98,6 +98,26 @@
     .dl-back { display: inline-block; margin-top: 22px; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
     .dl-back:hover { text-decoration: underline; }
 
+    .dl-video-ad {
+      display: none;
+      max-width: 760px;
+      margin: 18px auto 0;
+      background: linear-gradient(180deg, #181818 0%, #141414 100%);
+      border: 1px solid #262626;
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .dl-video-label {
+      display: block; margin-bottom: 8px; color: var(--text-muted);
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .dl-video-box {
+      position: relative; width: 100%; max-width: 640px; margin: 0 auto;
+      aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden;
+    }
+    #dl-ad-container { position: absolute; inset: 0; }
+    #dl-ad-video { width: 100%; height: 100%; display: block; }
+
     .dl-ad { max-width: 760px; margin: 18px auto 0; }
     .dl-ad .blog-ad-card { margin: 0; }
 
@@ -125,7 +145,17 @@
   <main class="container">
     <div class="dl-wrap">
 
-      <!-- Ad (upar) -->
+      <!-- Video ad (VAST) - js/site-config.js me VAST_TAG_URL ho tabhi chalta hai -->
+      <div class="dl-video-ad" id="dl-video-ad">
+        <span class="dl-video-label">Advertisement</span>
+        <div class="dl-video-box">
+          <div id="dl-ad-container">
+            <video id="dl-ad-video" muted playsinline></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner ad (upar) -->
       <div class="dl-ad" id="dl-ad-top"></div>
 
       <div class="dl-card" style="margin-top:18px;">
@@ -200,7 +230,10 @@
   <script type="module">
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { TELEGRAM_JOIN_URL } from './js/site-config.js';
+    import * as siteConfig from './js/site-config.js';
+
+    const TELEGRAM_JOIN_URL = String(siteConfig.TELEGRAM_JOIN_URL || '').trim();
+    const VAST_TAG_URL = String(siteConfig.VAST_TAG_URL || '').trim();
 
     // =====================================================================
     // SETTINGS  (sirf yahan badalna hai)
@@ -288,17 +321,112 @@
       }, { once: true });
     }
 
-    // Ads alag se load hote hain. js/ads.js na mile (ya error aaye) tab bhi
-    // download page chalta rahega, bas ad nahi dikhega.
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const el = document.createElement('script');
+        el.src = src;
+        el.async = true;
+        el.onload = resolve;
+        el.onerror = () => reject(new Error('Script load nahi hui: ' + src));
+        document.head.appendChild(el);
+      });
+    }
+
+    // ---------------------------------------------------------------
+    // Video (VAST) ad: Google IMA SDK se, muted auto-play.
+    // Fail ho (adblock / no fill / galat tag) to onFail() chalta hai
+    // aur banner ad dikha diya jaata hai.
+    // ---------------------------------------------------------------
+    function startVideoAd(onFail) {
+      const box = $('dl-video-ad');
+      const container = $('dl-ad-container');
+      const video = $('dl-ad-video');
+      let failed = false;
+
+      box.style.display = 'block';
+
+      const fail = (err) => {
+        if (failed) return;
+        failed = true;
+        console.warn('[download] video ad nahi chala:', err);
+        box.style.display = 'none';
+        onFail();
+      };
+
+      loadScript('https://imasdk.googleapis.com/js/sdkloader/ima3.js').then(() => {
+        const ima = window.google && window.google.ima;
+        if (!ima) { fail(new Error('IMA SDK missing')); return; }
+
+        const w = container.clientWidth || 640;
+        const h = container.clientHeight || 360;
+
+        const adDisplayContainer = new ima.AdDisplayContainer(container, video);
+        const adsLoader = new ima.AdsLoader(adDisplayContainer);
+
+        adsLoader.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, (e) => {
+          fail(e.getError ? e.getError() : e);
+        });
+
+        adsLoader.addEventListener(ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, (e) => {
+          const manager = e.getAdsManager(video);
+
+          manager.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, (ev) => {
+            fail(ev.getError ? ev.getError() : ev);
+          });
+          manager.addEventListener(ima.AdEvent.Type.STARTED, () => {
+            if (typeof gtag === 'function') {
+              gtag('event', 'video_ad_start', { movie_id: movieId });
+            }
+          });
+          manager.addEventListener(ima.AdEvent.Type.ALL_ADS_COMPLETED, () => {
+            box.style.display = 'none';
+          });
+
+          window.addEventListener('resize', () => {
+            try { manager.resize(container.clientWidth, container.clientHeight, ima.ViewMode.NORMAL); } catch (_) {}
+          });
+
+          try {
+            manager.init(w, h, ima.ViewMode.NORMAL);
+            manager.setVolume(0);   // muted autoplay: browsers allow
+            manager.start();
+          } catch (err) {
+            fail(err);
+          }
+        });
+
+        const req = new ima.AdsRequest();
+        req.adTagUrl = VAST_TAG_URL;
+        req.linearAdSlotWidth = w;
+        req.linearAdSlotHeight = h;
+        req.setAdWillAutoPlay(true);
+        req.setAdWillPlayMuted(true);
+
+        adDisplayContainer.initialize();
+        adsLoader.requestAds(req);
+      }).catch(fail);
+    }
+
+    // Banner ads alag se load hote hain. js/ads.js na mile tab bhi page chalta rahe.
     async function loadAds() {
+      let ads = null;
       try {
-        const ads = await import('./js/ads.js');
-        $('dl-ad-top').innerHTML = ads.adCardHTML();
-        $('dl-ad-bottom').innerHTML = ads.adCardHTML();
-        ads.mountAds();
+        ads = await import('./js/ads.js');
       } catch (err) {
         console.warn('[download] ads.js load nahi hua:', err);
       }
+
+      const showBanner = (id) => {
+        if (!ads) return;
+        const slot = $(id);
+        slot.innerHTML = ads.adCardHTML();
+        ads.mountAds(slot);
+      };
+
+      showBanner('dl-ad-bottom');
+
+      if (VAST_TAG_URL) startVideoAd(() => showBanner('dl-ad-top'));
+      else showBanner('dl-ad-top');
     }
 
     async function init() {
