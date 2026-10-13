@@ -244,6 +244,9 @@
 
     const TELEGRAM_JOIN_URL = String(siteConfig.TELEGRAM_JOIN_URL || '').trim();
     const VAST_TAG_URL = String(siteConfig.VAST_TAG_URL || '').trim();
+    // Doosre video slot ke liye alag zone ka VAST URL (optional).
+    // Khali ho to pehle wala hi URL use hota hai.
+    const VAST_TAG_URL_2 = String(siteConfig.VAST_TAG_URL_2 || '').trim() || VAST_TAG_URL;
 
     // =====================================================================
     // SETTINGS  (sirf yahan badalna hai)
@@ -347,7 +350,7 @@
     // Fail ho (adblock / no fill / galat tag) to onFail() chalta hai
     // aur banner ad dikha diya jaata hai.
     // ---------------------------------------------------------------
-    function startVideoAd(ids, onFail) {
+    function startVideoAd(ids, tagUrl, onFail) {
       const box = $(ids.box);
       const container = $(ids.container);
       const video = $(ids.video);
@@ -369,7 +372,7 @@
       const fail = (err) => {
         if (failed) return;
         failed = true;
-        console.warn('[download] video ad nahi chala ->', describe(err), '| VAST URL:', VAST_TAG_URL);
+        console.warn('[download] video ad nahi chala ->', describe(err), '| VAST URL:', tagUrl);
         box.style.display = 'none';
         onFail();
       };
@@ -417,7 +420,7 @@
         });
 
         const req = new ima.AdsRequest();
-        req.adTagUrl = VAST_TAG_URL;
+        req.adTagUrl = tagUrl;
         req.linearAdSlotWidth = w;
         req.linearAdSlotHeight = h;
         req.setAdWillAutoPlay(true);
@@ -446,17 +449,17 @@
 
       // Har slot: pehle video ad try hota hai, fail hone par uska banner dikhta hai.
       const slots = [
-        { ids: { box: 'dl-video-ad',   container: 'dl-ad-container',   video: 'dl-ad-video' },   banner: 'dl-ad-top',    delay: 0 },
-        { ids: { box: 'dl-video-ad-2', container: 'dl-ad-container-2', video: 'dl-ad-video-2' }, banner: 'dl-ad-bottom', delay: 1500 }
+        { ids: { box: 'dl-video-ad',   container: 'dl-ad-container',   video: 'dl-ad-video' },   tag: VAST_TAG_URL,   banner: 'dl-ad-top',    delay: 0 },
+        { ids: { box: 'dl-video-ad-2', container: 'dl-ad-container-2', video: 'dl-ad-video-2' }, tag: VAST_TAG_URL_2, banner: 'dl-ad-bottom', delay: 1500 }
       ];
 
       slots.forEach((slot) => {
-        if (!VAST_TAG_URL) {
+        if (!slot.tag) {
           showBanner(slot.banner);
           return;
         }
         // doosra request thodi der baad, taaki dono ek saath na jaayein
-        setTimeout(() => startVideoAd(slot.ids, () => showBanner(slot.banner)), slot.delay);
+        setTimeout(() => startVideoAd(slot.ids, slot.tag, () => showBanner(slot.banner)), slot.delay);
       });
     }
 

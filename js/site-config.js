@@ -15,3 +15,5 @@ export const USE_TIMER_PAGE = true;
 // Apne ad network ke panel se "VAST tag URL" yahan paste karo (https://... wali).
 // Khali ho to video ad nahi chalega, sirf banner ads dikhenge.
 export const VAST_TAG_URL = 'https://s.magsrv.com/v1/vast.php?idz=6054164&ex-av=name';
+
+export const VAST_TAG_URL_2 = 'https://s.magsrv.com/v1/vast.php?idz=6054166&ex-av=name';
