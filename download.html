@@ -345,10 +345,21 @@
 
       box.style.display = 'block';
 
+      // IMA ke error ko padhne layak text me badalta hai (error code + message)
+      const describe = (err) => {
+        try {
+          if (err && typeof err.getErrorCode === 'function') {
+            return 'IMA error ' + err.getErrorCode() + ': ' +
+              (typeof err.getMessage === 'function' ? err.getMessage() : '');
+          }
+        } catch (_) { /* ignore */ }
+        return String((err && err.message) || err);
+      };
+
       const fail = (err) => {
         if (failed) return;
         failed = true;
-        console.warn('[download] video ad nahi chala:', err);
+        console.warn('[download] video ad nahi chala ->', describe(err), '| VAST URL:', VAST_TAG_URL);
         box.style.display = 'none';
         onFail();
       };
