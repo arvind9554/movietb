@@ -1,4 +1,5 @@
 import { db, auth } from './firebase-config.js';
+import { TELEGRAM_JOIN_URL } from './site-config.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import {
   collection,
@@ -20,7 +21,8 @@ import {
      category: 'new-releases'
      isNewRelease: true
      releaseType: 'gateway'
-     messageId, channelId / channelUsername, telegramLink
+     joinLink  (Telegram channel ka Cloudflare Worker link; khali ho to
+                js/site-config.js ka TELEGRAM_JOIN_URL default use hota hai)
    ========================================================= */
 
 const PLACEHOLDER_POSTER = 'https://via.placeholder.com/300x450?text=MovieTB';
@@ -62,39 +64,27 @@ function showToast(message, type = 'success') {
 }
 
 /**
- * Telegram input samajhta hai:
- *   "27"                              -> { messageId: 27 }
- *   "https://t.me/my_channel/27"      -> { messageId: 27, channelUsername: 'my_channel' }
- *   "https://t.me/c/1234567890/27"    -> { messageId: 27, channelId: '-1001234567890' }
- * Galat input par null deta hai.
+ * Link ko saaf karta hai.
+ *   ""                                   -> ""   (default link use hoga)
+ *   "dry-credit-08ff.xxx.workers.dev"    -> "https://dry-credit-08ff.xxx.workers.dev"
+ *   "https://t.me/channel"               -> same
+ *   galat input                          -> null
+ * (Ab Telegram message ID zaroori nahi hai.)
  */
-function parseTelegramInput(input) {
-  const raw = String(input || '').trim();
-  if (!raw) return null;
-
-  if (/^\d+$/.test(raw)) {
-    const id = Number(raw);
-    return id > 0 ? { messageId: id, channelId: '', channelUsername: '', telegramLink: '' } : null;
-  }
+function normalizeJoinLink(input) {
+  let raw = String(input || '').trim();
+  if (!raw) return '';
+  if (!/^https?:\/\//i.test(raw)) raw = 'https://' + raw;
 
   try {
     const u = new URL(raw);
-    const host = u.hostname.replace(/^www\./, '');
-    if (host !== 't.me' && host !== 'telegram.me') return null;
-
-    const parts = u.pathname.split('/').filter(Boolean);
-    const messageId = Number(parts[parts.length - 1]);
-    if (!Number.isInteger(messageId) || messageId <= 0) return null;
-
-    if (parts[0] === 'c' && parts.length >= 3) {
-      return { messageId, channelId: `-100${parts[1]}`, channelUsername: '', telegramLink: raw };
-    }
-    if (parts.length >= 2) {
-      return { messageId, channelId: '', channelUsername: parts[0], telegramLink: raw };
-    }
-  } catch (_) { /* invalid URL */ }
-
-  return null;
+    if (!u.hostname.includes('.')) return null;
+    let href = u.href;
+    if (u.pathname === '/' && !u.search && !u.hash) href = href.replace(/\/$/, '');
+    return href;
+  } catch (_) {
+    return null;
+  }
 }
 
 function getCreatedTime(movie) {
@@ -136,7 +126,8 @@ function renderReleases() {
   list.innerHTML = releasesCache.map((m) => {
     const poster = m.posterUrl || PLACEHOLDER_POSTER;
     const meta = [m.year, m.language, m.format].filter(Boolean).join(' · ') || '—';
-    const tg = m.messageId ? `Msg ID: ${escapeHtml(m.messageId)}` : 'Msg ID: —';
+    const linkText = m.joinLink || '';
+    const tg = linkText ? `Link: ${escapeHtml(linkText.replace(/^https?:\/\//, ''))}` : 'Link: default';
 
     return `
       <div class="nr-row" data-id="${escapeHtml(m.id)}"
@@ -180,7 +171,7 @@ function startEdit(id) {
   editingId = id;
   $('nr-title').value = m.title || '';
   $('nr-poster-url').value = m.posterUrl || '';
-  $('nr-telegram-msg-id').value = m.telegramLink || (m.messageId ? String(m.messageId) : '');
+  $('nr-telegram-msg-id').value = m.joinLink || '';
   $('nr-year').value = m.year || '';
   $('nr-format').value = m.format || '';
   $('nr-language').value = m.language || '';
@@ -225,14 +216,14 @@ async function handleSubmit(e) {
   const submitBtn = document.querySelector('#new-release-form .btn-submit');
   const title = $('nr-title').value.trim();
   const posterUrl = $('nr-poster-url').value.trim();
-  const tg = parseTelegramInput($('nr-telegram-msg-id').value);
+  const joinLink = normalizeJoinLink($('nr-telegram-msg-id').value);
 
   if (!title || !posterUrl) {
     showToast('Title aur Poster URL zaroori hain.', 'error');
     return;
   }
-  if (!tg) {
-    showToast('Telegram link ya Message ID galat hai. Example: 27 ya https://t.me/channel/27', 'error');
+  if (joinLink === null) {
+    showToast('Link galat hai. Example: ' + TELEGRAM_JOIN_URL, 'error');
     return;
   }
 
@@ -243,10 +234,7 @@ async function handleSubmit(e) {
     category: 'new-releases',
     isNewRelease: true,
     releaseType: 'gateway',
-    messageId: tg.messageId,
-    channelId: tg.channelId,
-    channelUsername: tg.channelUsername,
-    telegramLink: tg.telegramLink,
+    joinLink, // khali ho to pages TELEGRAM_JOIN_URL (site-config.js) use karte hain
     year: /^\d{4}$/.test(yearRaw) ? Number(yearRaw) : yearRaw,
     format: $('nr-format').value.trim(),
     language: $('nr-language').value.trim(),

@@ -148,10 +148,10 @@
             <div class="dl-ring-num" id="dl-count">12</div>
           </div>
 
-          <p class="dl-msg" id="dl-msg">Aapka download <strong id="dl-secs">12</strong> second me ready hoga. Please is tab ko khula rakhein.</p>
+          <p class="dl-msg" id="dl-msg">Telegram link <strong id="dl-secs">12</strong> second me ready hoga. Please is tab ko khula rakhein.</p>
 
-          <a class="dl-btn" id="dl-btn" href="#" rel="nofollow noopener">
-            <span aria-hidden="true">⬇</span> Download Now
+          <a class="dl-btn" id="dl-btn" href="#" target="_blank" rel="nofollow noopener">
+            <i class="fa-brands fa-telegram" aria-hidden="true"></i> Join Telegram Channel
           </a>
 
           <div><a class="dl-back" id="dl-back" href="index.html">← Back</a></div>
@@ -201,24 +201,18 @@
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { adCardHTML, mountAds } from './js/ads.js';
+    import { TELEGRAM_JOIN_URL } from './js/site-config.js';
 
     // =====================================================================
     // SETTINGS  (sirf yahan badalna hai)
     // =====================================================================
     const COUNTDOWN_SECONDS = 12;
 
-    // Apne Cloudflare Worker ka base URL yahan daalo, bina last slash ke.
-    // Example: 'https://movietb-dl.your-name.workers.dev'
-    const WORKER_BASE_URL = '';
-
-    // Worker ka download URL kaise banta hai. Worker ka code mil jaane par
-    // isko exact format ke hisaab se set kiya jaayega.
-    function buildDownloadUrl(movie) {
-      const base = WORKER_BASE_URL.replace(/\/+$/, '');
-      if (!base) return '';
-      const msg = encodeURIComponent(movie.messageId);
-      if (movie.channelId) return `${base}/${encodeURIComponent(movie.channelId)}/${msg}`;
-      return `${base}/${msg}`;
+    // Telegram join link: movie me joinLink ho to wo, nahi to js/site-config.js
+    // ka TELEGRAM_JOIN_URL (aapka Cloudflare Worker link).
+    function getJoinUrl(movie) {
+      const own = String(movie.joinLink || '').trim();
+      return own || TELEGRAM_JOIN_URL;
     }
     // =====================================================================
 
@@ -251,7 +245,7 @@
       const timer = setInterval(() => {
         // Tab chhupa ho (user doosre tab me) to timer ruka rahega
         if (document.hidden) {
-          setMessage('Timer ruka hua hai. Download ke liye is tab par wapas aayein.', 'warn');
+          setMessage('Timer ruka hua hai. Aage badhne ke liye is tab par wapas aayein.', 'warn');
           return;
         }
 
@@ -260,7 +254,7 @@
         ring.style.strokeDashoffset = String(CIRC * (1 - left / COUNTDOWN_SECONDS));
 
         if (left > 0) {
-          setMessage(`Aapka download <strong>${left}</strong> second me ready hoga. Please is tab ko khula rakhein.`);
+          setMessage(`Telegram link <strong>${left}</strong> second me ready hoga. Please is tab ko khula rakhein.`);
           return;
         }
 
@@ -270,24 +264,24 @@
     }
 
     function revealDownload(movie) {
-      const url = buildDownloadUrl(movie);
+      const url = getJoinUrl(movie);
       const btn = $('dl-btn');
 
       $('dl-ring').style.display = 'none';
 
       if (!url) {
-        console.error('[download] WORKER_BASE_URL set nahi hai (download.html ke SETTINGS me).');
-        setMessage('Download server abhi configure nahi hai. Thodi der baad try karein.', 'error');
+        console.error('[download] Telegram link set nahi hai (js/site-config.js).');
+        setMessage('Telegram link abhi available nahi hai. Thodi der baad try karein.', 'error');
         return;
       }
 
       btn.href = url;
       btn.classList.add('is-visible');
-      setMessage('Aapka download ready hai! Neeche button dabayein.');
+      setMessage('Ready! Neeche button dabakar Telegram channel join karein. Movie wahin mil jaayegi.');
 
       btn.addEventListener('click', () => {
         if (typeof gtag === 'function') {
-          gtag('event', 'file_download', {
+          gtag('event', 'telegram_join_click', {
             movie_id: movieId,
             video_title: movie.title || ''
           });
@@ -314,11 +308,6 @@
         }
 
         const movie = snap.data();
-        const hasFile = movie.messageId !== undefined && movie.messageId !== null && movie.messageId !== '';
-        if (!hasFile) {
-          showError('Is movie ke liye download available nahi hai.');
-          return;
-        }
 
         const title = movie.title || 'Movie';
         document.title = `Download ${title} - MovieTB`;

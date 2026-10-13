@@ -1,6 +1,7 @@
 import { db } from './firebase-config.js';
 import { doc, getDoc, collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getYouTubeId } from './main.js';
+import { TELEGRAM_JOIN_URL, USE_TIMER_PAGE } from './site-config.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
@@ -61,8 +62,9 @@ async function loadMovieDetails() {
 
     // ==========================================================
     // NEW RELEASE (Telegram gateway) movies:
-    // player ki jagah poster + details + "Download Now" button.
-    // Button download.html (12 sec timer page) par bhejta hai.
+    // player ki jagah poster + details + "Get Movie on Telegram" button.
+    // Button download.html (12 sec timer page) ya seedha Telegram link par
+    // jaata hai (js/site-config.js ka USE_TIMER_PAGE).
     // ==========================================================
     if (movie.isNewRelease === true || movie.releaseType === 'gateway') {
       renderNewReleasePage(wrapper, movie, movieId);
@@ -175,7 +177,7 @@ async function loadMovieDetails() {
 }
 
 /* =========================================================
-   NEW RELEASE page: Poster + Details + "Download Now"
+   NEW RELEASE page: Poster + Details + "Get Movie on Telegram"
    ========================================================= */
 function detailRow(label, value) {
   if (!value) return '';
@@ -202,7 +204,15 @@ function renderNewReleasePage(wrapper, movie, id) {
   ].filter(Boolean);
   const tagsHtml = tagParts.join('<span class="meta-dot"></span>');
 
-  const downloadHref = `download.html?id=${encodeURIComponent(id)}`;
+  // Button kahan jaayega:
+  //  USE_TIMER_PAGE = true  -> download.html (12 sec timer, phir Join Telegram)
+  //  USE_TIMER_PAGE = false -> seedha Telegram (Worker) link
+  const joinUrl = firstPresent(movie.joinLink, TELEGRAM_JOIN_URL);
+  const ctaHref = USE_TIMER_PAGE ? `download.html?id=${encodeURIComponent(id)}` : joinUrl;
+  const ctaAttrs = USE_TIMER_PAGE ? 'rel="nofollow"' : 'target="_blank" rel="nofollow noopener"';
+  const ctaNote = USE_TIMER_PAGE
+    ? 'Agle page par 12 second ka timer chalega, phir Telegram channel join karke movie paayein.'
+    : 'Telegram channel join karein, movie wahin mil jaayegi.';
 
   wrapper.innerHTML = `
     <div class="nr-detail">
@@ -226,10 +236,10 @@ function renderNewReleasePage(wrapper, movie, id) {
 
         ${summary ? `<div class="summary-box">${escapeHtml(summary)}</div>` : ''}
 
-        <a class="nr-download-btn" id="nr-download-btn" href="${downloadHref}" rel="nofollow">
-          <span aria-hidden="true">⬇</span> Download Now
+        <a class="nr-download-btn" id="nr-download-btn" href="${escapeHtml(ctaHref)}" ${ctaAttrs}>
+          <i class="fa-brands fa-telegram" aria-hidden="true"></i> Get Movie on Telegram
         </a>
-        <p class="nr-note">Download page par 12 second ka timer chalega, uske baad file mil jaayegi.</p>
+        <p class="nr-note">${escapeHtml(ctaNote)}</p>
       </div>
     </div>
 
@@ -250,7 +260,7 @@ function renderNewReleasePage(wrapper, movie, id) {
 
   document.getElementById('nr-download-btn')?.addEventListener('click', () => {
     if (typeof gtag === 'function') {
-      gtag('event', 'download_click', {
+      gtag('event', 'get_movie_click', {
         movie_id: id,
         video_title: title
       });

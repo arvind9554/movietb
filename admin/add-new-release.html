@@ -25,11 +25,12 @@
   <main class="admin-main">
     <div class="admin-card">
       <div class="admin-card-header">
-        <h2>New Releases (Timer Download / Gateway Movies)</h2>
+        <h2>New Releases (Telegram Join Movies)</h2>
         <p class="admin-subtext">
           These movies appear in the homepage's <strong>"New Releases"</strong> section.
-          When users click to watch/download, they pass through your timer page (<code>download.html</code>) 
-          and receive the file via your Cloudflare Worker Telegram gateway link.
+          When a user clicks a movie, they open the details page, pass through your timer page
+          (<code>download.html</code>) and then get a <strong>"Join Telegram Channel"</strong> button
+          that opens your Cloudflare Worker link.
         </p>
       </div>
 
@@ -56,9 +57,9 @@
             <span class="field-hint">Required for homepage card and details page image.</span>
           </div>
           <div class="form-group">
-            <label for="nr-telegram-msg-id">Telegram Post Link / Message ID</label>
-            <input type="text" id="nr-telegram-msg-id" placeholder="e.g. 27 or https://t.me/your_channel/27" required>
-            <span class="field-hint">Used for mapping and generating the Cloudflare Worker file download link.</span>
+            <label for="nr-telegram-msg-id">Telegram Channel Link <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-telegram-msg-id" placeholder="https://dry-credit-08ff.arvindkp9336.workers.dev">
+            <span class="field-hint">Apna Cloudflare Worker link daalo. Khali chhodoge to default link (js/site-config.js) use hoga.</span>
           </div>
         </div>
 
