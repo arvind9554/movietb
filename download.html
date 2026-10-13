@@ -115,8 +115,8 @@
       position: relative; width: 100%; max-width: 640px; margin: 0 auto;
       aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden;
     }
-    #dl-ad-container { position: absolute; inset: 0; }
-    #dl-ad-video { width: 100%; height: 100%; display: block; }
+    #dl-ad-container, #dl-ad-container-2 { position: absolute; inset: 0; }
+    #dl-ad-video, #dl-ad-video-2 { width: 100%; height: 100%; display: block; }
 
     .dl-ad { max-width: 760px; margin: 18px auto 0; }
     .dl-ad .blog-ad-card { margin: 0; }
@@ -188,7 +188,17 @@
         </div>
       </div>
 
-      <!-- Ad (neeche) -->
+      <!-- Video ad #2 (neeche) - fail ho to niche wala banner dikhega -->
+      <div class="dl-video-ad" id="dl-video-ad-2">
+        <span class="dl-video-label">Advertisement</span>
+        <div class="dl-video-box">
+          <div id="dl-ad-container-2">
+            <video id="dl-ad-video-2" muted playsinline></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner ad (neeche) -->
       <div class="dl-ad" id="dl-ad-bottom"></div>
     </div>
   </main>
@@ -337,10 +347,10 @@
     // Fail ho (adblock / no fill / galat tag) to onFail() chalta hai
     // aur banner ad dikha diya jaata hai.
     // ---------------------------------------------------------------
-    function startVideoAd(onFail) {
-      const box = $('dl-video-ad');
-      const container = $('dl-ad-container');
-      const video = $('dl-ad-video');
+    function startVideoAd(ids, onFail) {
+      const box = $(ids.box);
+      const container = $(ids.container);
+      const video = $(ids.video);
       let failed = false;
 
       box.style.display = 'block';
@@ -386,7 +396,7 @@
           });
           manager.addEventListener(ima.AdEvent.Type.STARTED, () => {
             if (typeof gtag === 'function') {
-              gtag('event', 'video_ad_start', { movie_id: movieId });
+              gtag('event', 'video_ad_start', { movie_id: movieId, slot: ids.box });
             }
           });
           manager.addEventListener(ima.AdEvent.Type.ALL_ADS_COMPLETED, () => {
@@ -434,10 +444,20 @@
         ads.mountAds(slot);
       };
 
-      showBanner('dl-ad-bottom');
+      // Har slot: pehle video ad try hota hai, fail hone par uska banner dikhta hai.
+      const slots = [
+        { ids: { box: 'dl-video-ad',   container: 'dl-ad-container',   video: 'dl-ad-video' },   banner: 'dl-ad-top',    delay: 0 },
+        { ids: { box: 'dl-video-ad-2', container: 'dl-ad-container-2', video: 'dl-ad-video-2' }, banner: 'dl-ad-bottom', delay: 1500 }
+      ];
 
-      if (VAST_TAG_URL) startVideoAd(() => showBanner('dl-ad-top'));
-      else showBanner('dl-ad-top');
+      slots.forEach((slot) => {
+        if (!VAST_TAG_URL) {
+          showBanner(slot.banner);
+          return;
+        }
+        // doosra request thodi der baad, taaki dono ek saath na jaayein
+        setTimeout(() => startVideoAd(slot.ids, () => showBanner(slot.banner)), slot.delay);
+      });
     }
 
     async function init() {
