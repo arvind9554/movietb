@@ -14,4 +14,4 @@ export const USE_TIMER_PAGE = true;
 // Video (VAST) ad tag - download.html par timer ke upar auto-play (muted) video ad.
 // Apne ad network ke panel se "VAST tag URL" yahan paste karo (https://... wali).
 // Khali ho to video ad nahi chalega, sirf banner ads dikhenge.
-export const VAST_TAG_URL = 'https://fluffy-machine.com/PQr6nR';
+export const VAST_TAG_URL = 'https://smooth-survey.com/dKmLFGz.d/GcNmvJZVG/UB/re/mk9cu/Z/UllnkVPDTwc/0aNnzRMY0/MrzMMstNNfz_QJ3tMizzQ/zuNVwz';
