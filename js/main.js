@@ -1,5 +1,5 @@
 import { db } from './firebase-config.js';
-import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, getDocs, query, where, getDocsFromCache, getDocsFromServer } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ===== Skeleton Shimmer Loading Cards Builder =====
 export function renderSkeletonCards(container, count = 4) {
@@ -68,7 +68,6 @@ export function getYouTubeId(embedUrl) {
 }
 
 // Build best available poster + a safe fallback chain
-// (exported so js/app.js can reuse the exact same logic for movie cards)
 export function resolvePoster(movie) {
   const ytId = getYouTubeId(movie.embedUrl || movie.trailerUrl);
   
@@ -84,16 +83,6 @@ export function resolvePoster(movie) {
 }
 
 // Highest-quality background image for the homepage HERO only.
-// Priority:
-//   1) movie.heroImageUrl  - set this field on a movie doc (Firestore
-//      Console, or the admin form once wired up) to show EXACTLY the
-//      image you want as the hero background. Full manual control.
-//   2) movie.posterUrl     - whatever is already used on the card.
-//   3) YouTube maxresdefault.jpg (1280x720, sharp) if it actually exists
-//      for that video - YouTube silently returns a tiny 120x90 grey
-//      placeholder when it doesn't, so we probe it first.
-//   4) YouTube hqdefault.jpg (480x360) as a safe fallback.
-//   5) generic placeholder.
 export function resolveHeroImage(movie) {
   return new Promise((resolve) => {
     const heroUrl = ((movie.heroImageUrl || movie.bannerUrl || '') + '').trim();
@@ -119,7 +108,6 @@ export function resolveHeroImage(movie) {
 
     const probe = new Image();
     probe.onload = () => {
-      // YouTube serves a tiny 120x90 grey placeholder when maxres doesn't exist
       resolve(probe.naturalWidth > 200 ? maxres : hq);
     };
     probe.onerror = () => resolve(hq);
@@ -127,7 +115,7 @@ export function resolveHeroImage(movie) {
   });
 }
 
-// Utility to create Movie HTML Card (Fixed - Redirect Navigation)
+// Utility to create Movie HTML Card (Fixed Fallback Syntax Error)
 export function createMovieCard(movie, id) {
     const { primary, fallback } = resolvePoster(movie);
 
@@ -138,19 +126,19 @@ export function createMovieCard(movie, id) {
               src="${primary}"
               alt="${movie.title}"
               loading="lazy"
-              onerror="this.onerror=null;this.src='${fallback}';this.onerror=function(){this.onerror=null;this.src='http...';"
+              onerror="this.onerror=null;this.src='${fallback}';"
             />
             <span class="badge">${movie.format || 'HD'}</span>
         </div>
         <div class="card-details">
             <h3>${movie.title}</h3>
-            <div class="card-meta">${movie.year || ''} • ${movie.language || ''}</div>
+            <div class="card-meta">${movie.year || ''} ${movie.language || ''}</div>
         </div>
     </div>
     `;
 }
 
-// Load Home Page Categories Automatically
+// Load Home Page Categories Automatically with Timeout & Offline Fallback
 const categories = [
   { id: 'latest-trailers', containerId: 'trailers-grid' },
   { id: 'south-dubbed-movies', containerId: 'south-dubbed-grid' },
@@ -162,7 +150,7 @@ async function loadCategoryMovies() {
     const container = document.getElementById(cat.containerId);
     if (!container) continue;
 
-    renderSkeletonCards(container, 4); // Render Skeleton while fetching
+    renderSkeletonCards(container, 4);
 
     try {
       const q = query(
@@ -170,14 +158,30 @@ async function loadCategoryMovies() {
         where("category", "==", cat.id)
       );
 
-      const querySnapshot = await getDocs(q);
+      // Timeout wrapper to prevent hanging when direct from Google search
+      const fetchPromise = getDocs(q);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Firestore timeout")), 7000)
+      );
+
+      let querySnapshot;
+      try {
+        querySnapshot = await Promise.race([fetchPromise, timeoutPromise]);
+      } catch (err) {
+        // Fallback to cache if network times out on direct entry
+        try {
+          querySnapshot = await getDocsFromCache(q);
+        } catch (cacheErr) {
+          throw err;
+        }
+      }
 
       if (querySnapshot.empty) {
         container.innerHTML = `<p class="loading">No posts available in this section.</p>`;
         continue;
       }
 
-      container.innerHTML = ''; // Clear loading skeleton
+      container.innerHTML = '';
 
       querySnapshot.forEach((docSnap) => {
         const movie = docSnap.data();
@@ -187,7 +191,7 @@ async function loadCategoryMovies() {
 
     } catch (error) {
       console.error(`Error loading ${cat.id}:`, error);
-      container.innerHTML = `<p class="loading">Error loading content.</p>`;
+      container.innerHTML = `<p class="loading">Unable to load content. Please refresh.</p>`;
     }
   }
 }
