@@ -138,50 +138,6 @@ export function createMovieCard(movie, id) {
     `;
 }
 
-// ===== Portrait Poster Card (2:3) - "Trending Now" style =====
-// New Releases ke liye. Har card same size ka rehta hai, poster kisi bhi
-// shape ka ho. CSS: style.css ka "Poster cards (New Releases)" block.
-function escapeCardText(value) {
-    return String(value ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-}
-
-export function createPosterCard(movie, id) {
-    const { primary, fallback } = resolvePoster(movie);
-    const title = escapeCardText(movie.title || 'Untitled');
-    const meta = [movie.year, movie.language].filter(Boolean).join(' · ');
-    const badge = movie.format
-        ? `<span class="poster-card-badge">${escapeCardText(movie.format)}</span>`
-        : '';
-
-    return `
-    <a class="poster-card" href="movie.html?id=${encodeURIComponent(id)}" aria-label="Open ${title}">
-        <div class="poster-card-img">
-            <img
-              src="${escapeCardText(primary)}"
-              alt="${title}"
-              loading="lazy"
-              onerror="this.onerror=null;this.src='${fallback}';"
-            />
-            ${badge}
-        </div>
-        <h3 class="poster-card-title">${title}</h3>
-        ${meta ? `<p class="poster-card-meta">${escapeCardText(meta)}</p>` : ''}
-    </a>
-    `;
-}
-
-// Container ko poster layout me badalta hai (purani movie-grid / home-row
-// classes hata deta hai taaki unke purane rules na takraayein).
-export function applyPosterGrid(container) {
-    if (!container) return;
-    container.classList.remove('movie-grid', 'home-row');
-    container.classList.add('poster-grid');
-}
-
 // Load Home Page Categories Automatically with Timeout & Offline Fallback
 const categories = [
   { id: 'latest-trailers', containerId: 'trailers-grid' },
