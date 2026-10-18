@@ -402,6 +402,15 @@ export const blogs = [
 <h2>Release & Expectations</h2>
 <p>With high-voltage action sequences, a haunting background score, and Yash’s completely transformed look, <em>Toxic</em> stands as one of the biggest cinematic events of 2026. Fans and trade analysts expect it to set new box office benchmarks across Indian and global markets.</p>
 
+<!-- 🔻🔻 YAHAN ADD KARNA HAI RELATED MOVIES CONTAINER 🔻🔻 -->
+<div class="blog-related-movies-section" style="margin-top: 30px; padding: 20px 10px; background: #121212; border-radius: 8px;">
+    <h3 style="color: #fff; margin-bottom: 15px; font-size: 20px;">Watch / Related Releases</h3>
+    <div id="blog-movies-grid" class="movies-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px;">
+        <!-- JS ke dwara Firestore movie cards yahan dynamic inject honge -->
+    </div>
+</div>
+<!-- 🔺🔺 AAPKA CONTAINER HERE 🔺🔺 -->
+
 <hr>
 <p><strong>SEO Keywords:</strong> Yash Toxic Movie 2026, Toxic Yash Nayanthara, Geetu Mohandas Toxic, KGF Yash New Movie, Toxic Release Date, MovieTB South News.</p>
 `
@@ -445,5 +454,8 @@ export const blogs = [
 <hr>
 <p><strong>SEO Keywords:</strong> Call of Duty Movie 2026, Call of Duty Live Action, Dwayne Johnson Call of Duty, Jason Statham COD Film, Scarlett Johansson COD, Chris Hemsworth Ghost, Call of Duty Movie Release Date, MovieTB Hollywood News.</p>
 `
+
+
+
 },
 ];

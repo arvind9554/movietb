@@ -1830,3 +1830,117 @@ header {
 .category-pill:nth-child(5) .category-pill-icon { background: rgba(102, 187, 106, 0.12); border-color: rgba(102, 187, 106, 0.3); }
 .category-pill:nth-child(6) .category-pill-icon { background: rgba(236, 64, 122, 0.12); border-color: rgba(236, 64, 122, 0.3); }
 .category-pill:nth-child(7) .category-pill-icon { background: rgba(255, 202, 40, 0.12); border-color: rgba(255, 202, 40, 0.3); }
+
+
+/* =========================================================
+   Poster cards (New Releases) - portrait 2:3, "Trending Now" style
+   main.js ka createPosterCard ye classes use karta hai.
+   ========================================================= */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.poster-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.poster-card-img {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+  border: 1px solid var(--border);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.poster-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.poster-card:hover .poster-card-img {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+  border-color: #3a3a3a;
+}
+.poster-card:hover .poster-card-img img { transform: scale(1.05); }
+
+.poster-card-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 8px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.poster-card-title {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.poster-card-meta {
+  margin-top: 3px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 1100px) {
+  .poster-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Mobile: swipe wali ek row */
+@media (max-width: 760px) {
+  .poster-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .poster-grid::-webkit-scrollbar { display: none; }
+  .poster-grid .poster-card {
+    flex: 0 0 140px;
+    scroll-snap-align: start;
+  }
+}
+
+
+/* ===== Blog ad cards (blog.html & blog-post.html) =====
+   NOTE: ye block pehle wale blog-ad update ka hissa hai, aapki style.css me
+   nahi mila isliye wapas jod diya hai. Blog ads nahi lagaye to hata sakte ho. */
+.blog-ad-card {
+  grid-column: 1 / -1;          /* blog grid me poori row lega */
+  margin: 8px 0;
+  text-align: center;
+}
+.blog-ad-card .movietb-ad-frame {
+  max-width: 560px;             /* blog page par thoda chhota ad */
+}
+.blog-content .blog-ad-card { margin: 28px 0; }
+#ad-between .blog-ad-card { margin: 30px 0 0; }

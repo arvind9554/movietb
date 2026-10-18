@@ -1,6 +1,19 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { createMovieCard, resolveHeroImage } from './main.js';
+import * as mainModule from './main.js';
+
+// Namespace import: agar main.js abhi purani hai (createPosterCard nahi hai) tab
+// bhi homepage nahi tootega, New Releases purane cards me dikh jaayenge.
+const { createMovieCard, resolveHeroImage } = mainModule;
+const createPosterCard = mainModule.createPosterCard || mainModule.createMovieCard;
+const applyPosterGrid = mainModule.applyPosterGrid || (() => {});
+
+// Purani main.js par chup-chaap purane cards dikhne se confusion hota hai,
+// isliye console me saaf warning aati hai.
+if (!mainModule.createPosterCard) {
+  console.warn('[MovieTB] js/main.js purani hai (createPosterCard nahi mila). ' +
+    'Naya main.js upload karo, tab New Releases poster cards me dikhengi.');
+}
 
 function getDocTimestampMs(docSnap) {
   const createdAt = docSnap.data().createdAt;
@@ -171,14 +184,16 @@ function initTrailerArrows() {
    kisi bhi 4 docs ko laata tha, isliye nayi add ki hui New Release
    homepage par aane ki guarantee nahi thi.)
 
-   New Releases ke liye 30 laakar newest 4 dikhate hain. Zyada dikhana ho
-   to `show: 4` ko badal do.
+   New Releases ke liye 30 laakar newest 12 dikhate hain (poster cards).
+   Kam/zyada dikhana ho to `show` badal do.
    ========================================================= */
 const DEFAULT_LIMIT = 4;
 
 const categories = [
   'latest-trailers',
-  { id: 'new-releases', gridId: 'new-releases-grid', fetchLimit: 30, show: 4 },
+  // poster: true -> portrait poster cards (main.js: createPosterCard). Desktop par 6 columns,
+  // mobile par swipe wali row.
+  { id: 'new-releases', gridId: 'new-releases-grid', fetchLimit: 30, show: 12, poster: true },
   'hollywood-english',
   'south-dubbed-movies',
   'classic-cinema',
@@ -213,8 +228,12 @@ async function loadCategory(cat) {
         .slice(0, show);
     }
 
+    if (cfg.poster) applyPosterGrid(gridContainer);
+
     gridContainer.innerHTML = docs
-      .map((docSnap) => createMovieCard(docSnap.data(), docSnap.id))
+      .map((docSnap) => (cfg.poster
+        ? createPosterCard(docSnap.data(), docSnap.id)
+        : createMovieCard(docSnap.data(), docSnap.id)))
       .join('');
 
     if (catId === 'latest-trailers') {
