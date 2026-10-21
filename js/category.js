@@ -65,7 +65,7 @@ async function loadCategoryMovies() {
     if (usePosterCards) {
       // New Releases: sabse nayi movie sabse pehle, aur lambe poster cards
       docs = docs.slice().sort((a, b) => getCreatedMs(b) - getCreatedMs(a));
-      applyPosterGrid(container);
+      //applyPosterGrid(container);
     }
 
     container.innerHTML = docs
