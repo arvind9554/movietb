@@ -184,7 +184,7 @@ function initTrailerArrows() {
    kisi bhi 4 docs ko laata tha, isliye nayi add ki hui New Release
    homepage par aane ki guarantee nahi thi.)
 
-   New Releases ke liye 30 laakar newest 12 dikhate hain (poster cards).
+   New Releases ke liye 30 laakar newest 6 dikhate hain (poster cards).
    Kam/zyada dikhana ho to `show` badal do.
    ========================================================= */
 const DEFAULT_LIMIT = 4;
@@ -193,7 +193,7 @@ const categories = [
   'latest-trailers',
   // poster: true -> portrait poster cards (main.js: createPosterCard). Desktop par 6 columns,
   // mobile par swipe wali row.
-  { id: 'new-releases', gridId: 'new-releases-grid', fetchLimit: 30, show: 12, poster: true },
+  { id: 'new-releases', gridId: 'new-releases-grid', fetchLimit: 30, show: 6, poster: true },
   'hollywood-english',
   'south-dubbed-movies',
   'classic-cinema',
