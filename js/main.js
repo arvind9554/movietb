@@ -141,6 +141,55 @@ export function createMovieCard(movie, id) {
 // ===== Portrait Poster Card (2:3) - "Trending Now" style =====
 // New Releases ke liye. Har card same size ka rehta hai, poster kisi bhi
 // shape ka ho. CSS: style.css ka "Poster cards (New Releases)" block.
+// Poster cards ki CSS yahin se inject hoti hai, taaki style.css update na hui ho
+// tab bhi cards bina design ke (badi images) na dikhen. style.css me wahi block
+// ho to koi dikkat nahi, rules same hain.
+const POSTER_CARD_CSS = `
+.poster-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; margin-bottom: 20px; }
+.poster-card { display: flex; flex-direction: column; min-width: 0; color: inherit; cursor: pointer; }
+.poster-card-img {
+  position: relative; aspect-ratio: 2 / 3; border-radius: 12px; overflow: hidden;
+  background: linear-gradient(135deg, #1a1a1a, #0a0a0a); border: 1px solid #262626;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.poster-card-img img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
+  display: block; transition: transform 0.4s ease;
+}
+.poster-card:hover .poster-card-img { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-color: #3a3a3a; }
+.poster-card:hover .poster-card-img img { transform: scale(1.05); }
+.poster-card-badge {
+  position: absolute; top: 8px; right: 8px; background: #e50914; color: #fff;
+  padding: 3px 8px; font-size: 0.66rem; font-weight: 700; border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+.poster-card-title {
+  margin-top: 10px; font-size: 0.88rem; font-weight: 600; line-height: 1.35; color: #fff;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.poster-card-meta { margin-top: 3px; font-size: 0.75rem; color: #6b6b6b; }
+@media (max-width: 1100px) { .poster-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 761px) and (max-width: 1100px) {
+  #new-releases-grid.poster-grid .poster-card:nth-child(n+5) { display: none; }
+}
+@media (max-width: 760px) {
+  .poster-grid {
+    display: flex; overflow-x: auto; gap: 12px; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 4px;
+  }
+  .poster-grid::-webkit-scrollbar { display: none; }
+  .poster-grid .poster-card { flex: 0 0 140px; scroll-snap-align: start; }
+}
+`;
+
+function ensurePosterStyles() {
+    if (typeof document === 'undefined' || document.getElementById('poster-card-styles')) return;
+    const el = document.createElement('style');
+    el.id = 'poster-card-styles';
+    el.textContent = POSTER_CARD_CSS;
+    document.head.appendChild(el);
+}
+
 function escapeCardText(value) {
     return String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -150,6 +199,7 @@ function escapeCardText(value) {
 }
 
 export function createPosterCard(movie, id) {
+    ensurePosterStyles();
     const { primary, fallback } = resolvePoster(movie);
     const title = escapeCardText(movie.title || 'Untitled');
     const meta = [movie.year, movie.language].filter(Boolean).join(' · ');
@@ -178,6 +228,7 @@ export function createPosterCard(movie, id) {
 // classes hata deta hai taaki unke purane rules na takraayein).
 export function applyPosterGrid(container) {
     if (!container) return;
+    ensurePosterStyles();
     container.classList.remove('movie-grid', 'home-row');
     container.classList.add('poster-grid');
 }
