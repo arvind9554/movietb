@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <meta charset="UTF-8">
   <meta name="application-name" content="MovieTB" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="vPwzBLHUMp86d4LqnhfpBAL5g_XI6M5dYIIfmkzPu6g" />
-  
   <meta name="6a97888e-site-verification" content="a657d0141e2ffb5fed992392d055a4bf">
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <title>MovieTB - Watch Latest Trailers, South Movies & Web Series</title>
   <link rel="canonical" href="https://www.movietb.com/" />
+
+  <!-- Preconnect to speed up Firebase & Analytics -->
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
 
   <!-- Favicon / Apple Touch Icon -->
   <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
@@ -44,8 +47,12 @@
 
   <meta name="monetag" content="be3612b8a8bfa09677a3cf45b8a4b3b8">
 
-  <!-- Preconnects & Google Analytics -->
-  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <!-- Font Awesome & Critical CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Google Analytics Deferred -->
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -53,9 +60,6 @@
     gtag('js', new Date());
     gtag('config', 'G-KTG82NK7YD');
   </script>
-
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
@@ -90,27 +94,18 @@
       <button class="sidebar-close" id="sidebar-close" aria-label="Close">&times;</button>
     </div>
     <nav class="sidebar-links">
-  <a href="category.html?cat=latest-trailers">Trailers</a>
-  <a href="category.html?cat=new-releases">New Releases</a>
-  <a href="category.html?cat=hollywood-english">Hollywood (English)</a>
-  <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
-  <a href="category.html?cat=classic-cinema">Hollywood (Hindi)</a>
-  <a href="category.html?cat=movie-reviews">Web Series</a>
-  <a href="category.html?cat=story-tv">Story TV</a>
-  <a href="category.html?cat=bhojpuri-movies">Bhojpuri Movies</a>
-</nav>
+      <a href="category.html?cat=latest-trailers">Trailers</a>
+      <a href="category.html?cat=new-releases">New Releases</a>
+      <a href="category.html?cat=hollywood-english">Hollywood (English)</a>
+      <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
+      <a href="category.html?cat=classic-cinema">Hollywood (Hindi)</a>
+      <a href="category.html?cat=movie-reviews">Web Series</a>
+      <a href="category.html?cat=story-tv">Story TV</a>
+      <a href="category.html?cat=bhojpuri-movies">Bhojpuri Movies</a>
+    </nav>
   </aside>
 
-  <!--
-    Hero / Banner Section
-    Filled dynamically by js/app.js (loadHeroCarousel) from your real
-    "latest-trailers" movies - title, meta pills, tagline, and the
-    Play/Details button hrefs are all set there. Nothing here plays a
-    video directly; Play/Details just navigate to that movie's own
-    movie.html page, which is where js/movie-details.js picks the right
-    player (YouTube iframe, or the Plyr-powered native player for
-    videoUrl/streamUrl movies).
-  -->
+  <!-- Hero / Banner Section -->
   <section class="hero" id="hero">
     <div class="hero-video-bg" id="hero-video-bg" aria-hidden="true"></div>
     <div class="hero-poster-bg" id="hero-poster-bg" aria-hidden="true"></div>
@@ -118,7 +113,7 @@
 
     <div class="hero-content">
       <span class="hero-badge" id="hero-badge" style="display: none;"></span>
-      <h1 id="hero-title">Loading...</h1>
+      <h1 id="hero-title">MovieTB - Latest Releases</h1>
       <div class="hero-meta" id="hero-meta"></div>
       <p class="hero-tagline" id="hero-tagline" style="display: none;"></p>
 
@@ -131,11 +126,8 @@
     <div class="hero-dots" id="hero-dots" aria-hidden="true"></div>
   </section>
 
-  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
-
   <!-- Main Content Grids -->
   <main class="container">
-    
     <!-- Trending Now -->
     <section class="category-section trailers-section">
       <div class="section-header">
@@ -151,50 +143,23 @@
       </div>
     </section>
 
-   <!-- Popular Categories -->
-<section class="category-section popular-categories-section">
-  <div class="section-header">
-    <h2>Popular Categories</h2>
-  </div>
-  <div class="popular-categories-row">
-    <a class="category-pill" href="category.html?cat=latest-trailers">
-      <span class="category-pill-icon">🎬</span>
-      <span class="category-pill-label">Trailers</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=new-releases">
-      <span class="category-pill-icon">🆕</span>
-      <span class="category-pill-label">New Releases</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=hollywood-english">
-      <span class="category-pill-icon">🎥</span>
-      <span class="category-pill-label">Hollywood (English)</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=south-dubbed-movies">
-      <span class="category-pill-icon">🎞️</span>
-      <span class="category-pill-label">Bollywood</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=classic-cinema">
-      <span class="category-pill-icon">🎦</span>
-      <span class="category-pill-label">Hollywood (Hindi)</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=movie-reviews">
-      <span class="category-pill-icon">📺</span>
-      <span class="category-pill-label">Web Series</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=story-tv">
-      <span class="category-pill-icon">📖</span>
-      <span class="category-pill-label">Story TV</span>
-    </a>
-    <a class="category-pill" href="category.html?cat=bhojpuri-movies">
-      <span class="category-pill-icon">🎉</span>
-      <span class="category-pill-label">Bhojpuri</span>
-    </a>
-  </div>
-  <!-- Mobile Scroll Indicator Line -->
-  <div class="scroll-indicator-bar">
-    <div class="scroll-indicator-progress"></div>
-  </div>
-</section>
+    <!-- Popular Categories -->
+    <section class="category-section popular-categories-section">
+      <div class="section-header">
+        <h2>Popular Categories</h2>
+      </div>
+      <div class="popular-categories-row">
+        <a class="category-pill" href="category.html?cat=latest-trailers"><span class="category-pill-icon">🎬</span><span class="category-pill-label">Trailers</span></a>
+        <a class="category-pill" href="category.html?cat=new-releases"><span class="category-pill-icon">🆕</span><span class="category-pill-label">New Releases</span></a>
+        <a class="category-pill" href="category.html?cat=hollywood-english"><span class="category-pill-icon">🎥</span><span class="category-pill-label">Hollywood (English)</span></a>
+        <a class="category-pill" href="category.html?cat=south-dubbed-movies"><span class="category-pill-icon">🎞️</span><span class="category-pill-label">Bollywood</span></a>
+        <a class="category-pill" href="category.html?cat=classic-cinema"><span class="category-pill-icon">🎦</span><span class="category-pill-label">Hollywood (Hindi)</span></a>
+        <a class="category-pill" href="category.html?cat=movie-reviews"><span class="category-pill-icon">📺</span><span class="category-pill-label">Web Series</span></a>
+        <a class="category-pill" href="category.html?cat=story-tv"><span class="category-pill-icon">📖</span><span class="category-pill-label">Story TV</span></a>
+        <a class="category-pill" href="category.html?cat=bhojpuri-movies"><span class="category-pill-icon">🎉</span><span class="category-pill-label">Bhojpuri</span></a>
+      </div>
+      <div class="scroll-indicator-bar"><div class="scroll-indicator-progress"></div></div>
+    </section>
 
     <!-- New Releases -->
     <section class="category-section" id="new-releases">
@@ -300,26 +265,18 @@
       </nav>
     </div>
 
-
-
     <p class="footer-legal">All content embedded legally from public domains / YouTube.</p>
     <div class="footer-divider" aria-hidden="true"></div>
 
-<!-- Social Media Section -->
-<div class="social-links-wrapper">
-  <p class="social-title">Follow Us / Connect With Us</p>
-  <div class="social-icons">
-    <a href="https://instagram.com/movietb_" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn instagram">
-      <i class="fa-brands fa-instagram"></i>
-    </a>
-    <a href="https://www.facebook.com/profile.php?id=61593529134134" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn facebook">
-      <i class="fa-brands fa-facebook-f"></i>
-    </a>
-    <a href="https://tg.me/movietbofficial" target="_blank" rel="noopener" aria-label="Telegram" class="social-btn telegram">
-      <i class="fa-brands fa-telegram"></i>
-    </a>
-  </div>
-</div>
+    <!-- Social Media Section -->
+    <div class="social-links-wrapper">
+      <p class="social-title">Follow Us / Connect With Us</p>
+      <div class="social-icons">
+        <a href="https://instagram.com/movietb_" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61593529134134" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://tg.me/movietbofficial" target="_blank" rel="noopener" aria-label="Telegram" class="social-btn telegram"><i class="fa-brands fa-telegram"></i></a>
+      </div>
+    </div>
 
     <div class="footer-bottom">
       <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
@@ -327,29 +284,16 @@
     </div>
   </footer>
 
+  <!-- JavaScript Modules (Deferred via type="module") -->
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/app.js"></script>
 
-  <script src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+  <!-- Non-Blocking Ad Scripts Moved to Footer -->
+  <script async src="https://www.highperformanceformat.com/d5880242ed90264e3eb8a6a3e9f527a6/invoke.js"></script>
+  <script async src="https://n6wxm.com/vignette.min.js" data-zone="11628670"></script>
 
-<script>(function(s){s.dataset.zone='11628670',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-  <!--
+  <!-- Smart Event Interceptor -->
   <script>
-  (function(zlyv){
-  var d = document,
-      s = d.createElement('script'),
-      l = d.scripts[d.scripts.length - 1];
-  s.settings = zlyv || {};
-  s.src = "\/\/unfoldedtrade.com\/b.XZVwsOdYGQl\/0SYqW\/cH\/seim\/9\/uNZ\/URlCkNPxT\/clzlNJTnQSwaNiznM\/tKNEzgM\/1_NVDJAe3UNhwr";
-  s.async = true;
-  s.referrerPolicy = 'no-referrer-when-downgrade';
-  l.parentNode.insertBefore(s, l);
-  })({})
-  </script>
--->
-
-  <script>
-    // Smart Event Interceptor for MovieTB
     window.addEventListener('click', function(e) {
       if (e.target && (
           e.target.tagName === 'IFRAME' || 
@@ -362,7 +306,5 @@
       }
     }, true);
   </script>
-
-
 </body>
 </html>
