@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+  <title id="page-title">Download - MovieTB</title>
+  <link rel="canonical" href="https://www.movietb.com/download" />
+  <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KTG82NK7YD');
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .dl-wrap { max-width: 760px; margin: 28px auto 10px; }
+
+    .dl-card {
+      background: linear-gradient(180deg, #181818 0%, #141414 100%);
+      border: 1px solid #262626;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .dl-movie {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      padding-bottom: 22px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #262626;
+    }
+
+    .dl-poster {
+      width: 72px;
+      height: 104px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #262626;
+      background: #0f0f0f;
+      flex-shrink: 0;
+    }
+
+    .dl-title { font-size: 1.25rem; font-weight: 800; color: #fff; line-height: 1.3; }
+    .dl-meta { margin-top: 6px; font-size: 0.85rem; color: #888; }
+
+    .dl-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 14px; }
+    .dl-ring svg { transform: rotate(-90deg); }
+    .dl-ring-bg { stroke: #262626; }
+    .dl-ring-fg {
+      stroke: var(--accent);
+      stroke-linecap: round;
+      stroke-dasharray: 339.292;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .dl-ring-num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem; font-weight: 800; color: #fff;
+    }
+
+    .dl-msg { color: #bbb; font-size: 0.95rem; min-height: 1.5em; }
+    .dl-msg.warn { color: #f5c518; }
+    .dl-msg.error { color: #f87171; }
+
+    .dl-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px auto 0;
+      padding: 15px 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e50914, #b0060f);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(229, 9, 20, 0.4);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .dl-btn.is-visible { display: inline-flex; }
+    .dl-btn:hover { background: linear-gradient(135deg, #ff0a16, #d0060f); transform: translateY(-2px); }
+
+    .dl-back { display: inline-block; margin-top: 22px; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+    .dl-back:hover { text-decoration: underline; }
+
+    .dl-video-ad {
+      display: none;
+      max-width: 760px;
+      margin: 18px auto 0;
+      background: linear-gradient(180deg, #181818 0%, #141414 100%);
+      border: 1px solid #262626;
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .dl-video-label {
+      display: block; margin-bottom: 8px; color: var(--text-muted);
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .dl-video-box {
+      position: relative; width: 100%; max-width: 640px; margin: 0 auto;
+      aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden;
+    }
+    #dl-ad-container, #dl-ad-container-2 { position: absolute; inset: 0; }
+    #dl-ad-video, #dl-ad-video-2 { width: 100%; height: 100%; display: block; }
+
+    .dl-ad { max-width: 760px; margin: 18px auto 0; }
+    .dl-ad .blog-ad-card { margin: 0; }
+
+    @media (max-width: 560px) {
+      .dl-card { padding: 20px; }
+      .dl-btn { width: 100%; }
+    }
+
+
+    /* ===== Telegram Fallback Popup Styles ===== */
+.tg-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  backdrop-filter: blur(5px);
+}
+.tg-modal-content {
+  background: #1a1a1a;
+  border: 1px solid var(--border, #333);
+  padding: 24px;
+  border-radius: 14px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+.tg-modal-content h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.tg-modal-content p {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.tg-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tg-btn-download {
+  background: linear-gradient(135deg, #0088cc, #00a8ff);
+  color: #fff !important;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
+}
+.tg-btn-close {
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.tg-btn-close:hover {
+  color: #fff;
+}
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo"><a href="index.html">Movie<span class="accent">TB</span></a></div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search movies...">
+      <button id="search-btn">Search</button>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="dl-wrap">
+
+      <!-- Video ad (VAST) - js/site-config.js me VAST_TAG_URL ho tabhi chalta hai -->
+      <div class="dl-video-ad" id="dl-video-ad">
+        <span class="dl-video-label">Advertisement</span>
+        <div class="dl-video-box">
+          <div id="dl-ad-container">
+            <video id="dl-ad-video" muted playsinline></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner ad (upar) -->
+      <div class="dl-ad" id="dl-ad-top"></div>
+
+      <div class="dl-card" style="margin-top:18px;">
+        <p class="loading" id="dl-loading">Loading download details...</p>
+
+        <div id="dl-content" style="display:none;">
+          <div class="dl-movie">
+            <img class="dl-poster" id="dl-poster" src="assets/images/placeholder.jpg" alt="">
+            <div>
+              <div class="dl-title" id="dl-title"></div>
+              <div class="dl-meta" id="dl-meta"></div>
+            </div>
+          </div>
+
+          <div class="dl-ring" id="dl-ring">
+            <svg width="130" height="130" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="dl-ring-bg" cx="60" cy="60" r="54" fill="none" stroke-width="8"></circle>
+              <circle class="dl-ring-fg" id="dl-ring-fg" cx="60" cy="60" r="54" fill="none" stroke-width="8"></circle>
+            </svg>
+            <div class="dl-ring-num" id="dl-count">12</div>
+          </div>
+
+          <p class="dl-msg" id="dl-msg">Telegram link <strong id="dl-secs">12</strong> second me ready hoga. Please is tab ko khula rakhein.</p>
+
+          <a class="dl-btn" id="dl-btn" href="#" target="_blank" rel="nofollow noopener">
+            <i class="fa-brands fa-telegram" aria-hidden="true"></i> Join Telegram Channel
+          </a>
+
+          <div><a class="dl-back" id="dl-back" href="index.html">← Back</a></div>
+        </div>
+      </div>
+
+      <!-- Video ad #2 (neeche) - fail ho to niche wala banner dikhega -->
+      <div class="dl-video-ad" id="dl-video-ad-2">
+        <span class="dl-video-label">Advertisement</span>
+        <div class="dl-video-box">
+          <div id="dl-ad-container-2">
+            <video id="dl-ad-video-2" muted playsinline></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner ad (neeche) -->
+      <div class="dl-ad" id="dl-ad-bottom"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-glow" aria-hidden="true"></div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">Movie<span class="accent">TB</span></a>
+        <span class="footer-accent-line" aria-hidden="true"></span>
+        <p class="footer-tagline">Your destination for official trailers, movies and web series.</p>
+      </div>
+      <nav class="footer-col" aria-label="Footer quick links">
+        <h3 class="footer-heading">Quick Links</h3>
+        <ul class="footer-links-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Footer legal links">
+        <h3 class="footer-heading">Legal</h3>
+        <ul class="footer-links-list">
+          <li><a href="dmca.html">DMCA Disclaimer</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="footer-legal">All content embedded legally from public domains / YouTube.</p>
+    <div class="footer-divider" aria-hidden="true"></div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 MovieTB. All rights reserved.</p>
+      <p class="developer-credit">Developer : Arvind Kumar Pandey</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import * as siteConfig from './js/site-config.js';
+
+    const TELEGRAM_JOIN_URL = String(siteConfig.TELEGRAM_JOIN_URL || '').trim();
+    const VAST_TAG_URL = String(siteConfig.VAST_TAG_URL || '').trim();
+    // Doosre video slot ke liye alag zone ka VAST URL (optional).
+    // Khali ho to pehle wala hi URL use hota hai.
+    const VAST_TAG_URL_2 = String(siteConfig.VAST_TAG_URL_2 || '').trim() || VAST_TAG_URL;
+
+    // =====================================================================
+    // SETTINGS  (sirf yahan badalna hai)
+    // =====================================================================
+    const COUNTDOWN_SECONDS = 12;
+
+    // Telegram join link: movie me joinLink ho to wo, nahi to js/site-config.js
+    // ka TELEGRAM_JOIN_URL (aapka Cloudflare Worker link).
+    function getJoinUrl(movie) {
+      const own = String(movie.joinLink || '').trim();
+      return own || TELEGRAM_JOIN_URL;
+    }
+    // =====================================================================
+
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get('id');
+
+    function showError(text) {
+      const loading = $('dl-loading');
+      loading.textContent = text;
+      loading.style.display = 'block';
+      $('dl-content').style.display = 'none';
+    }
+
+    function setMessage(html, cls = '') {
+      const el = $('dl-msg');
+      el.className = 'dl-msg' + (cls ? ' ' + cls : '');
+      el.innerHTML = html;
+    }
+
+    function startCountdown(movie) {
+      const CIRC = 339.292;
+      const ring = $('dl-ring-fg');
+      let left = COUNTDOWN_SECONDS;
+
+      $('dl-count').textContent = left;
+      $('dl-secs').textContent = left;
+      ring.style.strokeDashoffset = '0';
+
+      const timer = setInterval(() => {
+        // Tab chhupa ho (user doosre tab me) to timer ruka rahega
+        if (document.hidden) {
+          setMessage('Timer ruka hua hai. Aage badhne ke liye is tab par wapas aayein.', 'warn');
+          return;
+        }
+
+        left -= 1;
+        $('dl-count').textContent = Math.max(left, 0);
+        ring.style.strokeDashoffset = String(CIRC * (1 - left / COUNTDOWN_SECONDS));
+
+        if (left > 0) {
+          setMessage(`Telegram link <strong>${left}</strong> second me ready hoga. Please is tab ko khula rakhein.`);
+          return;
+        }
+
+        clearInterval(timer);
+        revealDownload(movie);
+      }, 1000);
+    }
+
+    function revealDownload(movie) {
+      const url = getJoinUrl(movie);
+      const btn = $('dl-btn');
+
+      $('dl-ring').style.display = 'none';
+
+      if (!url) {
+        console.error('[download] Telegram link set nahi hai (js/site-config.js).');
+        setMessage('Telegram link abhi available nahi hai. Thodi der baad try karein.', 'error');
+        return;
+      }
+
+      btn.href = url;
+      btn.classList.add('is-visible');
+      setMessage('Ready! Neeche button dabakar Telegram channel join karein. Movie wahin mil jaayegi.');
+
+      btn.addEventListener('click', () => {
+        if (typeof gtag === 'function') {
+          gtag('event', 'telegram_join_click', {
+            movie_id: movieId,
+            video_title: movie.title || ''
+          });
+        }
+      }, { once: true });
+    }
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const el = document.createElement('script');
+        el.src = src;
+        el.async = true;
+        el.onload = resolve;
+        el.onerror = () => reject(new Error('Script load nahi hui: ' + src));
+        document.head.appendChild(el);
+      });
+    }
+
+    // ---------------------------------------------------------------
+    // Video (VAST) ad: Google IMA SDK se, muted auto-play.
+    // Fail ho (adblock / no fill / galat tag) to onFail() chalta hai
+    // aur banner ad dikha diya jaata hai.
+    // ---------------------------------------------------------------
+    function startVideoAd(ids, tagUrl, onFail) {
+      const box = $(ids.box);
+      const container = $(ids.container);
+      const video = $(ids.video);
+      let failed = false;
+
+      box.style.display = 'block';
+
+      // IMA ke error ko padhne layak text me badalta hai (error code + message)
+      const describe = (err) => {
+        try {
+          if (err && typeof err.getErrorCode === 'function') {
+            return 'IMA error ' + err.getErrorCode() + ': ' +
+              (typeof err.getMessage === 'function' ? err.getMessage() : '');
+          }
+        } catch (_) { /* ignore */ }
+        return String((err && err.message) || err);
+      };
+
+      const fail = (err) => {
+        if (failed) return;
+        failed = true;
+        console.warn('[download] video ad nahi chala ->', describe(err), '| VAST URL:', tagUrl);
+        box.style.display = 'none';
+        onFail();
+      };
+
+      loadScript('https://imasdk.googleapis.com/js/sdkloader/ima3.js').then(() => {
+        const ima = window.google && window.google.ima;
+        if (!ima) { fail(new Error('IMA SDK missing')); return; }
+
+        const w = container.clientWidth || 640;
+        const h = container.clientHeight || 360;
+
+        const adDisplayContainer = new ima.AdDisplayContainer(container, video);
+        const adsLoader = new ima.AdsLoader(adDisplayContainer);
+
+        adsLoader.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, (e) => {
+          fail(e.getError ? e.getError() : e);
+        });
+
+        adsLoader.addEventListener(ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, (e) => {
+          const manager = e.getAdsManager(video);
+
+          manager.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, (ev) => {
+            fail(ev.getError ? ev.getError() : ev);
+          });
+          manager.addEventListener(ima.AdEvent.Type.STARTED, () => {
+            if (typeof gtag === 'function') {
+              gtag('event', 'video_ad_start', { movie_id: movieId, slot: ids.box });
+            }
+          });
+          manager.addEventListener(ima.AdEvent.Type.ALL_ADS_COMPLETED, () => {
+            box.style.display = 'none';
+          });
+
+          window.addEventListener('resize', () => {
+            try { manager.resize(container.clientWidth, container.clientHeight, ima.ViewMode.NORMAL); } catch (_) {}
+          });
+
+          try {
+            manager.init(w, h, ima.ViewMode.NORMAL);
+            manager.setVolume(0);   // muted autoplay: browsers allow
+            manager.start();
+          } catch (err) {
+            fail(err);
+          }
+        });
+
+        const req = new ima.AdsRequest();
+        req.adTagUrl = tagUrl;
+        req.linearAdSlotWidth = w;
+        req.linearAdSlotHeight = h;
+        req.setAdWillAutoPlay(true);
+        req.setAdWillPlayMuted(true);
+
+        adDisplayContainer.initialize();
+        adsLoader.requestAds(req);
+      }).catch(fail);
+    }
+
+    // Banner ads alag se load hote hain. js/ads.js na mile tab bhi page chalta rahe.
+    async function loadAds() {
+      let ads = null;
+      try {
+        ads = await import('./js/ads.js');
+      } catch (err) {
+        console.warn('[download] ads.js load nahi hua:', err);
+      }
+
+      const showBanner = (id) => {
+        if (!ads) return;
+        const slot = $(id);
+        slot.innerHTML = ads.adCardHTML();
+        ads.mountAds(slot);
+      };
+
+      // Har slot: pehle video ad try hota hai, fail hone par uska banner dikhta hai.
+      const slots = [
+        { ids: { box: 'dl-video-ad',   container: 'dl-ad-container',   video: 'dl-ad-video' },   tag: VAST_TAG_URL,   banner: 'dl-ad-top',    delay: 0 },
+        { ids: { box: 'dl-video-ad-2', container: 'dl-ad-container-2', video: 'dl-ad-video-2' }, tag: VAST_TAG_URL_2, banner: 'dl-ad-bottom', delay: 1500 }
+      ];
+
+      slots.forEach((slot) => {
+        if (!slot.tag) {
+          showBanner(slot.banner);
+          return;
+        }
+        // doosra request thodi der baad, taaki dono ek saath na jaayein
+        setTimeout(() => startVideoAd(slot.ids, slot.tag, () => showBanner(slot.banner)), slot.delay);
+      });
+    }
+
+    async function init() {
+      loadAds();
+
+      if (!movieId) {
+        showError('Download link galat hai (movie ID nahi mili).');
+        return;
+      }
+
+      try {
+        const snap = await getDoc(doc(db, 'movies', movieId));
+        if (!snap.exists()) {
+          showError('Ye movie ab available nahi hai.');
+          return;
+        }
+
+        const movie = snap.data();
+
+        const title = movie.title || 'Movie';
+        document.title = `Download ${title} - MovieTB`;
+        $('dl-title').textContent = title;
+        $('dl-meta').textContent = [movie.year, movie.language, movie.format].filter(Boolean).join(' · ');
+
+        const poster = $('dl-poster');
+        poster.alt = title;
+        poster.src = movie.posterUrl || 'assets/images/placeholder.jpg';
+        poster.onerror = () => { poster.onerror = null; poster.src = 'assets/images/placeholder.jpg'; };
+
+        $('dl-back').href = `movie.html?id=${encodeURIComponent(movieId)}`;
+        $('dl-back').textContent = '← Back to movie page';
+
+        $('dl-loading').style.display = 'none';
+        $('dl-content').style.display = 'block';
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'download_page_view', { movie_id: movieId, video_title: title });
+        }
+
+        startCountdown(movie);
+      } catch (err) {
+        console.error('Download page load failed:', err);
+        showError('Kuch gadbad ho gayi. Page refresh karke dobara try karein.');
+      }
+    }
+
+    init();
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Apne Telegram button ki class ya selector yahan select karein (jaise aapke page par jo join button hai)
+    const telegramBtn = document.querySelector('.telegram-download-btn, a[href*="t.me"]'); 
+    const modal = document.getElementById('telegramModal');
+    const closeBtn = document.getElementById('closeTgModal');
+
+    if (telegramBtn) {
+        telegramBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const telegramUserUrl = this.getAttribute('href'); // Button ka original link
+            
+            // 1. Telegram app kholne ki koshish karein
+            window.location.href = telegramUserUrl;
+
+            // 2. Fallback timer: agar app installed nahi hoga toh 1.5 second baad popup dikh jayega
+            setTimeout(function() {
+                if (!document.hidden) {
+                    modal.style.display = 'flex';
+                }
+            }, 1500);
+        });
+    }
+
+    // Modal close karne ka action
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
+
+    // Bahar click karne par bhi modal band ho jaye
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+
+
+  </script>
+</body>
+
+
+<!-- Telegram Download Popup Modal -->
+<div id="telegramModal" class="tg-modal-overlay" style="display: none;">
+  <div class="tg-modal-content">
+    <h3>Telegram App Required</h3>
+    <p>Aapke device me Telegram app installed nahi hai. Movie access karne ke liye pehle Telegram download karein.</p>
+    <div class="tg-modal-buttons">
+      <a id="downloadTgBtn" href="https://play.google.com/store/apps/details?id=org.telegram.messenger" target="_blank" class="tg-btn-download">Play Store se Download Karein</a>
+      <button id="closeTgModal" class="tg-btn-close">Wapas Jayein</button>
+    </div>
+  </div>
+</div>
+</html>

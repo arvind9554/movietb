@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Release - MovieTB Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="admin-body">
+
+  <header class="navbar admin-navbar">
+    <div class="navbar-left">
+      <div class="logo"><a href="dashboard.html">Movie<span class="accent">TB</span> <span class="admin-tag">Admin</span></a></div>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="add-movie.html">Add Movie</a>
+      <a href="add-new-release.html">New Releases</a>
+      <a href="hero-banner.html">Hero Banners</a>
+    </nav>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </header>
+
+  <main class="admin-main">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>New Releases (Telegram Join Movies)</h2>
+        <p class="admin-subtext">
+          These movies appear in the homepage's <strong>"New Releases"</strong> section.
+          When a user clicks a movie, they open the details page, pass through your timer page
+          (<code>download.html</code>) and then get a <strong>"Join Telegram Channel"</strong> button
+          that opens your Cloudflare Worker link.
+        </p>
+      </div>
+
+      <!-- Existing new releases -->
+      <div id="new-release-list" class="hero-slides-list">
+        <p class="admin-subtext">Loading current New Releases…</p>
+      </div>
+
+      <hr style="border-color: var(--border); margin: 26px 0;">
+
+      <!-- Add new movie -->
+      <form id="new-release-form" class="admin-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nr-title">Title</label>
+            <input type="text" id="nr-title" placeholder="e.g. Hanuman Ansh 2026" required>
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="nr-poster-url">Poster URL</label>
+            <input type="url" id="nr-poster-url" placeholder="https://domain.com/poster.jpg" required>
+            <span class="field-hint">Required for homepage card and details page image.</span>
+          </div>
+          <div class="form-group">
+            <label for="nr-telegram-msg-id">Telegram Channel Link <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-telegram-msg-id" placeholder="https://dry-credit-08ff.arvindkp9336.workers.dev">
+            <span class="field-hint">Apna Cloudflare Worker link daalo. Khali chhodoge to default link (js/site-config.js) use hoga.</span>
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="nr-year">Year <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-year" placeholder="2026">
+          </div>
+          <div class="form-group">
+            <label for="nr-format">Quality Badge <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-format" placeholder="1080p HD">
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="nr-language">Language <span class="optional-tag">Optional</span></label>
+            <input type="text" id="nr-language" placeholder="Hindi">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nr-summary">Summary <span class="optional-tag">Optional</span></label>
+            <textarea id="nr-summary" rows="3" placeholder="Short synopsis shown on the movie page"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Add to New Releases</button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="../js/add-new-release.js"></script>
+</body>
+</html>
