@@ -417,10 +417,10 @@ export const blogs = [
   },
 
   
-  {
+ {
   id: 14,
   title: "Jailer 2 (2026) - Rajinikanth's Blockbuster Sequel Rewrites Tamil Box Office History",
-  image: "assets/images/jailer-2-movie.jpg",
+  image: "assets/images/jailer-2-movie.jpg?v=2",
   category: "South Indian",
   date: "20 Nov 2026",
   author: "Arvind Kumar Pandey",
@@ -431,13 +431,13 @@ export const blogs = [
 <p>When <em>Jailer</em> released in 2023, it revived the superstar magic of Rajinikanth in a big way. Three years later, <strong>Jailer 2</strong> has gone even bigger. Released worldwide on 15 October 2026 during the Dussehra festival, the Nelson Dilipkumar directorial has become one of the biggest theatrical events of the year and has set new records for Tamil cinema.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="assets/images/jailer-2-poster.jpg" alt="Jailer 2 Movie Poster - Rajinikanth as Tiger Muthuvel Pandian" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/jailer-2-poster.jpg?v=2" alt="Jailer 2 Movie Poster - Rajinikanth as Tiger Muthuvel Pandian" style="display: block; margin: 0 auto; width: auto; max-width: 100%; height: auto; max-height: 480px; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none'" />
 </div>
 
 <h2>Jailer 2 Movie Details</h2>
 <ul>
     <li><strong>Movie:</strong> Jailer 2</li>
-    <li><strong>Industry:</strong> Tamil cinema (Bollywood), also released in Hindi, Telugu, Kannada and Malayalam</li>
+    <li><strong>Industry:</strong> Tamil cinema (Kollywood), also released in Hindi, Telugu, Kannada and Malayalam</li>
     <li><strong>Release Date:</strong> 15 October 2026 (Dussehra release)</li>
     <li><strong>Director and Writer:</strong> Nelson Dilipkumar</li>
     <li><strong>Producer:</strong> Kalanidhi Maran (Sun Pictures)</li>

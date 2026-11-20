@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon" href="https://www.movietb.com/assets/images/logo.png" />
 
   <!-- Open Graph / Social Sharing Tags (blog load hone par update hote hain) -->
+  <meta property="og:site_name" content="MovieTB" />
   <meta property="og:type" id="og-type" content="website" />
   <meta property="og:url" id="og-url" content="https://www.movietb.com/" />
   <meta property="og:title" id="og-title" content="MovieTB - Movies, Trailers & Entertainment News" />
@@ -98,6 +99,25 @@
     .dropdown:hover .dropdown-content,
     .dropdown.open .dropdown-content { display: block; }
 
+    /* Blog hero poster: portrait/landscape dono ke liye safe */
+    .blog-article .blog-hero-img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 480px;
+      margin: 20px auto 28px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+    @media (max-width: 600px) {
+      .blog-article .blog-hero-img { max-height: 360px; }
+    }
+
+    /* Blog content ke andar ki images/tables mobile par bahar na nikle */
+    .blog-content img { max-width: 100%; height: auto; }
+    .blog-content table { display: block; overflow-x: auto; max-width: 100%; }
+
     /* Recommendation Sections */
     .recommend-section {
       margin-top: 40px;
@@ -166,10 +186,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    /* Blog content ke andar ki images/tables mobile par bahar na nikle */
-    .blog-content img { max-width: 100%; height: auto; }
-    .blog-content table { display: block; overflow-x: auto; max-width: 100%; }
   </style>
 </head>
 <body>
@@ -248,7 +264,6 @@
     </div>
   </footer>
 
-  <!-- main.js sirf ek baar -->
   <script type="module" src="js/main.js"></script>
 
   <!-- Dropdown: mobile par click se khule -->
@@ -264,13 +279,16 @@
     })();
   </script>
 
-  <!-- Blog page logic (sirf ek module block) -->
+  <!-- Blog page logic -->
   <script type="module">
-    import { blogs } from './js/blogs-data.js';
-    import { db } from './js/firebase-config.js';
-    import { collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    // Sirf blogs-data static import hai. Firebase neeche dynamic load hota hai,
+    // taaki Firebase fail ho to bhi article hamesha dikhe.
+    // blogs-data.js update karne par ?v= number badha dena (cache bust).
+    import { blogs } from './js/blogs-data.js?v=2';
 
     const SITE = 'https://www.movietb.com';
+    const HIDE_KEYWORD_LINE = true; // article ke end ki visible "SEO Keywords:" line chhupane ke liye
+
     const params = new URLSearchParams(window.location.search);
     const id = parseInt(params.get('id'), 10);
     const blog = blogs.find(b => b.id === id);
@@ -297,6 +315,12 @@
       if (el) el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', value);
     }
 
+    // "20 Nov 2026" -> "2026-11-20" (Google ko ISO date chahiye)
+    function toIsoDate(dateStr) {
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? undefined : d.toISOString().slice(0, 10);
+    }
+
     function normalizeCategory(categoryStr) {
       if (!categoryStr) return '';
       const cat = String(categoryStr).toLowerCase().trim();
@@ -317,9 +341,14 @@
       return null;
     }
 
-    // Blog content ke andar ka <h1> hata do (page par H1 sirf ek hona chahiye)
+    // Content cleanup: duplicate <h1> hatao, aur (optional) visible keyword line hatao
     function cleanContent(html) {
-      return String(html || '').replace(/<h1[\s\S]*?<\/h1>/i, '');
+      let out = String(html || '').replace(/<h1[\s\S]*?<\/h1>/i, '');
+      if (HIDE_KEYWORD_LINE) {
+        out = out.replace(/<hr\s*\/?>\s*<p>\s*<strong>\s*SEO Keywords:[\s\S]*?<\/p>/i, '');
+        out = out.replace(/<p>\s*<strong>\s*SEO Keywords:[\s\S]*?<\/p>/i, '');
+      }
+      return out;
     }
 
     function updateSEO(b) {
@@ -340,15 +369,11 @@
       setMeta('tw-desc', desc);
       setMeta('tw-image', img);
 
-      // Article structured data
-      const ld = document.createElement('script');
-      ld.type = 'application/ld+json';
-      ld.textContent = JSON.stringify({
+      const schema = {
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": b.title,
         "image": [img],
-        "datePublished": b.date,
         "author": { "@type": "Person", "name": b.author },
         "publisher": {
           "@type": "Organization",
@@ -357,7 +382,13 @@
         },
         "mainEntityOfPage": url,
         "description": desc
-      });
+      };
+      const iso = toIsoDate(b.date);
+      if (iso) schema.datePublished = iso;
+
+      const ld = document.createElement('script');
+      ld.type = 'application/ld+json';
+      ld.textContent = JSON.stringify(schema);
       document.head.appendChild(ld);
     }
 
@@ -370,7 +401,7 @@
       article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
     }
 
-    // ---------- Related movies (Firestore) ----------
+    // ---------- Recommended movies (Firebase, dynamic import) ----------
     async function loadRecommendedMovies(categoryName) {
       const moviesContainer = document.getElementById('recommended-movies');
       const titleElem = document.getElementById('recommended-movies-title');
@@ -379,8 +410,11 @@
       titleElem.textContent = `Recommended ${categoryName} Movies`;
 
       try {
-        const q = query(collection(db, "movies"), limit(100));
-        const snap = await getDocs(q);
+        const { db } = await import('./js/firebase-config.js');
+        const { collection, getDocs, query, limit } =
+          await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+
+        const snap = await getDocs(query(collection(db, "movies"), limit(100)));
 
         if (snap.empty) {
           moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">No movies found.</p>`;
@@ -430,12 +464,12 @@
     } else {
       updateSEO(blog);
 
-      // Content seedha HTML ki tarah render (pehle <p> mein wrap hota tha, wo galat tha)
       article.innerHTML = `
         <span class="blog-badge-inline">${escapeHtml(blog.category)}</span>
         <h1>${escapeHtml(blog.title)}</h1>
         <div class="blog-meta">By ${escapeHtml(blog.author)} • ${escapeHtml(blog.date)}</div>
-        <img src="${escapeHtml(blog.image)}" alt="${escapeHtml(blog.title)}" class="blog-hero-img">
+        <img src="${escapeHtml(blog.image)}" alt="${escapeHtml(blog.title)}" class="blog-hero-img"
+             fetchpriority="high" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg'">
         <div class="blog-content">${cleanContent(blog.content)}</div>
         <a href="blog.html" class="back-link">← Back to Blog</a>
       `;
@@ -457,7 +491,8 @@
       if (relatedContainer) {
         relatedContainer.innerHTML = relatedBlogs.map(b => `
           <a href="blog-post.html?id=${b.id}" class="related-blog-card">
-            <img src="${escapeHtml(b.image)}" alt="${escapeHtml(b.title)}" loading="lazy">
+            <img src="${escapeHtml(b.image)}" alt="${escapeHtml(b.title)}" loading="lazy"
+                 onerror="this.onerror=null;this.src='assets/images/placeholder.jpg'">
             <div class="info"><h4>${escapeHtml(b.title)}</h4></div>
           </a>
         `).join('');
