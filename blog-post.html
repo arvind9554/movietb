@@ -1,54 +1,53 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-<link rel="canonical" href="https://www.movietb.com/blog-post" />
-<meta name="monetag" content="be3612b8a8bfa09677a3cf45b8a4b3b8">
-
-<!-- Favicon / Apple Touch Icon -->
-  <link rel="icon" type="image/svg+xml" href="https://www.movietb.com/assets/images/logo.png" />
-  <link rel="apple-touch-icon" href="https://www.movietb.com/assets/images/logo.png" />
-
-  <!-- Open Graph / Social Sharing Tags -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.movietb.com/" />
-  <meta property="og:title" content="MovieTB - Watch Latest Movies & Series" />
-  <meta property="og:description" content="Explore and watch your favorite movies and web series online." />
-  <meta property="og:image" content="https://www.movietb.com/assets/images/placeholder.jpg" />
-
-  <!-- Twitter Cards -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://www.movietb.com/" />
-  <meta name="twitter:title" content="MovieTB - Watch Latest Movies & Series" />
-  <meta name="twitter:description" content="Explore and watch your favorite movies and web series online." />
-  <meta name="twitter:image" content="https://www.movietb.com/assets/images/placeholder.jpg" />
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KTG82NK7YD');
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "MovieTB",
-  "url": "https://www.movietb.com/"
-}
-</script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">Blog - MovieTB</title>
+  <meta name="description" id="meta-desc" content="Latest movie news, reviews and updates on MovieTB.">
+  <link rel="canonical" id="canonical-link" href="https://www.movietb.com/blog.html" />
+  <meta name="monetag" content="be3612b8a8bfa09677a3cf45b8a4b3b8">
+
+  <!-- Favicon / Apple Touch Icon -->
+  <link rel="icon" type="image/png" href="https://www.movietb.com/assets/images/logo.png" />
+  <link rel="apple-touch-icon" href="https://www.movietb.com/assets/images/logo.png" />
+
+  <!-- Open Graph / Social Sharing Tags (blog load hone par update hote hain) -->
+  <meta property="og:type" id="og-type" content="website" />
+  <meta property="og:url" id="og-url" content="https://www.movietb.com/" />
+  <meta property="og:title" id="og-title" content="MovieTB - Movies, Trailers & Entertainment News" />
+  <meta property="og:description" id="og-desc" content="Explore movie news, trailers and updates on MovieTB." />
+  <meta property="og:image" id="og-image" content="https://www.movietb.com/assets/images/placeholder.jpg" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" id="tw-title" content="MovieTB - Movies, Trailers & Entertainment News" />
+  <meta name="twitter:description" id="tw-desc" content="Explore movie news, trailers and updates on MovieTB." />
+  <meta name="twitter:image" id="tw-image" content="https://www.movietb.com/assets/images/placeholder.jpg" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KTG82NK7YD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KTG82NK7YD');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MovieTB",
+    "url": "https://www.movietb.com/"
+  }
+  </script>
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 
   <style>
-    /* Navbar Alignment & Dropdown Fix */
+    /* Navbar Alignment & Dropdown */
     .navbar {
       display: flex;
       align-items: center;
@@ -58,18 +57,8 @@
       position: relative;
       z-index: 1000;
     }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .dropdown { position: relative; display: inline-block; }
     .dropbtn {
       background: #1e293b;
       color: #ffffff;
@@ -82,8 +71,6 @@
       align-items: center;
       gap: 6px;
     }
-
-    /* Dropdown content popup positioning */
     .dropdown-content {
       display: none;
       position: absolute;
@@ -98,7 +85,6 @@
       padding: 6px 0;
       margin-top: 5px;
     }
-
     .dropdown-content a {
       color: #cbd5e1;
       padding: 10px 16px;
@@ -108,120 +94,82 @@
       white-space: nowrap;
       transition: background 0.2s, color 0.2s;
     }
-
-    .dropdown-content a:hover {
-      background-color: #1e293b;
-      color: #e2e8f0;
-    }
-
-    /* Hover action */
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
+    .dropdown-content a:hover { background-color: #1e293b; color: #e2e8f0; }
+    .dropdown:hover .dropdown-content,
+    .dropdown.open .dropdown-content { display: block; }
 
     /* Recommendation Sections */
-.recommend-section {
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid #1e293b;
-}
+    .recommend-section {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #1e293b;
+    }
+    .recommend-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .recommend-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background-color: #e11d48;
+      border-radius: 2px;
+    }
+    .related-blogs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .related-blog-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .related-blog-card:hover { transform: translateY(-3px); border-color: #334155; }
+    .related-blog-card img { width: 100%; height: 120px; object-fit: cover; }
+    .related-blog-card .info { padding: 10px; }
+    .related-blog-card h4 { font-size: 14px; color: #f1f5f9; margin: 0 0 6px 0; line-height: 1.3; }
 
-.recommend-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    .movies-scroll-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 14px;
+    }
+    .movie-mini-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .movie-mini-card:hover { transform: scale(1.03); }
+    .movie-mini-card img { width: 100%; height: 190px; object-fit: cover; }
+    .movie-mini-card p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
+      padding: 8px;
+      margin: 0;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.recommend-title::before {
-  content: '';
-  display: inline-block;
-  width: 4px;
-  height: 20px;
-  background-color: #e11d48; /* Accent Color */
-  border-radius: 2px;
-}
-
-/* Related Blogs Grid */
-.related-blogs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 30px;
-}
-
-.related-blog-card {
-  background: #0f172a;
-  border: 1px solid #1e293b;
-  border-radius: 8px;
-  overflow: hidden;
-  text-decoration: none;
-  transition: transform 0.2s, border-color 0.2s;
-}
-
-.related-blog-card:hover {
-  transform: translateY(-3px);
-  border-color: #334155;
-}
-
-.related-blog-card img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-}
-
-.related-blog-card .info {
-  padding: 10px;
-}
-
-.related-blog-card h4 {
-  font-size: 14px;
-  color: #f1f5f9;
-  margin: 0 0 6px 0;
-  line-height: 1.3;
-}
-
-/* Recommended Movies Horizontal Scroll / Grid */
-.movies-scroll-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 14px;
-}
-
-.movie-mini-card {
-  background: #0f172a;
-  border: 1px solid #1e293b;
-  border-radius: 8px;
-  overflow: hidden;
-  text-decoration: none;
-  transition: transform 0.2s;
-}
-
-.movie-mini-card:hover {
-  transform: scale(1.03);
-}
-
-.movie-mini-card img {
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
-}
-
-.movie-mini-card p {
-  font-size: 13px;
-  font-weight: 600;
-  color: #e2e8f0;
-  padding: 8px;
-  margin: 0;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    /* Blog content ke andar ki images/tables mobile par bahar na nikle */
+    .blog-content img { max-width: 100%; height: auto; }
+    .blog-content table { display: block; overflow-x: auto; max-width: 100%; }
   </style>
 </head>
 <body>
@@ -236,9 +184,10 @@
       <a href="index.html">Home</a>
       <a href="blog.html">Blog</a>
       <a href="about.html">About</a>
-      <div class="dropdown">
-        <button class="dropbtn">Categories <span class="arrow">▾</span></button>
+      <div class="dropdown" id="cat-dropdown">
+        <button class="dropbtn" type="button">Categories <span class="arrow">▾</span></button>
         <div class="dropdown-content">
+          <!-- NOTE: labels aur slugs apne category.html ke hisaab se verify karo -->
           <a href="category.html?cat=latest-trailers">Trailers</a>
           <a href="category.html?cat=hollywood-english">Hollywood (English)</a>
           <a href="category.html?cat=south-dubbed-movies">Bollywood</a>
@@ -256,21 +205,15 @@
       <p class="loading">Loading article...</p>
     </article>
 
-    <!-- 1. Related Blogs Section -->
-  <section class="recommend-section">
-    <h3 class="recommend-title">More Related Articles</h3>
-    <div class="related-blogs-grid" id="related-blogs">
-      <!-- JavaScript Dynamic Render Karega -->
-    </div>
-  </section>
+    <section class="recommend-section">
+      <h3 class="recommend-title">More Related Articles</h3>
+      <div class="related-blogs-grid" id="related-blogs"></div>
+    </section>
 
-  <!-- 2. Recommended Movies Section -->
-  <section class="recommend-section">
-    <h3 class="recommend-title" id="recommended-movies-title">Recommended Movies</h3>
-    <div class="movies-scroll-grid" id="recommended-movies">
-      <!-- Category Matching Movies Here -->
-    </div>
-  </section>
+    <section class="recommend-section">
+      <h3 class="recommend-title" id="recommended-movies-title">Recommended Movies</h3>
+      <div class="movies-scroll-grid" id="recommended-movies"></div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -305,186 +248,223 @@
     </div>
   </footer>
 
+  <!-- main.js sirf ek baar -->
   <script type="module" src="js/main.js"></script>
+
+  <!-- Dropdown: mobile par click se khule -->
+  <script>
+    (function () {
+      var dd = document.getElementById('cat-dropdown');
+      if (!dd) return;
+      dd.querySelector('.dropbtn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        dd.classList.toggle('open');
+      });
+      document.addEventListener('click', function () { dd.classList.remove('open'); });
+    })();
+  </script>
+
+  <!-- Blog page logic (sirf ek module block) -->
   <script type="module">
     import { blogs } from './js/blogs-data.js';
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    const SITE = 'https://www.movietb.com';
     const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get('id'));
+    const id = parseInt(params.get('id'), 10);
     const blog = blogs.find(b => b.id === id);
     const article = document.getElementById('blog-article');
 
-    if (blog) {
-      document.getElementById('page-title').textContent = blog.title + ' - MovieTB';
-      article.innerHTML = `
-        <span class="blog-badge-inline">${blog.category}</span>
-        <h1>${blog.title}</h1>
-        <div class="blog-meta">By ${blog.author} • ${blog.date}</div>
-        <img src="${blog.image}" alt="${blog.title}" class="blog-hero-img">
-        <div class="blog-content">
-          ${blog.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
-        </div>
-        <a href="blog.html" class="back-link">← Back to Blog</a>
-      `;
-    } else {
+    // ---------- Helpers ----------
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function absoluteUrl(path) {
+      if (!path) return `${SITE}/assets/images/placeholder.jpg`;
+      if (/^https?:\/\//i.test(path)) return path;
+      return `${SITE}/${path.replace(/^\/+/, '')}`;
+    }
+
+    function setMeta(idName, value) {
+      const el = document.getElementById(idName);
+      if (el) el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', value);
+    }
+
+    function normalizeCategory(categoryStr) {
+      if (!categoryStr) return '';
+      const cat = String(categoryStr).toLowerCase().trim();
+      if (cat.includes('hollywood')) return 'hollywood';
+      if (cat.includes('bollywood') || cat.includes('south') || cat.includes('hindi')) return 'bollywood';
+      if (cat.includes('trailer')) return 'trailer';
+      if (cat.includes('series') || cat.includes('tv')) return 'series';
+      return cat;
+    }
+
+    function getYouTubePoster(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = String(url).match(regExp);
+      if (match && match[2].length === 11) {
+        return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
+      }
+      return null;
+    }
+
+    // Blog content ke andar ka <h1> hata do (page par H1 sirf ek hona chahiye)
+    function cleanContent(html) {
+      return String(html || '').replace(/<h1[\s\S]*?<\/h1>/i, '');
+    }
+
+    function updateSEO(b) {
+      const url = `${SITE}/blog-post.html?id=${b.id}`;
+      const title = `${b.title} - MovieTB`;
+      const desc = b.excerpt || '';
+      const img = absoluteUrl(b.image);
+
+      document.getElementById('page-title').textContent = title;
+      setMeta('meta-desc', desc);
+      setMeta('canonical-link', url);
+      setMeta('og-type', 'article');
+      setMeta('og-url', url);
+      setMeta('og-title', title);
+      setMeta('og-desc', desc);
+      setMeta('og-image', img);
+      setMeta('tw-title', title);
+      setMeta('tw-desc', desc);
+      setMeta('tw-image', img);
+
+      // Article structured data
+      const ld = document.createElement('script');
+      ld.type = 'application/ld+json';
+      ld.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": b.title,
+        "image": [img],
+        "datePublished": b.date,
+        "author": { "@type": "Person", "name": b.author },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MovieTB",
+          "logo": { "@type": "ImageObject", "url": `${SITE}/assets/images/logo.png` }
+        },
+        "mainEntityOfPage": url,
+        "description": desc
+      });
+      document.head.appendChild(ld);
+    }
+
+    function renderNotFound() {
+      document.getElementById('page-title').textContent = 'Article not found - MovieTB';
+      const robots = document.createElement('meta');
+      robots.name = 'robots';
+      robots.content = 'noindex';
+      document.head.appendChild(robots);
       article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
     }
-  </script>
-  
-<script type="module" src="js/main.js"></script>
-<script type="module">
-  import { blogs } from './js/blogs-data.js';
-  import { db } from './js/firebase-config.js';
-  import { collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  const params = new URLSearchParams(window.location.search);
-  const id = parseInt(params.get('id'));
-  const blog = blogs.find(b => b.id === id);
-  const article = document.getElementById('blog-article');
+    // ---------- Related movies (Firestore) ----------
+    async function loadRecommendedMovies(categoryName) {
+      const moviesContainer = document.getElementById('recommended-movies');
+      const titleElem = document.getElementById('recommended-movies-title');
+      if (!moviesContainer || !titleElem) return;
 
-  // --- Helper Function: Category Names ko Clean/Normalize karne ke liye ---
-  function normalizeCategory(categoryStr) {
-    if (!categoryStr) return '';
-    const cat = String(categoryStr).toLowerCase().trim();
+      titleElem.textContent = `Recommended ${categoryName} Movies`;
 
-    if (cat.includes('hollywood')) return 'hollywood';
-    if (cat.includes('bollywood') || cat.includes('south') || cat.includes('hindi')) return 'bollywood';
-    if (cat.includes('trailer')) return 'trailer';
-    if (cat.includes('series') || cat.includes('tv')) return 'series';
+      try {
+        const q = query(collection(db, "movies"), limit(100));
+        const snap = await getDocs(q);
 
-    return cat;
-  }
+        if (snap.empty) {
+          moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">No movies found.</p>`;
+          return;
+        }
 
-  // --- Helper Function: YouTube URL se Poster Extract karne ke liye ---
-  function getYouTubePoster(url) {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = String(url).match(regExp);
-    if (match && match[2].length === 11) {
-      return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
-    }
-    return null;
-  }
+        const allMovies = [];
+        snap.forEach(d => allMovies.push({ id: d.id, ...d.data() }));
 
-  if (blog) {
-    document.getElementById('page-title').textContent = blog.title + ' - MovieTB';
-    
-    // 1. Current Blog Article Render
-    article.innerHTML = `
-      <span class="blog-badge-inline">${blog.category}</span>
-      <h1>${blog.title}</h1>
-      <div class="blog-meta">By ${blog.author} • ${blog.date}</div>
-      <img src="${blog.image}" alt="${blog.title}" class="blog-hero-img">
-      <div class="blog-content">
-        ${blog.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
-      </div>
-      <a href="blog.html" class="back-link">← Back to Blog</a>
-    `;
+        const targetTag = normalizeCategory(categoryName);
+        let filtered = allMovies.filter(m => {
+          if (Array.isArray(m.categories)) {
+            return m.categories.some(c => normalizeCategory(c) === targetTag);
+          }
+          const movieCat = normalizeCategory(m.category || m.cat || m.genre || '');
+          return movieCat === targetTag || (targetTag && movieCat.includes(targetTag));
+        });
 
-    // 2. Related Articles Render (Filtered by Same Category)
-    const currentCatNormalized = normalizeCategory(blog.category);
-    let relatedBlogs = blogs.filter(b => b.id !== blog.id && normalizeCategory(b.category) === currentCatNormalized).slice(0, 3);
+        filtered = (filtered.length ? filtered : allMovies).slice(0, 20);
 
-    // Agar same category ke 3 blogs nahi milte, toh baki blogs add karke 3 count pura karein
-    if (relatedBlogs.length < 3) {
-      const extraBlogs = blogs.filter(b => b.id !== blog.id && !relatedBlogs.some(rb => rb.id === b.id)).slice(0, 3 - relatedBlogs.length);
-      relatedBlogs = [...relatedBlogs, ...extraBlogs];
+        moviesContainer.innerHTML = filtered.map(movie => {
+          let posterImg = movie.poster || movie.posterUrl || movie.image || movie.thumbnail || movie.poster_path;
+          if (!posterImg) {
+            const ytLink = movie.youtubeUrl || movie.youtube || movie.trailer || movie.embedUrl || movie.url || movie.videoUrl || movie.youtubeId;
+            posterImg = getYouTubePoster(ytLink);
+          }
+          posterImg = posterImg || 'assets/images/placeholder.jpg';
+          const movieTitle = movie.title || movie.name || 'Untitled';
+
+          return `
+            <a href="movie.html?id=${encodeURIComponent(movie.id)}" class="movie-mini-card">
+              <img src="${escapeHtml(posterImg)}" alt="${escapeHtml(movieTitle)}" loading="lazy"
+                   onerror="this.onerror=null;this.src='assets/images/placeholder.jpg'">
+              <p>${escapeHtml(movieTitle)}</p>
+            </a>`;
+        }).join('');
+
+      } catch (err) {
+        console.error("Error fetching recommended movies:", err);
+        moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">Unable to load recommendations.</p>`;
+      }
     }
 
-    const relatedContainer = document.getElementById('related-blogs');
-    if (relatedContainer) {
-      relatedContainer.innerHTML = relatedBlogs.map(b => `
-        <a href="blog-post.html?id=${b.id}" class="related-blog-card">
-          <img src="${b.image}" alt="${b.title}">
-          <div class="info">
-            <h4>${b.title}</h4>
-          </div>
-        </a>
-      `).join('');
-    }
+    // ---------- Main ----------
+    if (!blog) {
+      renderNotFound();
+    } else {
+      updateSEO(blog);
 
-    // 3. Recommended Movies Load
-    loadRecommendedMovies(blog.category);
+      // Content seedha HTML ki tarah render (pehle <p> mein wrap hota tha, wo galat tha)
+      article.innerHTML = `
+        <span class="blog-badge-inline">${escapeHtml(blog.category)}</span>
+        <h1>${escapeHtml(blog.title)}</h1>
+        <div class="blog-meta">By ${escapeHtml(blog.author)} • ${escapeHtml(blog.date)}</div>
+        <img src="${escapeHtml(blog.image)}" alt="${escapeHtml(blog.title)}" class="blog-hero-img">
+        <div class="blog-content">${cleanContent(blog.content)}</div>
+        <a href="blog.html" class="back-link">← Back to Blog</a>
+      `;
 
-  } else {
-    article.innerHTML = `<p class="loading">Article not found.</p><a href="blog.html" class="back-link">← Back to Blog</a>`;
-  }
+      // Related articles
+      const currentCat = normalizeCategory(blog.category);
+      let relatedBlogs = blogs
+        .filter(b => b.id !== blog.id && normalizeCategory(b.category) === currentCat)
+        .slice(0, 3);
 
-  // --- Main Function: Firestore se Movies Load karna ---
-  async function loadRecommendedMovies(categoryName) {
-    const moviesContainer = document.getElementById('recommended-movies');
-    const titleElem = document.getElementById('recommended-movies-title');
-    if (!moviesContainer || !titleElem) return;
-
-    titleElem.textContent = `Recommended ${categoryName} Movies`;
-
-    try {
-      const moviesRef = collection(db, "movies");
-      // Fetch top 100 movies to ensure accurate category filtering
-      const q = query(moviesRef, limit(100));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">No movies found.</p>`;
-        return;
+      if (relatedBlogs.length < 3) {
+        const extra = blogs
+          .filter(b => b.id !== blog.id && !relatedBlogs.some(rb => rb.id === b.id))
+          .slice(0, 3 - relatedBlogs.length);
+        relatedBlogs = [...relatedBlogs, ...extra];
       }
 
-      const allMovies = [];
-      querySnapshot.forEach((doc) => {
-        allMovies.push({ id: doc.id, ...doc.data() });
-      });
-
-      // Category Filtering Logic using Normalizer
-      const targetTag = normalizeCategory(categoryName);
-
-      let filtered = allMovies.filter(m => {
-        const movieCat = normalizeCategory(m.category || m.cat || m.genre || '');
-        if (Array.isArray(m.categories)) {
-          return m.categories.some(c => normalizeCategory(c) === targetTag);
-        }
-        return movieCat === targetTag || movieCat.includes(targetTag);
-      });
-
-      // If no category match, fallback to first 20 movies
-      if (filtered.length === 0) {
-        filtered = allMovies.slice(0, 20);
-      } else {
-        filtered = filtered.slice(0, 20);
-      }
-
-      let html = '';
-      filtered.forEach((movie) => {
-        // 1. Direct poster/image check
-        let posterImg = movie.poster || movie.posterUrl || movie.image || movie.thumbnail || movie.poster_path;
-
-        // 2. Extract poster from YouTube embed URL if direct image missing
-        if (!posterImg) {
-          const ytLink = movie.youtubeUrl || movie.youtube || movie.trailer || movie.embedUrl || movie.url || movie.videoUrl || movie.youtubeId;
-          posterImg = getYouTubePoster(ytLink);
-        }
-
-        // 3. Default fallback
-        if (!posterImg) {
-          posterImg = 'assets/images/placeholder.jpg';
-        }
-
-        const movieTitle = movie.title || movie.name || 'Untitled';
-
-        html += `
-          <a href="movie.html?id=${movie.id}" class="movie-mini-card">
-            <img src="${posterImg}" alt="${movieTitle}" onerror="this.src='assets/images/placeholder.jpg'">
-            <p>${movieTitle}</p>
+      const relatedContainer = document.getElementById('related-blogs');
+      if (relatedContainer) {
+        relatedContainer.innerHTML = relatedBlogs.map(b => `
+          <a href="blog-post.html?id=${b.id}" class="related-blog-card">
+            <img src="${escapeHtml(b.image)}" alt="${escapeHtml(b.title)}" loading="lazy">
+            <div class="info"><h4>${escapeHtml(b.title)}</h4></div>
           </a>
-        `;
-      });
+        `).join('');
+      }
 
-      moviesContainer.innerHTML = html;
-
-    } catch (err) {
-      console.error("Error fetching recommended movies:", err);
-      moviesContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">Unable to load recommendations.</p>`;
+      loadRecommendedMovies(blog.category);
     }
-  }
-</script>
+  </script>
 </body>
 </html>

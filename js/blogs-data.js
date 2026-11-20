@@ -416,46 +416,67 @@ export const blogs = [
 `
   },
 
+  
   {
-  id: 13,
-  title: "Call of Duty: The Live-Action Movie (2026) - Hollywood’s Ultimate Military Action Spectacle",
-  image: "assets/images/call-of-duty-movie.jpg",
-  category: "Hollywood",
-  date: "03 Oct 2026",
+  id: 14,
+  title: "Jailer 2 (2026) - Rajinikanth's Blockbuster Sequel Rewrites Tamil Box Office History",
+  image: "assets/images/jailer-2-movie.jpg",
+  category: "South Indian",
+  date: "20 Nov 2026",
   author: "Arvind Kumar Pandey",
-  excerpt: "Dwayne Johnson, Jason Statham, Scarlett Johansson, and Chris Hemsworth star in Hollywood’s massive live-action adaptation of Call of Duty: The Mission Is Not Over.",
+  excerpt: "Rajinikanth returns as Tiger Muthuvel Pandian in Nelson Dilipkumar's Jailer 2, which has become the highest-grossing Tamil film of all time. Here is everything you need to know about the cast, story and box office run.",
   content: `
-<h1>Call of Duty: The Live-Action Movie (2026) - The Ultimate Military Action Spectacle</h1>
+<h1>Jailer 2 (2026) - Rajinikanth's Blockbuster Sequel Rewrites Tamil Box Office History</h1>
 
-<p>For decades, Activision’s legendary franchise <em>Call of Duty</em> has dominated the global gaming industry, shaping the way modern military thrillers are experienced across consoles and PC platforms. Now, Hollywood is taking this iconic universe to unmatched cinematic heights with the release of the live-action blockbuster, <strong>Call of Duty (2026)</strong>. Directed with visceral energy and featuring an ensemble cast of global action heavyweights, the movie delivers an adrenaline-fueled experience crafted for both hardcore fans and action film enthusiasts alike.</p>
+<p>When <em>Jailer</em> released in 2023, it revived the superstar magic of Rajinikanth in a big way. Three years later, <strong>Jailer 2</strong> has gone even bigger. Released worldwide on 15 October 2026 during the Dussehra festival, the Nelson Dilipkumar directorial has become one of the biggest theatrical events of the year and has set new records for Tamil cinema.</p>
 
 <div style="text-align: center; margin: 25px 0;">
-    <img src="assets/images/call-of-duty-poster.jpg" alt="Call of Duty Movie Poster - Dwayne Johnson, Jason Statham, Scarlett Johansson, Chris Hemsworth" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    <img src="assets/images/jailer-2-poster.jpg" alt="Jailer 2 Movie Poster - Rajinikanth as Tiger Muthuvel Pandian" style="max-width: 100%; height: auto; border-radius: 8px;" />
 </div>
 
-<h2>An Unprecedented A-List Action Ensemble</h2>
-<p>The cinematic adaptation brings together a power-packed star cast, combining some of the biggest icons of modern action cinema:</p>
+<h2>Jailer 2 Movie Details</h2>
 <ul>
-    <li><strong>Dwayne "The Rock" Johnson</strong> leads the charge as Commander Price, bringing raw authority, battlefield leadership, and unmatched physical dominance.</li>
-    <li><strong>Jason Statham</strong> portrays the lethal tactical operative Captain John "Soap" MacTavish, specializing in close-quarters combat and stealth extractions.</li>
-    <li><strong>Scarlett Johansson</strong> plays Sarah Carter, a top-tier covert intelligence specialist and sharpshooter navigating high-stakes espionage.</li>
-    <li><strong>Chris Hemsworth</strong> stars as Ghost (Simon Riley), executing high-risk sniper cover operations in snow-bound mountainous warzones.</li>
+    <li><strong>Movie:</strong> Jailer 2</li>
+    <li><strong>Industry:</strong> Tamil cinema (Bollywood), also released in Hindi, Telugu, Kannada and Malayalam</li>
+    <li><strong>Release Date:</strong> 15 October 2026 (Dussehra release)</li>
+    <li><strong>Director and Writer:</strong> Nelson Dilipkumar</li>
+    <li><strong>Producer:</strong> Kalanidhi Maran (Sun Pictures)</li>
+    <li><strong>Music:</strong> Anirudh Ravichander</li>
+    <li><strong>Genre:</strong> Action, Comedy</li>
+    <li><strong>Runtime:</strong> Approx. 165 minutes</li>
+    <li><strong>Certification:</strong> U/A</li>
 </ul>
 
-<h2>High-Stakes Plot & Tactical War Narrative</h2>
-<p>Carrying the tagline <em>"The Mission Is Not Over"</em>, the storyline follows Special Operations Task Force 141 as they face a rogue paramilitary syndicate threatening global stability. From fiery desert combat zones packed with tactical helicopter strikes to frozen arctic peaks, the narrative mirrors the signature multi-theater war campaigns that made the video games a global phenomenon.</p>
+<h2>Jailer 2 Cast: A Star-Studded Ensemble</h2>
+<p>Like the first film, the sequel is loaded with stars from across Indian cinema:</p>
+<ul>
+    <li><strong>Rajinikanth</strong> returns as Tiger Muthuvel Pandian, the retired jailer at the centre of the story.</li>
+    <li><strong>Mohanlal</strong> and <strong>Shiva Rajkumar</strong> bring big-screen power from the Malayalam and Kannada industries.</li>
+    <li><strong>Ramya Krishnan</strong> reprises her role from the first film.</li>
+    <li><strong>Vidya Balan</strong>, <strong>Vijay Sethupathi</strong> and <strong>S. J. Suryah</strong> add more star value to the cast.</li>
+    <li><strong>Jackie Shroff</strong>, <strong>Yogi Babu</strong>, <strong>Suraj Venjaramoodu</strong> and <strong>Mirnaa</strong> also appear in key roles.</li>
+</ul>
 
-<h2>Groundbreaking Visual Effects & Stunt Choreography</h2>
-<p>Built with IMAX-certified cameras and real-life military stunt choreography, <em>Call of Duty</em> blends practical explosives with cutting-edge visual effects. The film captures first-person tactical sequences, intense gunfights, aerial dogfights, and fast-paced breach operations that recreate the immersive tension of iconic game missions like <em>"No Russian"</em> and <em>"All Ghillied Up"</em> on a grand cinematic scale.</p>
+<h2>Jailer 2 Story and Treatment</h2>
+<p>The sequel builds on the world created in the 2023 film. Director Nelson once again mixes mass action with his trademark dark humour, putting Rajinikanth's calm, stylish screen presence against dangerous new enemies. The film has a larger scale than the original, with bigger set pieces and a cast spread across multiple industries, which is one reason it has worked so well in all language markets.</p>
 
-<h2>Release & Global Box Office Potential</h2>
-<p>Distributed globally across theaters, 3D, and IMAX screens, <em>Call of Duty (2026)</em> is poised to set record-breaking box office figures for video game movie adaptations. Trade analysts predict it will redefine the modern military action genre and establish a multi-film franchise ecosystem.</p>
+<h2>Jailer 2 Box Office Collection</h2>
+<p>The box office numbers have been the biggest story around the film:</p>
+<ul>
+    <li>It crossed the lifetime worldwide collection of the first <em>Jailer</em> within its first 9 days.</li>
+    <li>It crossed the Rs 700 crore worldwide mark in just 11 days and became the <strong>highest-grossing Tamil film of all time</strong>, passing 2.0.</li>
+    <li>According to trade tracker Sacnilk, the worldwide total went past Rs 800 crore in 18 days, a first for a Tamil film.</li>
+</ul>
+<p><em>Note: Box office figures are based on trade reports and may change. Check official sources for final numbers.</em></p>
+
+<h2>Jailer 2 OTT Release</h2>
+<p>The film is reported to be streaming on <strong>Amazon Prime Video</strong>. Platform availability and language options can vary, so check the official platform before watching. Always watch Jailer 2 through official theatres and licensed OTT platforms.</p>
+
+<h2>Final Verdict</h2>
+<p>With a strong cast, Anirudh's music and Rajinikanth's unmatched screen presence, <em>Jailer 2</em> has delivered exactly what fans wanted and more. It is a must-watch for action cinema lovers, and it has set a new benchmark for Tamil films at the box office.</p>
 
 <hr>
-<p><strong>SEO Keywords:</strong> Call of Duty Movie 2026, Call of Duty Live Action, Dwayne Johnson Call of Duty, Jason Statham COD Film, Scarlett Johansson COD, Chris Hemsworth Ghost, Call of Duty Movie Release Date, MovieTB Hollywood News.</p>
+<p><strong>SEO Keywords:</strong> Jailer 2, Jailer 2 movie, Jailer 2 2026, Jailer 2 box office collection, Jailer 2 cast, Jailer 2 release date, Jailer 2 OTT release date, Jailer 2 Prime Video, Rajinikanth Jailer 2, Tiger Muthuvel Pandian, Nelson Dilipkumar Jailer 2, Jailer 2 Hindi dubbed, Jailer 2 review, highest grossing Tamil film, South Indian movies 2026, MovieTB South Indian News.</p>
 `
-
-
-
 },
 ];
