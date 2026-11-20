@@ -120,14 +120,14 @@ a { color: var(--text-primary); text-decoration: none; }
     width: 280px;
     background: var(--bg-elevated);
     border-right: 1px solid var(--border);
-    z-index: 9999; /* Header ke upar rakhne ke liye z-index badha diya */
-    transform: translate3d(-100%, 0, 0); /* Hardware accelerated transition */
+    z-index: 9999;
+    transform: translate3d(-100%, 0, 0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
     overflow-x: hidden;
-    -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
+    -webkit-overflow-scrolling: touch;
     will-change: transform;
-    padding-top: 15px; /* Upar se thoda padding taaki content hide na ho */
+    padding-top: 130px; /* <-- Isko 130px kar dein taaki saare options (Trailers, New Releases) header ke niche saaf dikhein */
 }
 
 .categories-sidebar.active {
