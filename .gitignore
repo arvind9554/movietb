@@ -4,3 +4,21 @@ Thumbs.db
 .idea/
 *.log
 node_modules/
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+node_modules/
+
+# Secrets, env & telegram sessions
+.env
+.env.*
+server/.env
+*.session
+*.session-journal
+
+# Python cache
+__pycache__/
+*.pyc
