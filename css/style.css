@@ -127,7 +127,7 @@ a { color: var(--text-primary); text-decoration: none; }
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     will-change: transform;
-    padding-top: 130px; /* <-- Isko 130px kar dein taaki saare options (Trailers, New Releases) header ke niche saaf dikhein */
+    padding-top: 0; /* <-- Isko 130px kar dein taaki saare options (Trailers, New Releases) header ke niche saaf dikhein */
 }
 
 .categories-sidebar.active {
